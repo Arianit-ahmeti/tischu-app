@@ -1,0 +1,14 @@
+.git
+.gitignore
+.vscode
+.expo
+.expo-shared
+node_modules
+android
+ios
+npm-debug.log*
+yarn-error.log*
+*.iml
+*.log
+.DS_Store
+coverage
