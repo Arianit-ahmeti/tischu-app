@@ -1,0 +1,16 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Docker Compose Up",
+      "type": "node-terminal",
+      "request": "launch",
+      "command": "docker compose up",
+      "cwd": "${workspaceFolder}",
+      "env": {
+        "FORCE_COLOR": "1"
+      },
+      "problemMatcher": []
+    }
+  ]
+}
