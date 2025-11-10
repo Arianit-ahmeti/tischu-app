@@ -1,15 +1,12 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { StyleSheet, View, Alert } from "react-native";
-import { Button, Input } from "@rneui/themed";
+import { StyleSheet, View, Alert, Button, TextInput, Text } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
-  const [website, setWebsite] = useState("");
-  const [avatarUrl, setAvatarUrl] = useState("");
 
   const router = useRouter();
 
@@ -33,8 +30,6 @@ export default function Account({ session }: { session: Session }) {
 
       if (data) {
         setUsername(data.username);
-        setWebsite(data.website);
-        setAvatarUrl(data.avatar_url);
       }
     } catch (error) {
       if (error instanceof Error) {
@@ -45,15 +40,7 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
-  async function updateProfile({
-    username,
-    website,
-    avatar_url,
-  }: {
-    username: string;
-    website: string;
-    avatar_url: string;
-  }) {
+  async function updateProfile({ username }: { username: string }) {
     try {
       setLoading(true);
       if (!session?.user) throw new Error("No user on the session!");
@@ -61,8 +48,6 @@ export default function Account({ session }: { session: Session }) {
       const updates = {
         id: session?.user.id,
         username,
-        website,
-        avatar_url,
         updated_at: new Date(),
       };
 
@@ -83,29 +68,21 @@ export default function Account({ session }: { session: Session }) {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
+        <Text>Email</Text>
+        <TextInput value={session?.user?.email} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
-          label="Username"
+        <Text>Username</Text>
+        <TextInput
           value={username || ""}
           onChangeText={(text) => setUsername(text)}
-        />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Input
-          label="Website"
-          value={website || ""}
-          onChangeText={(text) => setWebsite(text)}
         />
       </View>
 
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
           title={loading ? "Loading ..." : "Update"}
-          onPress={() =>
-            updateProfile({ username, website, avatar_url: avatarUrl })
-          }
+          onPress={() => updateProfile({ username })}
           disabled={loading}
         />
       </View>

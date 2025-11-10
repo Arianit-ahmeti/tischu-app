@@ -1,8 +1,15 @@
-import { Text, ScrollView, View } from "react-native";
+import {
+  Text,
+  ScrollView,
+  View,
+  TextInput,
+  Button,
+  Pressable,
+  StyleSheet,
+} from "react-native";
 import React, { useState } from "react";
-import { Input, ButtonGroup, Button } from "@rneui/themed";
+import SelectableButton from "../../components/SelectableButton";
 import { supabase } from "../../lib/supabase";
-import { get } from "react-native/Libraries/TurboModule/TurboModuleRegistry";
 
 export default function Add() {
   const [name, setName] = useState("");
@@ -73,22 +80,22 @@ export default function Add() {
 
   return (
     <ScrollView>
-      <Input
-        label="Name"
+      <Text>Name</Text>
+      <TextInput
         onChangeText={(text) => setName(text)}
         value={name}
         placeholder="Name des Tiers"
       />
 
-      <Input
-        label="Herkunft"
+      <Text>Herkunft</Text>
+      <TextInput
         onChangeText={(text) => setOrigin(text)}
         value={origin}
         placeholder="Herkunft des Tiers"
       />
 
-      <Input
-        label="Alter"
+      <Text>Alter</Text>
+      <TextInput
         keyboardType="numeric"
         onChangeText={(text) => setAge(parseInt(text) || 0)}
         value={age?.toString()}
@@ -96,47 +103,86 @@ export default function Add() {
       />
 
       <Text>Tierart</Text>
-      <ButtonGroup
-        buttons={["Hund", "Katze"]}
-        selectedIndex={type}
-        onPress={(value) => {
-          setType(value);
-        }}
-        containerStyle={{ marginBottom: 20 }}
-      />
+      <View style={styles.buttonGroup}>
+        <SelectableButton
+          isSelected={type == 0}
+          title="Hund"
+          onPress={() => setType(0)}
+        />
+
+        <SelectableButton
+          isSelected={type == 1}
+          title="Katze"
+          onPress={() => setType(1)}
+        />
+      </View>
 
       <Text>Geschlecht</Text>
-      <ButtonGroup
-        buttons={["männlich", "weiblich"]}
-        selectedIndex={sex}
-        onPress={(value) => {
-          setSex(value);
-        }}
-        containerStyle={{ marginBottom: 20 }}
-      />
+      <View style={styles.buttonGroup}>
+        <SelectableButton
+          isSelected={sex == 0}
+          title="männlich"
+          onPress={() => setSex(0)}
+        />
+        <SelectableButton
+          isSelected={sex == 1}
+          title="weiblich"
+          onPress={() => setSex(1)}
+        />
+      </View>
 
       <Text>Größe</Text>
-      <ButtonGroup
-        buttons={["klein", "mittel", "groß"]}
-        selectedIndex={size}
-        onPress={(value) => {
-          setSize(value);
-        }}
-        containerStyle={{ marginBottom: 20 }}
-      />
+      <View style={styles.buttonGroup}>
+        <SelectableButton
+          isSelected={size == 0}
+          title="klein"
+          onPress={() => setSize(0)}
+        />
+        <SelectableButton
+          isSelected={size == 1}
+          title="mittel"
+          onPress={() => setSize(1)}
+        />
+        <SelectableButton
+          isSelected={size == 2}
+          title="groß"
+          onPress={() => setSize(2)}
+        />
+      </View>
 
       <Text>Charakter</Text>
-      <ButtonGroup
-        buttons={["scheu", "freundlich", "ängstlich", "aggressiv"]}
-        selectedIndex={character}
-        onPress={(value) => {
-          setCharacter(value);
-        }}
-        containerStyle={{ marginBottom: 20 }}
-      />
+      <View style={styles.buttonGroup}>
+        <SelectableButton
+          isSelected={character == 0}
+          title="scheu"
+          onPress={() => setCharacter(0)}
+        />
+        <SelectableButton
+          isSelected={character == 1}
+          title="freundlich"
+          onPress={() => setCharacter(1)}
+        />
+        <SelectableButton
+          isSelected={character == 2}
+          title="ängstlich"
+          onPress={() => setCharacter(2)}
+        />
+        <SelectableButton
+          isSelected={character == 3}
+          title="aggressiv"
+          onPress={() => setCharacter(3)}
+        />
+      </View>
 
-      <Button onPress={() => handleAddAnimal()}>Tier hinzufügen</Button>
+      <Button title="Tier hinzufügen" onPress={handleAddAnimal} />
       <View style={{ height: 20 }}></View>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  buttonGroup: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+  },
+});
