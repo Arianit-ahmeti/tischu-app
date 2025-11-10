@@ -21,7 +21,7 @@ export default function Account({ session }: { session: Session }) {
 
       const { data, error, status } = await supabase
         .from("profiles")
-        .select(`username, website, avatar_url`)
+        .select(`username`)
         .eq("id", session?.user.id)
         .single();
       if (error && status !== 406) {
@@ -40,7 +40,11 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
-  async function updateProfile({ username }: { username: string }) {
+  async function updateProfile({
+    username
+  }: {
+    username: string;
+  }) {
     try {
       setLoading(true);
       if (!session?.user) throw new Error("No user on the session!");
