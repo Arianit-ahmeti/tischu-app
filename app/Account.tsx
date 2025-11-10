@@ -1,13 +1,14 @@
 import { useState, useEffect } from "react";
 import { supabase } from "../lib/supabase";
-import { StyleSheet, View, Alert } from "react-native";
-import { Button, Input } from "@rneui/themed";
+import { StyleSheet, View, Alert, Button, TextInput, Text } from "react-native";
 import { Session } from "@supabase/supabase-js";
+import { useRouter } from "expo-router";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
 
+  const router = useRouter();
 
   useEffect(() => {
     if (session) getProfile();
@@ -40,7 +41,7 @@ export default function Account({ session }: { session: Session }) {
   }
 
   async function updateProfile({
-    username,
+    username
   }: {
     username: string;
   }) {
@@ -71,18 +72,32 @@ export default function Account({ session }: { session: Session }) {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Input label="Email" value={session?.user?.email} disabled />
+        <Text>Email</Text>
+        <TextInput value={session?.user?.email} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Input
-          label="Username"
+        <Text>Username</Text>
+        <TextInput
           value={username || ""}
           onChangeText={(text) => setUsername(text)}
         />
       </View>
-
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <Button
+          title={loading ? "Loading ..." : "Update"}
+          onPress={() => updateProfile({ username })}
+          disabled={loading}
+        />
+      </View>
       <View style={styles.verticallySpaced}>
         <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+      </View>
+
+      <View style={styles.verticallySpaced}>
+        <Button
+          title="Add Animal"
+          onPress={() => router.navigate("Animal/Add")}
+        />
       </View>
     </View>
   );
