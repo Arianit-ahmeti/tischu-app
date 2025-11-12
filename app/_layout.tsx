@@ -16,6 +16,15 @@ export default function RootLayout() {
           title: "Account",
         }}
       />
+      {/* TASK #29: Registrierung des Tier-Detail-Endpunkts */}
+            <Stack.Screen 
+                name="Animal/[id]" 
+                options={{ 
+                    title: "Tierprofil",
+                }}
+            />
+
+           
       <Stack.Screen name="Animal/Add" options={{ title: "Tier hinzufügen" }} />
     </Stack>
   );
