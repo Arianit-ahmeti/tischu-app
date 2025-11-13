@@ -1,6 +1,6 @@
 export interface Animal {
-  id: string | null;
-  created_at: string | null;
+  id: string;
+  created_at: string;
   name: string | null;
   origin: string | null;
   type: string | null;
