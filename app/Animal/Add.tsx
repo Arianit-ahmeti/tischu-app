@@ -10,6 +10,7 @@ import {
 import React, { useState } from "react";
 import SelectableButton from "../../components/SelectableButton";
 import { supabase } from "../../lib/supabase";
+import { addAnimal } from "../../lib/animalService";
 
 export default function Add() {
   const [name, setName] = useState("");
@@ -20,7 +21,7 @@ export default function Add() {
   const [size, setSize] = useState(0);
   const [character, setCharacter] = useState(0);
 
-  function getSize(): String | null {
+  function getSize(): string | null {
     switch (size) {
       case 0:
         return "small";
@@ -33,15 +34,15 @@ export default function Add() {
     }
   }
 
-  function getType(): String {
+  function getType(): string {
     return type === 0 ? "dog" : "cat";
   }
 
-  function getSex(): String {
+  function getSex(): string {
     return sex === 0 ? "male" : "female";
   }
 
-  function getCharacter(): String | null {
+  function getCharacter(): string | null {
     switch (character) {
       case 0:
         return "shy";
@@ -57,26 +58,22 @@ export default function Add() {
   }
 
   async function handleAddAnimal() {
-    const { data, error } = await supabase
-      .from("animals")
-      .insert({
-        name: name,
-        age: age,
-        origin: origin,
-        type: getType(),
-        size: getSize(),
-        sex: getSex(),
-        character: getCharacter(),
-        status: "open",
-      })
-      .select();
-
-    if (error) {
-      console.log("Error adding animal:", error.message);
-    } else {
-      console.log("Animal added successfully:", data);
-    }
+    addAnimal({
+      name,
+      age,
+      origin,
+      type: getType(),
+      size: getSize(),
+      sex: getSex(),
+      character: getCharacter(),
+      status: "open",
+    })
   }
+
+
+
+
+
 
   return (
     <ScrollView>
@@ -174,7 +171,7 @@ export default function Add() {
         />
       </View>
 
-      <Button title="Tier hinzufügen" onPress={handleAddAnimal} />
+      <Button title="Tier hinzufügen" onPress={async () => handleAddAnimal()} />
       <View style={{ height: 20 }}></View>
     </ScrollView>
   );

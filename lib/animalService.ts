@@ -3,7 +3,7 @@
 import { supabase } from './supabase';
 import { Animal } from './types';
 
-async function handleAddAnimal(animal: Animal) {
+export async function addAnimal(animal: Partial<Animal>) {
     const { data, error } = await supabase
         .from("animals")
         .insert({
