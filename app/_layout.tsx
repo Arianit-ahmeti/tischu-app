@@ -23,6 +23,13 @@ export default function RootLayout() {
                     title: "Tierprofil",
                 }}
             />
+            {/* TASK #17: Route für Tier bearbeiten */}
+            <Stack.Screen 
+                name="Animal/edit" 
+                options={{ 
+                    title: "Tier bearbeiten",
+                }}
+            />
 
            
       <Stack.Screen name="Animal/Add" options={{ title: "Tier hinzufügen" }} />
