@@ -2,19 +2,9 @@ import React, { useEffect, useState } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { supabase } from "../lib/supabase";
+import { Animal } from "../lib/types";
 
-type Animal = {
-    id: string;
-    created_at: string;
-    name: string;
-    origin?: string | null;
-    type?: string | null;
-    sex?: string | null;
-    size?: string | null;
-    character?: string | null;
-    status?: string | null;
-    age?: number | null;
-};
+
 
 export default function AnimalList() {
     const [animals, setAnimals] = useState<Animal[]>([]);
@@ -25,11 +15,9 @@ export default function AnimalList() {
                 .from("animals")
                 .select("*")
 
-            if (error) {
-                console.log("Error fetching Animal data: ", error.message);
-            } else {
-                console.log("Loaded Animal data successfully", data);
-            }
+
+            console.log("Loaded Animal data successfully");
+
             setAnimals(data ?? []);
 
         } catch (error) {
