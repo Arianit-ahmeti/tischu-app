@@ -1,14 +1,17 @@
 import React, { useEffect, useState } from "react";
-import { StyleSheet, View, Text, useWindowDimensions } from "react-native";
+import { StyleSheet, View, Text, useWindowDimensions, Pressable } from "react-native";
 import { FlashList } from "@shopify/flash-list";
 import { supabase } from "../lib/supabase";
 import { Animal } from "../lib/types";
+import { SafeAreaView } from "react-native-safe-area-context";
+import { useRouter } from "expo-router";
 
 
 
 export default function AnimalList() {
+    const router = useRouter();
     const { width } = useWindowDimensions();
-    const numColumns = Math.max(1, Math.floor(width / 200))
+    const numColumns = Math.max(1, Math.floor(width / 200));
     const [animals, setAnimals] = useState<Animal[]>([]);
     const [loading, setLoading] = useState(true);
     async function loadAnimals() {
@@ -48,9 +51,13 @@ export default function AnimalList() {
                 style={styles.list}
                 keyExtractor={item => item.id}
                 renderItem={({ item }) => (
-                    <View style={styles.card}>
-                        <Text style={styles.title}>{item.name}</Text>
-                    </View>
+                    <SafeAreaView>
+                        <Pressable onPress={() => router.navigate({ pathname: "Animal/[id]", params: { id: item.id } })}>
+                            <View style={styles.card}>
+                                <Text style={styles.title}>{item.name}</Text>
+                            </View>
+                        </Pressable>
+                    </SafeAreaView>
                 )}
                 ListEmptyComponent={
                     <View
