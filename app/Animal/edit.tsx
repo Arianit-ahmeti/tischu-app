@@ -1,7 +1,17 @@
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  Keyboard,
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableWithoutFeedback,
+  View,
+} from "react-native";
 import { fetchAnimalDetails, updateAnimal } from "../../lib/animalService";
 
 export default function EditAnimal() {
@@ -11,13 +21,6 @@ export default function EditAnimal() {
   const [animal, setAnimal] = useState<any | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
-
-  const Label = ({ label, value }: { label: string; value: any }) => (
-    <Text style={{ marginBottom: 25 }}>
-      <Text style={{ fontWeight: "bold" }}>{label}:</Text>
-      {value || "Unbekannt"}
-    </Text>
-  );
 
   async function loadAnimal() {
     setLoading(true);
@@ -52,16 +55,18 @@ export default function EditAnimal() {
 
     const updates: any = {
       name: animal.name,
-      age: animal.age,
-      character: animal.character,
+      origin: animal.origin,
+      type: animal.type,
       size: animal.size,
+      character: animal.character,
       status: animal.status,
+      age: animal.age,
     };
 
     const updated = await updateAnimal(id as string, updates);
     if (updated) {
       Alert.alert("Erfolg", "Tier wurde aktualisiert!");
-      router.replace(`/Animal/${id}`);
+      router.back();
     } else {
       Alert.alert("Fehler, Aktualisierung fehlgeschlagen!");
     }
@@ -69,88 +74,89 @@ export default function EditAnimal() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
-      <TextInput
-        style={styles.input}
-        value={animal.name || ""}
-        onChangeText={(text) => setAnimal({ ...animal, name: text })}
-      />
+    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
+      <View style={styles.container}>
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
+        <TextInput
+          style={styles.input}
+          value={animal.name || ""}
+          onChangeText={(text) => setAnimal({ ...animal, name: text })}
+        />
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
-      <TextInput
-        style={styles.input}
-        value={animal.origin || ""}
-        keyboardType="numeric"
-        onChangeText={(text) => setAnimal({ ...animal, origin: text })}
-      />
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
+        <TextInput
+          style={styles.input}
+          value={animal.origin || ""}
+          onChangeText={(text) => setAnimal({ ...animal, origin: text })}
+        />
 
-      <Text style={{ fontWeight: "bold" }}>Art:</Text>
-      <Picker
-        selectedValue={animal.size || ""}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="katze" value="cat" />
-        <Picker.Item label="hund" value="dog" />
-      </Picker>
+        <Text style={{ fontWeight: "bold" }}>Art:</Text>
+        <Picker
+          selectedValue={animal.type || ""}
+          onValueChange={(itemValue) => setAnimal({ ...animal, type: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="Katze" value="cat" />
+          <Picker.Item label="Hund" value="dog" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
-      <Picker
-        selectedValue={animal.size ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="male" value="male" />
-        <Picker.Item label="female" value="female" />
-      </Picker>
+        <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
+        <Picker
+          selectedValue={animal.sex ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, sex: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="male" value="male" />
+          <Picker.Item label="female" value="female" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold" }}>Größe:</Text>
-      <Picker
-        selectedValue={animal.size ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="klein" value="small" />
-        <Picker.Item label="mittel" value="medium" />
-        <Picker.Item label="groß" value="large" />
-      </Picker>
+        <Text style={{ fontWeight: "bold" }}>Größe:</Text>
+        <Picker
+          selectedValue={animal.size ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="klein" value="small" />
+          <Picker.Item label="mittel" value="medium" />
+          <Picker.Item label="groß" value="large" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
-      <Picker
-        selectedValue={animal.character ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="scheu" value="shy" />
-        <Picker.Item label="freundlich" value="friendly" />
-        <Picker.Item label="ängstlich" value="anxious" />
-        <Picker.Item label="aggressiv" value="aggressive" />
-      </Picker>
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
+        <Picker
+          selectedValue={animal.character ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="scheu" value="shy" />
+          <Picker.Item label="freundlich" value="friendly" />
+          <Picker.Item label="ängstlich" value="anxious" />
+          <Picker.Item label="aggressiv" value="aggressive" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
-      <Picker
-        selectedValue={animal.status ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="adopted" value="adopted" />
-        <Picker.Item label="open" value="open" />
-        <Picker.Item label="reserved" value="reserved" />
-      </Picker>
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
+        <Picker
+          selectedValue={animal.status ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="adopted" value="adopted" />
+          <Picker.Item label="open" value="open" />
+          <Picker.Item label="reserved" value="reserved" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
-      <TextInput
-        style={styles.input}
-        value={animal.age?.toString() || ""}
-        keyboardType="numeric"
-        onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
-      />
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
+        <TextInput
+          style={styles.input}
+          value={animal.age?.toString() || ""}
+          keyboardType="numeric"
+          onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
+        />
 
-      <View style={styles.buttonContainer}>
-        <Button title="Speichern" onPress={handleSave} disabled={saving} />
+        <View style={styles.buttonContainer}>
+          <Button title="Speichern" onPress={handleSave} disabled={saving} />
+        </View>
       </View>
-    </View>
+    </TouchableWithoutFeedback>
   );
 }
 
