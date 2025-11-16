@@ -1,0 +1,80 @@
+{
+  "tab_size": 2,
+  "hard_tabs": false,
+  "format_on_save": "on",
+  "use_on_type_format": true,
+  "ensure_final_newline_on_save": true,
+  "remove_trailing_whitespace_on_save": true,
+  "preferred_line_length": 120,
+  "soft_wrap": "none",
+
+  // Language-specific settings
+  "languages": {
+    "TypeScript": {
+      "tab_size": 2,
+      "preferred_line_length": 120,
+      "format_on_save": "on",
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.organizeImports": true
+      }
+    },
+    "TSX": {
+      "tab_size": 2,
+      "preferred_line_length": 120,
+      "format_on_save": "on",
+      "formatter": "prettier",
+      "code_actions_on_format": {
+        "source.organizeImports": true
+      }
+    },
+    "JavaScript": {
+      "tab_size": 2,
+      "preferred_line_length": 120,
+      "format_on_save": "on",
+      "formatter": "prettier"
+    },
+    "JSON": {
+      "tab_size": 2
+    }
+  },
+
+  "file_scan_exclusions": [
+    "**/.git",
+    "**/.DS_Store",
+    "**/node_modules/**",
+    "**/.expo/**",
+    "**/build/**",
+    "**/ios/Pods/**",
+    "**/android/.gradle/**",
+    "**/android/build/**",
+    "**/android/app/build/**",
+    "**/.expo-shared/**",
+    "**/dist/**",
+    "**/web-build/**"
+  ],
+
+  "current_line_highlight": "all",
+  "show_whitespaces": "selection",
+
+  // Completion and suggestions
+  "show_completions_on_input": true,
+  "show_completion_documentation": true,
+
+  // Git settings
+  "git": {
+    "git_gutter": "tracked_files",
+    "inline_blame": {
+      "enabled": true
+    }
+  },
+
+  "indent_guides": {
+    "enabled": true,
+    "coloring": "fixed"
+  },
+
+  "diagnostics": {
+    "include_warnings": true
+  }
+}
