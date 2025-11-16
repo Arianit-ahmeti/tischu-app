@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { View, Text, ActivityIndicator, StyleSheet, Alert } from 'react-native';
-import { useLocalSearchParams } from 'expo-router'; 
-import { fetchAnimalDetails } from '../../lib/animalService';
+import { View, Text, ActivityIndicator, StyleSheet, Alert, Button } from 'react-native';
+import { useRouter, useLocalSearchParams } from 'expo-router'; 
+import { fetchAnimalDetails, deleteAnimal } from '../../lib/animalService';
 
 interface Animal {
     id: string;
@@ -15,6 +15,8 @@ interface Animal {
     status: string;
     age: number | null;
 }
+
+const router = useRouter();
 
 export default function AnimalDetailScreen() {
     const { id } = useLocalSearchParams(); 
@@ -58,7 +60,31 @@ export default function AnimalDetailScreen() {
             <Text>Herkunft: {animal.origin}</Text>
             <Text>Alter: {animal.age || 'Unbekannt'}</Text>
             <Text>Charakter: {animal.character}</Text>
+            <Button
+                  title="Tier löschen"
+                  onPress={() => {
+                Alert.alert(
+                  "Tier löschen",
+                  `Möchten Sie ${animal.name} wirklich löschen?`,
+                  [
+                    {
+                      text: "Abbrechen",
+                      style: "cancel"
+                    },
+                    {
+                      text: "Löschen",
+                      style: "destructive",
+                      onPress: async () => {
+                    await deleteAnimal(animalId as string);
+                    router.back();
+                      }
+                    }
+                  ]
+                );
+                  }}
+                />
         </View>
+        
     );
 }
 
