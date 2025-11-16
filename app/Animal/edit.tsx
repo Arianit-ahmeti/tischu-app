@@ -19,23 +19,24 @@ export default function EditAnimal() {
         </Text>
     )
 
+    async function loadAnimal() {
+        setLoading(true);
+        const data = await fetchAnimalDetails(id as string);        
+        if (data) setAnimal(data);
+        else Alert.alert("Fehler", "Tier konnte nicht geladen werden.");
+        setLoading(false);
+    }
+
     useEffect(() => {
-            if(!id) return;
-            async function loadAnimal() {
-                setLoading(true);
-                const data = await fetchAnimalDetails(id as string);        
-                if (data) setAnimal(data);
-                else Alert.alert("Fehler", "Tier konnte nicht geladen werden.");
-                setLoading(false);
-            }
-            loadAnimal();
-        }, [id]);
+        if (!id) return;
+        loadAnimal();
+    }, [id]);
 
     if (loading) return <View style={styles.center}><ActivityIndicator size="large" /></View>
     if (!animal) return (<View style={styles.center}><Text>Tier nicht gefunden.</Text></View>);
 
     const handleSave = async() => {
-        if(!animal) return;
+        if (!animal) return;
 
         setSaving(true);
 
@@ -48,7 +49,7 @@ export default function EditAnimal() {
         };
 
         const updated = await updateAnimal(id as string, updates);
-        if(updated) {
+        if (updated) {
             Alert.alert("Erfolg", "Tier wurde aktualisiert!");
             router.replace(`/Animal/${id}`);
         } else {
@@ -60,14 +61,41 @@ export default function EditAnimal() {
 
     return (
         <View style={styles.container}>
-            <Text style={styles.name}>{animal?.name}</Text>
+            <Text style= {{fontWeight: 'bold', marginTop: 10}}>Name:</Text>
+            <TextInput 
+                style= {styles.input} 
+                value={animal.name || ""}
+                onChangeText={(text) => setAnimal({...animal, name:text })}
+            />
 
-            {/*Readonly*/}
-            <Label label='Herkunft' value={animal.origin}/>
-            <Label label='Art' value={animal.type}/>
-            <Label label='Geschlecht' value={animal.sex}/>
+            <Text style= {{fontWeight: 'bold', marginTop: 10}}>Herkunft:</Text>
+            <TextInput 
+                style= {styles.input} 
+                value={animal.origin || ""}
+                keyboardType="numeric"
+                onChangeText={(text) => setAnimal({...animal, origin:text })}
+            />
 
-            {/*editable, dropdown*/}
+            <Text style= {{fontWeight: 'bold'}}>Art:</Text>
+            <Picker 
+                selectedValue={animal.size || ""}
+                onValueChange={(itemValue) => setAnimal({...animal, size: itemValue})}
+                style= {styles.picker}
+            > 
+                <Picker.Item label='katze' value="cat"/>
+                <Picker.Item label='hund' value="dog"/>
+            </Picker>
+
+            <Text style= {{fontWeight: 'bold'}}>Geschlecht:</Text>
+            <Picker 
+                selectedValue={animal.size ?? "Unbekannt"}
+                onValueChange={(itemValue) => setAnimal({...animal, size: itemValue})}
+                style= {styles.picker}
+            > 
+                <Picker.Item label='male' value="male"/>
+                <Picker.Item label='female' value="female"/>
+            </Picker>
+
             <Text style= {{fontWeight: 'bold'}}>Größe:</Text>
             <Picker 
                 selectedValue={animal.size ?? "Unbekannt"}

@@ -2,19 +2,8 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet, Alert, Button } from 'react-native';
 import { useLocalSearchParams, useRouter } from 'expo-router'; 
 import { fetchAnimalDetails } from '../../lib/animalService';
+import {Animal } from '../../lib/types';
 
-interface Animal {
-    id: string;
-    created_at: string;
-    name: string;
-    origin: string;
-    type: string;
-    sex: string;
-    size: string;
-    character: string;
-    status: string;
-    age: number | null;
-}
 
 export default function AnimalDetailScreen() {
     const { id } = useLocalSearchParams(); 
@@ -25,22 +14,22 @@ export default function AnimalDetailScreen() {
 
     const router = useRouter();
 
+    async function loadAnimal() {
+        setLoading(true);
+        const data = await fetchAnimalDetails(animalId as string);
+            
+        if (data) {
+            setAnimal(data);
+        } else {
+            Alert.alert("Fehler", "Tier konnte nicht geladen werden.");
+        }
+        setLoading(false);
+    }
+
     useEffect(() => {
         if (!animalId) { 
             setLoading(false); 
             return; 
-        }
-
-        async function loadAnimal() {
-            setLoading(true);
-            const data = await fetchAnimalDetails(animalId as string);
-            
-            if (data) {
-                setAnimal(data);
-            } else {
-                Alert.alert("Fehler", "Tier konnte nicht geladen werden.");
-            }
-            setLoading(false);
         }
         loadAnimal();
     }, [animalId]);
