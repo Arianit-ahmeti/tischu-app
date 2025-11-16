@@ -1,5 +1,5 @@
-import { supabase } from './supabase';
-import { Animal } from './types';
+import { supabase } from "./supabase";
+import { Animal } from "./types";
 
 export async function addAnimal(animal: Partial<Animal>) {
   const { data, error } = await supabase
@@ -27,31 +27,26 @@ export async function addAnimal(animal: Partial<Animal>) {
 
 export async function loadAllAnimals() {
   try {
-    const { data: animal, error } = await supabase
-      .from('animals')
-      .select('*');
+    const { data: animal, error } = await supabase.from("animals").select("*");
 
     if (error) {
-      console.log('Supabase Error on fetching all animal ids:', error.message)
+      console.log("Supabase Error on fetching all animal ids:", error.message);
       return null;
     }
     console.log("Loaded Animal data successfully");
 
     return animal;
-
   } catch (error) {
-    (error instanceof Error ? console.log("Error fetching Animal data: ", error.message) : console.log("Unexpected Error ocurred:", error));
+    error instanceof Error
+      ? console.log("Error fetching Animal data: ", error.message)
+      : console.log("Unexpected Error ocurred:", error);
     return null;
   }
 }
 
 export async function fetchAnimalDetails(animalId: string) {
   try {
-    const { data: animal, error } = await supabase
-      .from('animals')
-      .select('*')
-      .eq('id', animalId)
-      .single();
+    const { data: animal, error } = await supabase.from("animals").select("*").eq("id", animalId).single();
 
     if (error) {
       console.error(`Supabase Error on fetching animal details for ${animalId}:`, error.message);
@@ -64,43 +59,33 @@ export async function fetchAnimalDetails(animalId: string) {
     }
 
     return animal;
-
   } catch (err) {
-    console.error('Unexpected error on fetchAnimalDetails:', err);
+    console.error("Unexpected error on fetchAnimalDetails:", err);
     return null;
   }
 }
 
 export async function deleteAnimal(animalId: string) {
-  const { error } = await supabase
-    .from('animals')
-    .delete()
-    .eq('id', animalId);
-  
+  const { error } = await supabase.from("animals").delete().eq("id", animalId);
+
   if (error) {
-    console.error('Fehler beim Löschen des Tiers:', error.message);
+    console.error("Fehler beim Löschen des Tiers:", error.message);
     return false;
   }
-  
+
   return true;
 }
 
 export async function updateAnimal(animalId: string, updates: any) {
   try {
-    const { data: animal, error } = await supabase
-      .from('animals')
-      .update(updates)
-      .select()
-      .eq('id', animalId)
-      .single();
+    const { data: animal, error } = await supabase.from("animals").update(updates).select().eq("id", animalId).single();
 
     if (error) {
-      console.error('Supabase Error on updating animal data:', error.message);
+      console.error("Supabase Error on updating animal data:", error.message);
       return null;
     }
     return animal;
-
   } catch (err) {
-    console.error('Unexpected error in updateAnimal:', err);
+    console.error("Unexpected error in updateAnimal:", err);
   }
 }

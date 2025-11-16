@@ -1,15 +1,6 @@
-import {
-  Text,
-  ScrollView,
-  View,
-  TextInput,
-  Button,
-  Pressable,
-  StyleSheet,
-} from "react-native";
 import React, { useState } from "react";
+import { Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import SelectableButton from "../../components/SelectableButton";
-import { supabase } from "../../lib/supabase";
 import { addAnimal } from "../../lib/animalService";
 
 export default function Add() {
@@ -67,29 +58,16 @@ export default function Add() {
       sex: getSex(),
       character: getCharacter(),
       status: "open",
-    })
+    });
   }
-
-
-
-
-
 
   return (
     <ScrollView>
       <Text>Name</Text>
-      <TextInput
-        onChangeText={(text) => setName(text)}
-        value={name}
-        placeholder="Name des Tiers"
-      />
+      <TextInput onChangeText={(text) => setName(text)} value={name} placeholder="Name des Tiers" />
 
       <Text>Herkunft</Text>
-      <TextInput
-        onChangeText={(text) => setOrigin(text)}
-        value={origin}
-        placeholder="Herkunft des Tiers"
-      />
+      <TextInput onChangeText={(text) => setOrigin(text)} value={origin} placeholder="Herkunft des Tiers" />
 
       <Text>Alter</Text>
       <TextInput
@@ -101,74 +79,30 @@ export default function Add() {
 
       <Text>Tierart</Text>
       <View style={styles.buttonGroup}>
-        <SelectableButton
-          isSelected={type == 0}
-          title="Hund"
-          onPress={() => setType(0)}
-        />
+        <SelectableButton isSelected={type == 0} title="Hund" onPress={() => setType(0)} />
 
-        <SelectableButton
-          isSelected={type == 1}
-          title="Katze"
-          onPress={() => setType(1)}
-        />
+        <SelectableButton isSelected={type == 1} title="Katze" onPress={() => setType(1)} />
       </View>
 
       <Text>Geschlecht</Text>
       <View style={styles.buttonGroup}>
-        <SelectableButton
-          isSelected={sex == 0}
-          title="männlich"
-          onPress={() => setSex(0)}
-        />
-        <SelectableButton
-          isSelected={sex == 1}
-          title="weiblich"
-          onPress={() => setSex(1)}
-        />
+        <SelectableButton isSelected={sex == 0} title="männlich" onPress={() => setSex(0)} />
+        <SelectableButton isSelected={sex == 1} title="weiblich" onPress={() => setSex(1)} />
       </View>
 
       <Text>Größe</Text>
       <View style={styles.buttonGroup}>
-        <SelectableButton
-          isSelected={size == 0}
-          title="klein"
-          onPress={() => setSize(0)}
-        />
-        <SelectableButton
-          isSelected={size == 1}
-          title="mittel"
-          onPress={() => setSize(1)}
-        />
-        <SelectableButton
-          isSelected={size == 2}
-          title="groß"
-          onPress={() => setSize(2)}
-        />
+        <SelectableButton isSelected={size == 0} title="klein" onPress={() => setSize(0)} />
+        <SelectableButton isSelected={size == 1} title="mittel" onPress={() => setSize(1)} />
+        <SelectableButton isSelected={size == 2} title="groß" onPress={() => setSize(2)} />
       </View>
 
       <Text>Charakter</Text>
       <View style={styles.buttonGroup}>
-        <SelectableButton
-          isSelected={character == 0}
-          title="scheu"
-          onPress={() => setCharacter(0)}
-        />
-        <SelectableButton
-          isSelected={character == 1}
-          title="freundlich"
-          onPress={() => setCharacter(1)}
-        />
-        <SelectableButton
-          isSelected={character == 2}
-          title="ängstlich"
-          onPress={() => setCharacter(2)}
-        />
-        <SelectableButton
-          isSelected={character == 3}
-          title="aggressiv"
-          onPress={() => setCharacter(3)}
-        />
+        <SelectableButton isSelected={character == 0} title="scheu" onPress={() => setCharacter(0)} />
+        <SelectableButton isSelected={character == 1} title="freundlich" onPress={() => setCharacter(1)} />
+        <SelectableButton isSelected={character == 2} title="ängstlich" onPress={() => setCharacter(2)} />
+        <SelectableButton isSelected={character == 3} title="aggressiv" onPress={() => setCharacter(3)} />
       </View>
 
       <Button title="Tier hinzufügen" onPress={async () => handleAddAnimal()} />

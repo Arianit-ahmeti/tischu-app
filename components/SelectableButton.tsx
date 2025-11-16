@@ -1,5 +1,5 @@
-import { View, Text, StyleSheet, Pressable } from "react-native";
 import React from "react";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 export default function SelectableButton({
   isSelected,
@@ -12,12 +12,7 @@ export default function SelectableButton({
 }) {
   return (
     <Pressable onPress={onPress}>
-      <View
-        style={[
-          styles.button,
-          isSelected ? styles.selectedButton : styles.deselectedButton,
-        ]}
-      >
+      <View style={[styles.button, isSelected ? styles.selectedButton : styles.deselectedButton]}>
         <Text>{title}</Text>
       </View>
     </Pressable>

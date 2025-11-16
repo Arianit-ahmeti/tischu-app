@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { supabase } from "../lib/supabase";
-import { StyleSheet, View, Alert, Button, TextInput, Text } from "react-native";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { supabase } from "../lib/supabase";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -40,11 +40,7 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
-  async function updateProfile({
-    username
-  }: {
-    username: string;
-  }) {
+  async function updateProfile({ username }: { username: string }) {
     try {
       setLoading(true);
       if (!session?.user) throw new Error("No user on the session!");
@@ -77,10 +73,7 @@ export default function Account({ session }: { session: Session }) {
       </View>
       <View style={styles.verticallySpaced}>
         <Text>Username</Text>
-        <TextInput
-          value={username || ""}
-          onChangeText={(text) => setUsername(text)}
-        />
+        <TextInput value={username || ""} onChangeText={(text) => setUsername(text)} />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
@@ -94,17 +87,11 @@ export default function Account({ session }: { session: Session }) {
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button
-          title="Add Animal"
-          onPress={() => router.navigate("Animal/Add")}
-        />
+        <Button title="Add Animal" onPress={() => router.navigate("Animal/Add")} />
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button
-          title="Show AnimalList"
-          onPress={() => router.navigate("AnimalList")}
-        />
+        <Button title="Show AnimalList" onPress={() => router.navigate("AnimalList")} />
       </View>
     </View>
   );
