@@ -2,6 +2,12 @@
   "name": "tischu-app",
   "version": "1.0.0",
   "main": "expo-router/entry",
+  "overrides": {
+    "js-yaml": "^4.1.1",
+    "inflight": "^2.0.0",
+    "rimraf": "^5.0.0",
+    "glob": "^10.0.0"
+  },
   "scripts": {
     "start": "expo start",
     "android": "expo run:android",
@@ -10,7 +16,7 @@
   },
   "dependencies": {
     "@react-native-async-storage/async-storage": "^2.2.0",
-    "@react-native-picker/picker": "^2.11.4",
+    "@react-native-picker/picker": "2.11.1",
     "@shopify/flash-list": "2.0.2",
     "@supabase/supabase-js": "^2.77.0",
     "aes-js": "^3.1.2",
@@ -30,7 +36,7 @@
   },
   "devDependencies": {
     "@types/aes-js": "^3.1.4",
-    "@types/react": "19.1.10",
+    "@types/react": "~19.1.10",
     "typescript": "~5.9.2"
   },
   "private": true
