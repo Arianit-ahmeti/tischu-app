@@ -1,4 +1,5 @@
 {
+  // File exclusions
   "files.exclude": {
     "**/.git": true,
     "**/.svn": true,
@@ -8,5 +9,100 @@
     "**/CVS": true,
     "**/.ruby-lsp": true
   },
-  "hide-files.files": []
+  "hide-files.files": [],
+
+  // Search exclusions (React Native/Expo specific)
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/.expo": true,
+    "**/build": true,
+    "**/ios/Pods": true,
+    "**/android/.gradle": true,
+    "**/android/build": true,
+    "**/android/app/build": true,
+    "**/.expo-shared": true,
+    "**/dist": true,
+    "**/web-build": true
+  },
+
+  // Editor behavior
+  "editor.tabSize": 2,
+  "editor.insertSpaces": true,
+  "editor.rulers": [120],
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "editor.defaultFormatter": "esbenp.prettier-vscode",
+  "editor.wordWrap": "off",
+  "editor.cursorBlinking": "blink",
+  "editor.renderWhitespace": "selection",
+
+  // Trim and newline settings
+  "files.trimTrailingWhitespace": true,
+  "files.insertFinalNewline": true,
+
+  // Code actions on save
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+
+  "[typescript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[typescriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true,
+    "editor.codeActionsOnSave": {
+      "source.organizeImports": "explicit"
+    }
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  },
+  "[javascriptreact]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2,
+    "editor.formatOnSave": true
+  },
+  "[json]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[jsonc]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.tabSize": 2
+  },
+  "[yaml]": {
+    "editor.tabSize": 2
+  },
+
+  "editor.quickSuggestions": {
+    "other": true,
+    "comments": false,
+    "strings": true
+  },
+  "editor.suggestOnTriggerCharacters": true,
+  "editor.parameterHints.enabled": true,
+
+  "editor.guides.indentation": true,
+  "editor.guides.bracketPairs": true,
+
+  "typescript.preferences.importModuleSpecifier": "relative",
+  "typescript.updateImportsOnFileMove.enabled": "always",
+  "typescript.suggest.autoImports": true,
+  "typescript.preferences.quoteStyle": "single",
+  "javascript.preferences.quoteStyle": "single",
+
+  "typescript.validate.enable": true,
+  "javascript.validate.enable": true,
+
+  "workbench.editor.enablePreview": false,
+  "workbench.editor.closeOnFileDelete": true
 }
