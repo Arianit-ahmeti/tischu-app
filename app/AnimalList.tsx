@@ -4,7 +4,7 @@ import { FlashList } from "@shopify/flash-list";
 import { supabase } from "../lib/supabase";
 import { Animal } from "../lib/types";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { useRouter } from "expo-router";
+import { useRouter, useFocusEffect } from "expo-router";
 
 
 
@@ -30,9 +30,11 @@ export default function AnimalList() {
         }
     }
 
-    useEffect(() => {
-        loadAnimals().finally(() => setLoading(false));
-    }, []);
+    useFocusEffect(
+        React.useCallback(() => {
+            loadAnimals().finally(() => setLoading(false));
+        }, [])
+    );
 
     if (loading) {
         return (

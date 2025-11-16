@@ -1,5 +1,3 @@
-
-
 import { supabase } from './supabase';
 import { Animal } from './types';
 
@@ -71,6 +69,20 @@ export async function fetchAnimalDetails(animalId: string) {
     console.error('Unexpected error on fetchAnimalDetails:', err);
     return null;
   }
+}
+
+export async function deleteAnimal(animalId: string) {
+  const { error } = await supabase
+    .from('animals')
+    .delete()
+    .eq('id', animalId);
+  
+  if (error) {
+    console.error('Fehler beim Löschen des Tiers:', error.message);
+    return false;
+  }
+  
+  return true;
 }
 
 export async function updateAnimal(animalId: string, updates: any) {
