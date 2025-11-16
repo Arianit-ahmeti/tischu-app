@@ -93,6 +93,13 @@ export default function Account({ session }: { session: Session }) {
       <View style={styles.verticallySpaced}>
         <Button title="Show AnimalList" onPress={() => router.navigate("AnimalList")} />
       </View>
+
+      <View style={styles.verticallySpaced}>
+        <Button
+          title="List Animal Media"
+          onPress={() => router.navigate("ImageCarouselExample")}
+        />
+      </View>
     </View>
   );
 }
