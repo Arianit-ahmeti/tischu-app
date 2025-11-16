@@ -99,6 +99,13 @@ export default function Account({ session }: { session: Session }) {
           onPress={() => router.navigate("Animal/Add")}
         />
       </View>
+
+      <View style={styles.verticallySpaced}>
+        <Button
+          title="Show AnimalList"
+          onPress={() => router.navigate("AnimalList")}
+        />
+      </View>
     </View>
   );
 }
