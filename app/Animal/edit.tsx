@@ -1,17 +1,7 @@
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Button,
-  Keyboard,
-  StyleSheet,
-  Text,
-  TextInput,
-  TouchableWithoutFeedback,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 import { useEnum } from "../../hooks/useEnum";
 import { fetchAnimalDetails, updateAnimal } from "../../lib/animalService";
 import {
@@ -119,105 +109,104 @@ export default function EditAnimal() {
   };
 
   return (
-    <TouchableWithoutFeedback onPress={Keyboard.dismiss}>
-      <View style={styles.container}>
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
-        <TextInput
-          style={styles.input}
-          value={animal.name || ""}
-          onChangeText={(text) => setAnimal({ ...animal, name: text })}
-        />
+    <ScrollView style={styles.container} contentContainerStyle={styles.contentContainer}>
+      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
+      <TextInput
+        style={styles.input}
+        value={animal.name || ""}
+        onChangeText={(text) => setAnimal({ ...animal, name: text })}
+      />
 
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
-        <TextInput
-          style={styles.input}
-          value={animal.origin || ""}
-          onChangeText={(text) => setAnimal({ ...animal, origin: text })}
-        />
+      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
+      <TextInput
+        style={styles.input}
+        value={animal.origin || ""}
+        onChangeText={(text) => setAnimal({ ...animal, origin: text })}
+      />
 
-        <Text style={{ fontWeight: "bold" }}>Art:</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={animal.type || ""}
-            onValueChange={(itemValue) => setAnimal({ ...animal, type: itemValue })}
-            style={styles.picker}
-          >
-            {animalTypes.values.map((type) => (
-              <Picker.Item key={type} label={type} value={type} />
-            ))}
-          </Picker>
-        </View>
-
-        <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={animal.size ?? "Unbekannt"}
-            onValueChange={(itemValue) => setAnimal({ ...animal, sex: itemValue })}
-            style={styles.picker}
-          >
-            {sexes.values.map((sex) => (
-              <Picker.Item key={sex} label={sex} value={sex} />
-            ))}
-          </Picker>
-        </View>
-
-        <Text style={{ fontWeight: "bold" }}>Größe:</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={animal.size ?? "Unbekannt"}
-            onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-            style={styles.picker}
-          >
-            {animalSizes.values.map((size) => (
-              <Picker.Item key={size} label={size} value={size} />
-            ))}
-          </Picker>
-        </View>
-
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={animal.character ?? "Unbekannt"}
-            onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
-            style={styles.picker}
-          >
-            {characterTypes.values.map((type) => (
-              <Picker.Item key={type} label={type} value={type} />
-            ))}
-          </Picker>
-        </View>
-
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
-        <View style={styles.pickerContainer}>
-          <Picker
-            selectedValue={animal.status ?? "Unbekannt"}
-            onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
-            style={styles.picker}
-          >
-            {adoptionStatuses.values.map((status) => (
-              <Picker.Item key={status} label={status} value={status} />
-            ))}
-          </Picker>
-        </View>
-
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
-        <TextInput
-          style={styles.input}
-          value={animal.age?.toString() || ""}
-          keyboardType="numeric"
-          onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
-        />
-
-        <View style={styles.buttonContainer}>
-          <Button title="Speichern" onPress={handleSave} disabled={saving} />
-        </View>
+      <Text style={{ fontWeight: "bold" }}>Art:</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.type || ""}
+          onValueChange={(itemValue) => setAnimal({ ...animal, type: itemValue })}
+          style={styles.picker}
+        >
+          {animalTypes.values.map((type) => (
+            <Picker.Item key={type} label={type} value={type} />
+          ))}
+        </Picker>
       </View>
-    </TouchableWithoutFeedback>
+
+      <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.size ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, sex: itemValue })}
+          style={styles.picker}
+        >
+          {sexes.values.map((sex) => (
+            <Picker.Item key={sex} label={sex} value={sex} />
+          ))}
+        </Picker>
+      </View>
+
+      <Text style={{ fontWeight: "bold" }}>Größe:</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.size ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          style={styles.picker}
+        >
+          {animalSizes.values.map((size) => (
+            <Picker.Item key={size} label={size} value={size} />
+          ))}
+        </Picker>
+      </View>
+
+      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.character ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
+          style={styles.picker}
+        >
+          {characterTypes.values.map((type) => (
+            <Picker.Item key={type} label={type} value={type} />
+          ))}
+        </Picker>
+      </View>
+
+      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.status ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
+          style={styles.picker}
+        >
+          {adoptionStatuses.values.map((status) => (
+            <Picker.Item key={status} label={status} value={status} />
+          ))}
+        </Picker>
+      </View>
+
+      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
+      <TextInput
+        style={styles.input}
+        value={animal.age?.toString() || ""}
+        keyboardType="numeric"
+        onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
+      />
+
+      <View style={styles.buttonContainer}>
+        <Button title="Speichern" onPress={handleSave} disabled={saving} />
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, flex: 1 },
+  container: { flex: 1 },
+  contentContainer: { padding: 20, paddingBottom: 40 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   name: { fontSize: 28, fontWeight: "bold", marginBottom: 30 },
   input: {
