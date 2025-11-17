@@ -76,16 +76,17 @@ export async function deleteAnimal(animalId: string) {
   return true;
 }
 
-export async function updateAnimal(animalId: string, updates: any) {
+export async function updateAnimal(animal: Animal) {
   try {
-    const { data: animal, error } = await supabase.from("animals").update(updates).select().eq("id", animalId).single();
+    const { error } = await supabase.from("animals").update(animal).select().eq("id", animal.id).single();
 
     if (error) {
       console.error("Supabase Error on updating animal data:", error.message);
       return null;
     }
-    return animal;
+    return true;
   } catch (err) {
     console.error("Unexpected error in updateAnimal:", err);
+    return null;
   }
 }

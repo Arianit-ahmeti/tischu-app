@@ -2,15 +2,38 @@ import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { useEnum } from "../../hooks/useEnum";
 import { fetchAnimalDetails, updateAnimal } from "../../lib/animalService";
+import {
+  getAdoptionStatusesEnum,
+  getAnimalSizesEnum,
+  getAnimalTypesEnum,
+  getCharacterTypesEnum,
+  getSexesEnum,
+} from "../../lib/supabaseEnumHandler";
+import { Animal } from "../../lib/types";
 
 export default function EditAnimal() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
 
-  const [animal, setAnimal] = useState<any | null>(null);
+  const [animal, setAnimal] = useState<Animal | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+
+  const { enumObj: animalTypes, loading: animalTypesLoading, error: animalTypesError } = useEnum(getAnimalTypesEnum);
+  const { enumObj: animalSizes, loading: animalSizesLoading, error: animalSizesError } = useEnum(getAnimalSizesEnum);
+  const { enumObj: sexes, loading: sexesLoading, error: sexesError } = useEnum(getSexesEnum);
+  const {
+    enumObj: characterTypes,
+    loading: characterTypesLoading,
+    error: characterTypesError,
+  } = useEnum(getCharacterTypesEnum);
+  const {
+    enumObj: adoptionStatuses,
+    loading: adoptionStatusesLoading,
+    error: adoptionStatusesError,
+  } = useEnum(getAdoptionStatusesEnum);
 
   const Label = ({ label, value }: { label: string; value: any }) => (
     <Text style={{ marginBottom: 25 }}>
@@ -32,7 +55,14 @@ export default function EditAnimal() {
     loadAnimal();
   }, [id]);
 
-  if (loading)
+  if (
+    loading ||
+    animalTypesLoading ||
+    animalSizesLoading ||
+    sexesLoading ||
+    characterTypesLoading ||
+    adoptionStatusesLoading
+  )
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
@@ -45,20 +75,30 @@ export default function EditAnimal() {
       </View>
     );
 
+  if (
+    animalTypesError ||
+    !animalTypes ||
+    animalSizesError ||
+    !animalSizes ||
+    sexesError ||
+    !sexes ||
+    characterTypesError ||
+    !characterTypes ||
+    adoptionStatusesError ||
+    !adoptionStatuses
+  )
+    return (
+      <View style={styles.center}>
+        <Text>Fehler beim Laden</Text>
+      </View>
+    );
+
   const handleSave = async () => {
     if (!animal) return;
 
     setSaving(true);
 
-    const updates: any = {
-      name: animal.name,
-      age: animal.age,
-      character: animal.character,
-      size: animal.size,
-      status: animal.status,
-    };
-
-    const updated = await updateAnimal(id as string, updates);
+    const updated = await updateAnimal(animal);
     if (updated) {
       Alert.alert("Erfolg", "Tier wurde aktualisiert!");
       router.replace(`/Animal/${id}`);
@@ -86,58 +126,69 @@ export default function EditAnimal() {
       />
 
       <Text style={{ fontWeight: "bold" }}>Art:</Text>
-      <Picker
-        selectedValue={animal.size || ""}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="katze" value="cat" />
-        <Picker.Item label="hund" value="dog" />
-      </Picker>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.type || ""}
+          onValueChange={(itemValue) => setAnimal({ ...animal, type: itemValue })}
+          style={styles.picker}
+        >
+          {animalTypes.values.map((type) => (
+            <Picker.Item key={type} label={type} value={type} />
+          ))}
+        </Picker>
+      </View>
 
       <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
-      <Picker
-        selectedValue={animal.size ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="male" value="male" />
-        <Picker.Item label="female" value="female" />
-      </Picker>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.size ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, sex: itemValue })}
+          style={styles.picker}
+        >
+          {sexes.values.map((sex) => (
+            <Picker.Item key={sex} label={sex} value={sex} />
+          ))}
+        </Picker>
+      </View>
 
       <Text style={{ fontWeight: "bold" }}>Größe:</Text>
-      <Picker
-        selectedValue={animal.size ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="klein" value="small" />
-        <Picker.Item label="mittel" value="medium" />
-        <Picker.Item label="groß" value="large" />
-      </Picker>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.size ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          style={styles.picker}
+        >
+          {animalSizes.values.map((size) => (
+            <Picker.Item key={size} label={size} value={size} />
+          ))}
+        </Picker>
+      </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
-      <Picker
-        selectedValue={animal.character ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="scheu" value="shy" />
-        <Picker.Item label="freundlich" value="friendly" />
-        <Picker.Item label="ängstlich" value="anxious" />
-        <Picker.Item label="aggressiv" value="aggressive" />
-      </Picker>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.character ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
+          style={styles.picker}
+        >
+          {characterTypes.values.map((type) => (
+            <Picker.Item key={type} label={type} value={type} />
+          ))}
+        </Picker>
+      </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
-      <Picker
-        selectedValue={animal.status ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="adopted" value="adopted" />
-        <Picker.Item label="open" value="open" />
-        <Picker.Item label="reserved" value="reserved" />
-      </Picker>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={animal.status ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
+          style={styles.picker}
+        >
+          {adoptionStatuses.values.map((status) => (
+            <Picker.Item key={status} label={status} value={status} />
+          ))}
+        </Picker>
+      </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
       <TextInput
@@ -158,7 +209,27 @@ const styles = StyleSheet.create({
   container: { padding: 20, flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   name: { fontSize: 28, fontWeight: "bold", marginBottom: 30 },
-  input: { backgroundColor: "#fff", borderColor: "#5f5f5fff", borderWidth: 1, width: "30%", height: 25 },
-  picker: { width: "30%", height: 25 },
+  input: {
+    backgroundColor: "#fff",
+    borderColor: "#5f5f5fff",
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 45,
+    paddingHorizontal: 10,
+    fontSize: 16,
+    color: "#000",
+  },
+  pickerContainer: {
+    backgroundColor: "#fff",
+    borderColor: "#5f5f5fff",
+    borderWidth: 1,
+    borderRadius: 5,
+    height: 45,
+    justifyContent: "center",
+    marginVertical: 5,
+  },
+  picker: {
+    height: 55,
+  },
   buttonContainer: { marginTop: 30, overflow: "hidden", width: "30%" },
 });
