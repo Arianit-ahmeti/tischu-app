@@ -1,9 +1,16 @@
-import { FlatList, Image, Dimensions, View } from "react-native";
 import React from "react";
+import { Dimensions, FlatList, Image, Text, View } from "react-native";
 
 const { width } = Dimensions.get("window");
 
 export default function ImageCarousel({ urls }: { urls: string[] }) {
+  if (urls.length == 0) {
+    return (
+      <View style={{ width, height: 250, justifyContent: "center", alignItems: "center" }}>
+        <Text style={{ fontSize: 20 }}>Keine Bilder verfügbar</Text>
+      </View>
+    );
+  }
   return (
     <View style={{ width, height: 250 }}>
       <FlatList
