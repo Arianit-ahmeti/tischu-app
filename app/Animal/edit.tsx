@@ -1,8 +1,8 @@
+import { fetchAnimalDetails, updateAnimal } from "@lib/animalService";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { fetchAnimalDetails, updateAnimal } from "../../lib/animalService";
 
 export default function EditAnimal() {
   const { id } = useLocalSearchParams();

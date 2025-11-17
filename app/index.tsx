@@ -1,9 +1,9 @@
+import Account from "@app/Account";
+import Auth from "@app/Auth";
+import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { supabase } from "../lib/supabase";
-import Account from "./Account";
-import Auth from "./Auth";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
