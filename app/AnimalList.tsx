@@ -1,10 +1,10 @@
+import { supabase } from "@lib/supabase";
 import { FlashList } from "@shopify/flash-list";
+import type { Animal } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { supabase } from "../lib/supabase";
-import { Animal } from "../lib/types";
 
 export default function AnimalList() {
   const router = useRouter();

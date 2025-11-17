@@ -1,8 +1,8 @@
+import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
+import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
-import { deleteAnimal, fetchAnimalDetails } from "../../lib/animalService";
-import { Animal } from "../../lib/types";
 
 const router = useRouter();
 
