@@ -8,7 +8,7 @@
       "@lib/*": ["lib/*"],
       "@components/*": ["components/*"],
       "@app/*": ["app/*"],
-      "@types/*": ["lib/types.ts"]
+      "@types": ["lib/types"]
     }
   }
 }
