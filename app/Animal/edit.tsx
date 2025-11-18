@@ -1,7 +1,7 @@
-import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Dropdown } from "react-native-element-dropdown";
 import { useEnum } from "../../hooks/useEnum";
 import { fetchAnimalDetails, updateAnimal } from "../../lib/animalService";
 import {
@@ -35,12 +35,6 @@ export default function EditAnimal() {
     error: adoptionStatusesError,
   } = useEnum(getAdoptionStatusesEnum);
 
-  const Label = ({ label, value }: { label: string; value: any }) => (
-    <Text style={{ marginBottom: 25 }}>
-      <Text style={{ fontWeight: "bold" }}>{label}:</Text>
-      {value || "Unbekannt"}
-    </Text>
-  );
 
   async function loadAnimal() {
     setLoading(true);
@@ -126,67 +120,68 @@ export default function EditAnimal() {
 
       <Text style={{ fontWeight: "bold" }}>Art:</Text>
       <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={animal.type || ""}
-          onValueChange={(itemValue) => setAnimal({ ...animal, type: itemValue })}
+        <Dropdown
+          data={animalTypes.values.map((val) => ({value: val}))}
+          valueField={"value"}
+          labelField={"value"}
+          value={animal.type}
+          onChange={(itemValue) => setAnimal({ ...animal, type: itemValue })}
           style={styles.picker}
         >
-          {animalTypes.values.map((type) => (
-            <Picker.Item key={type} label={type} value={type} />
-          ))}
-        </Picker>
+        </Dropdown>
       </View>
+
 
       <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
       <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={animal.size ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, sex: itemValue })}
+         <Dropdown
+          data={sexes.values.map((val) => ({value: val}))}
+          valueField={"value"}
+          labelField={"value"}
+          value={animal.sex}
+          onChange={(itemValue) => setAnimal({ ...animal, type: itemValue.value })}
           style={styles.picker}
         >
-          {sexes.values.map((sex) => (
-            <Picker.Item key={sex} label={sex} value={sex} />
-          ))}
-        </Picker>
+        </Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold" }}>Größe:</Text>
       <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={animal.size ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+         <Dropdown
+          data={animalSizes.values.map((val) => ({value: val}))}
+          valueField={"value"}
+          labelField={"value"}
+          value={animal.size}
+          onChange={(itemValue) => setAnimal({ ...animal, size: itemValue.value })}
           style={styles.picker}
         >
-          {animalSizes.values.map((size) => (
-            <Picker.Item key={size} label={size} value={size} />
-          ))}
-        </Picker>
+        </Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
       <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={animal.character ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
+        <Dropdown
+          data={characterTypes.values.map((val) => ({value: val}))}
+          valueField={"value"}
+          labelField={"value"}
+          value={animal.character}
+          onChange={(itemValue) => setAnimal({ ...animal, character: itemValue.value })}
           style={styles.picker}
         >
-          {characterTypes.values.map((type) => (
-            <Picker.Item key={type} label={type} value={type} />
-          ))}
-        </Picker>
+        </Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
       <View style={styles.pickerContainer}>
-        <Picker
-          selectedValue={animal.status ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
+        <Dropdown
+          data={adoptionStatuses.values.map((val) => ({value: val}))}
+          valueField={"value"}
+          labelField={"value"}
+          value={animal.status}
+          onChange={(itemValue) => setAnimal({ ...animal, status: itemValue.value })}
           style={styles.picker}
         >
-          {adoptionStatuses.values.map((status) => (
-            <Picker.Item key={status} label={status} value={status} />
-          ))}
-        </Picker>
+        </Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
@@ -230,6 +225,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 55,
+    padding: 10
   },
   buttonContainer: { marginTop: 30, overflow: "hidden", width: "30%" },
 });
