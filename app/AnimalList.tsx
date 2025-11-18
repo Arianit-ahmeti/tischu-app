@@ -1,18 +1,11 @@
+import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { supabase } from "@lib/supabase";
 import { FlashList } from "@shopify/flash-list";
 import type { Animal } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getAnimalMediaDownloadURls } from "../lib/AnimalMediaService";
 
 export default function AnimalList() {
   const router = useRouter();
@@ -39,25 +32,20 @@ export default function AnimalList() {
             previewMap[animal.id] = urls[0];
           }
         } catch (err) {
-          console.log(
-            `Could not load preview image for animal ${animal.id}:`,
-            err
-          );
+          console.log(`Could not load preview image for animal ${animal.id}:`, err);
         }
       }
 
       setPreviewImage(previewMap);
     } catch (error) {
-      error instanceof Error
-        ? console.log("Error fetching Animal data: ", error.message)
-        : "Unexpected Error ocurred";
+      error instanceof Error ? console.log("Error fetching Animal data: ", error.message) : "Unexpected Error ocurred";
     }
   }
 
   useFocusEffect(
     React.useCallback(() => {
       loadAnimals().finally(() => setLoading(false));
-    }, [])
+    }, []),
   );
 
   if (loading) {

@@ -1,6 +1,6 @@
+import { supabase } from "@lib/supabase";
+import { FileResponse } from "@types";
 import * as ImagePicker from "expo-image-picker";
-import { supabase } from "./supabase";
-import { FileResponse } from "./types";
 
 async function listAnimalMedia(animalId: string): Promise<FileResponse> {
   const { data, error } = await supabase.storage.from("animal-entry-media").list(animalId);
