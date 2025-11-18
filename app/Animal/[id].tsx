@@ -1,12 +1,14 @@
 import ImageCarousel from "@components/ImageCarousel";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
+import { useIsFocused } from "@react-navigation/native";
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
 
 export default function AnimalDetailScreen() {
+  const isFocused = useIsFocused();
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const animalId = Array.isArray(id) ? id[0] : id;
@@ -60,6 +62,7 @@ export default function AnimalDetailScreen() {
       </View>
     );
   }
+
   if (!animal) {
     return (
       <View style={styles.center}>
