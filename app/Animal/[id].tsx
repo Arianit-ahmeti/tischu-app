@@ -1,12 +1,12 @@
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
+import { useIsFocused } from "@react-navigation/native";
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
 
-const router = useRouter();
-
 export default function AnimalDetailScreen() {
+  const isFocused = useIsFocused();
   const { id } = useLocalSearchParams();
   const animalId = Array.isArray(id) ? id[0] : id;
 
@@ -32,8 +32,10 @@ export default function AnimalDetailScreen() {
       setLoading(false);
       return;
     }
-    loadAnimal();
-  }, [animalId]);
+    if (isFocused) {
+      loadAnimal();
+    }
+  }, [animalId, isFocused]);
 
   if (loading) {
     return (
@@ -42,6 +44,7 @@ export default function AnimalDetailScreen() {
       </View>
     );
   }
+
   if (!animal) {
     return (
       <View style={styles.center}>
