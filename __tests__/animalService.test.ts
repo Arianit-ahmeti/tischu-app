@@ -1,10 +1,4 @@
-import {
-  addAnimal,
-  deleteAnimal,
-  fetchAnimalDetails,
-  loadAllAnimals,
-  updateAnimal,
-} from "../lib/animalService";
+import { addAnimal, deleteAnimal, fetchAnimalDetails, loadAllAnimals, updateAnimal } from "../lib/animalService";
 import { supabase } from "../lib/supabase";
 
 const mockedSupabase = jest.mocked(supabase);
@@ -27,7 +21,7 @@ describe("animalService", () => {
       };
 
       const mockResponse = {
-        data: [{ id: 1, ...mockAnimal, status: "open" }],
+        data: [{ id: "1", ...mockAnimal, status: "open" }],
         error: null,
       };
 
@@ -39,11 +33,9 @@ describe("animalService", () => {
 
       const result = await addAnimal(mockAnimal);
 
+      expect(result).toBeNull();
       expect(mockedSupabase.from).toHaveBeenCalledWith("animals");
-      expect(console.log).toHaveBeenCalledWith(
-        "Animal added successfully:",
-        expect.anything()
-      );
+      expect(console.log).toHaveBeenCalledWith("Animal added successfully:", expect.anything());
     });
 
     it("should handle errors when adding an animal", async () => {
@@ -59,18 +51,15 @@ describe("animalService", () => {
       const result = await addAnimal(mockAnimal);
 
       expect(result).toBeNull();
-      expect(console.log).toHaveBeenCalledWith(
-        "Error adding animal:",
-        "Database error"
-      );
+      expect(console.log).toHaveBeenCalledWith("Error adding animal:", "Database error");
     });
   });
 
   describe("loadAllAnimals", () => {
     it("should load all animals successfully", async () => {
       const mockAnimals = [
-        { id: 1, name: "Wuffi", type: "dog" },
-        { id: 2, name: "Kitty", type: "cat" },
+        { id: "1", name: "Wuffi", type: "dog" },
+        { id: "2", name: "Kitty", type: "cat" },
       ];
 
       mockedSupabase.from.mockReturnValue({
@@ -81,9 +70,7 @@ describe("animalService", () => {
 
       expect(mockedSupabase.from).toHaveBeenCalledWith("animals");
       expect(result).toEqual(mockAnimals);
-      expect(console.log).toHaveBeenCalledWith(
-        "Loaded Animal data successfully"
-      );
+      expect(console.log).toHaveBeenCalledWith("Loaded Animal data successfully");
     });
 
     it("should handle supabase errors", async () => {
@@ -96,10 +83,7 @@ describe("animalService", () => {
       const result = await loadAllAnimals();
 
       expect(result).toBeNull();
-      expect(console.log).toHaveBeenCalledWith(
-        "Supabase Error on fetching all animal ids:",
-        "Supabase error #1"
-      );
+      expect(console.log).toHaveBeenCalledWith("Supabase Error on fetching all animal ids:", "Supabase error #1");
     });
 
     it("should handle unexpected errors", async () => {
@@ -112,24 +96,19 @@ describe("animalService", () => {
       const result = await loadAllAnimals();
 
       expect(result).toBeNull();
-      expect(console.log).toHaveBeenCalledWith(
-        "Error fetching Animal data: ",
-        "Unexpected error"
-      );
+      expect(console.log).toHaveBeenCalledWith("Error fetching Animal data: ", "Unexpected error");
     });
   });
 
   describe("fetchAnimalDetails", () => {
     it("should fetch animal details successfully", async () => {
       const animalId = "123";
-      const mockAnimal = { id: 123, name: "Bello", type: "dog" };
+      const mockAnimal = { id: "123", name: "Bello", type: "dog" };
 
       mockedSupabase.from.mockReturnValue({
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnValue({
-            single: jest
-              .fn()
-              .mockResolvedValue({ data: mockAnimal, error: null }),
+            single: jest.fn().mockResolvedValue({ data: mockAnimal, error: null }),
           }),
         }),
       } as any);
@@ -147,9 +126,7 @@ describe("animalService", () => {
       mockedSupabase.from.mockReturnValue({
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnValue({
-            single: jest
-              .fn()
-              .mockResolvedValue({ data: null, error: mockError }),
+            single: jest.fn().mockResolvedValue({ data: null, error: mockError }),
           }),
         }),
       } as any);
@@ -159,7 +136,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         "Supabase Error on fetching animal details for 123:",
-        "Supabase error #2"
+        "Supabase error #2",
       );
     });
 
@@ -177,9 +154,7 @@ describe("animalService", () => {
       const result = await fetchAnimalDetails(animalId);
 
       expect(result).toBeNull();
-      expect(console.warn).toHaveBeenCalledWith(
-        "Animal with id 404 not found."
-      );
+      expect(console.warn).toHaveBeenCalledWith("Animal with id 404 not found.");
     });
 
     it("should handle unexpected errors", async () => {
@@ -197,10 +172,7 @@ describe("animalService", () => {
       const result = await fetchAnimalDetails(animalId);
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Unexpected error on fetchAnimalDetails:",
-        mockError
-      );
+      expect(console.error).toHaveBeenCalledWith("Unexpected error on fetchAnimalDetails:", mockError);
     });
   });
 
@@ -233,10 +205,7 @@ describe("animalService", () => {
       const result = await deleteAnimal(animalId);
 
       expect(result).toBe(false);
-      expect(console.error).toHaveBeenCalledWith(
-        "Fehler beim Löschen des Tiers:",
-        "Delete failed"
-      );
+      expect(console.error).toHaveBeenCalledWith("Fehler beim Löschen des Tiers:", "Delete failed");
     });
   });
 
@@ -250,9 +219,7 @@ describe("animalService", () => {
         update: jest.fn().mockReturnValue({
           select: jest.fn().mockReturnValue({
             eq: jest.fn().mockReturnValue({
-              single: jest
-                .fn()
-                .mockResolvedValue({ data: mockUpdatedAnimal, error: null }),
+              single: jest.fn().mockResolvedValue({ data: mockUpdatedAnimal, error: null }),
             }),
           }),
         }),
@@ -273,9 +240,7 @@ describe("animalService", () => {
         update: jest.fn().mockReturnValue({
           select: jest.fn().mockReturnValue({
             eq: jest.fn().mockReturnValue({
-              single: jest
-                .fn()
-                .mockResolvedValue({ data: null, error: mockError }),
+              single: jest.fn().mockResolvedValue({ data: null, error: mockError }),
             }),
           }),
         }),
@@ -284,10 +249,7 @@ describe("animalService", () => {
       const result = await updateAnimal(animalId, updates);
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Supabase Error on updating animal data:",
-        "Update failed"
-      );
+      expect(console.error).toHaveBeenCalledWith("Supabase Error on updating animal data:", "Update failed");
     });
 
     it("should handle unexpected errors", async () => {
@@ -308,29 +270,27 @@ describe("animalService", () => {
       const result = await updateAnimal(animalId, updates);
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Unexpected error in updateAnimal:",
-        mockError
-      );
+      expect(console.error).toHaveBeenCalledWith("Unexpected error in updateAnimal:", mockError);
     });
 
     it("should handle animal not found", async () => {
       const animalId = "404";
+      const updates = { name: "Updated Name" };
 
       mockedSupabase.from.mockReturnValue({
-        select: jest.fn().mockReturnValue({
-          eq: jest.fn().mockReturnValue({
-            single: jest.fn().mockResolvedValue({ data: null, error: null }),
+        update: jest.fn().mockReturnValue({
+          select: jest.fn().mockReturnValue({
+            eq: jest.fn().mockReturnValue({
+              single: jest.fn().mockResolvedValue({ data: null, error: null }),
+            }),
           }),
         }),
       } as any);
 
-      const result = await fetchAnimalDetails(animalId);
+      const result = await updateAnimal(animalId, updates);
 
       expect(result).toBeNull();
-      expect(console.warn).toHaveBeenCalledWith(
-        "Animal with id 404 not found."
-      );
+      expect(console.warn).toHaveBeenCalledWith("Animal with id 404 not found.");
     });
   });
 });
