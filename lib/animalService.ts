@@ -46,10 +46,17 @@ export async function loadAllAnimals() {
 
 export async function fetchAnimalDetails(animalId: string) {
   try {
-    const { data: animal, error } = await supabase.from("animals").select("*").eq("id", animalId).single();
+    const { data: animal, error } = await supabase
+      .from("animals")
+      .select("*")
+      .eq("id", animalId)
+      .single();
 
     if (error) {
-      console.error(`Supabase Error on fetching animal details for ${animalId}:`, error.message);
+      console.error(
+        `Supabase Error on fetching animal details for ${animalId}:`,
+        error.message
+      );
       return null;
     }
 
@@ -78,14 +85,26 @@ export async function deleteAnimal(animalId: string) {
 
 export async function updateAnimal(animalId: string, updates: any) {
   try {
-    const { data: animal, error } = await supabase.from("animals").update(updates).select().eq("id", animalId).single();
+    const { data: animal, error } = await supabase
+      .from("animals")
+      .update(updates)
+      .select()
+      .eq("id", animalId)
+      .single();
 
     if (error) {
       console.error("Supabase Error on updating animal data:", error.message);
       return null;
     }
+
+    if (!animal) {
+      console.warn(`Animal with id ${animalId} not found.`);
+      return null;
+    }
+
     return animal;
   } catch (err) {
     console.error("Unexpected error in updateAnimal:", err);
+    return null;
   }
 }
