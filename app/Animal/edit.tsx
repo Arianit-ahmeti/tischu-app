@@ -1,10 +1,21 @@
+import { fetchAnimalDetails, updateAnimal } from "@lib/animalService";
 import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import ImageCarousel from "../../components/ImageCarousel";
-import { getAnimalMediaDownloadURls, uploadAnimalMedia } from "../../lib/AnimalMediaService";
-import { fetchAnimalDetails, updateAnimal } from "../../lib/animalService";
+import {
+  getAnimalMediaDownloadURls,
+  uploadAnimalMedia,
+} from "../../lib/AnimalMediaService";
 
 export default function EditAnimal() {
   const { id } = useLocalSearchParams();
@@ -122,7 +133,9 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold" }}>Art:</Text>
         <Picker
           selectedValue={animal.size || ""}
-          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          onValueChange={(itemValue) =>
+            setAnimal({ ...animal, size: itemValue })
+          }
           style={styles.picker}
         >
           <Picker.Item label="katze" value="cat" />
@@ -132,7 +145,9 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
         <Picker
           selectedValue={animal.size ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          onValueChange={(itemValue) =>
+            setAnimal({ ...animal, size: itemValue })
+          }
           style={styles.picker}
         >
           <Picker.Item label="male" value="male" />
@@ -142,7 +157,9 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold" }}>Größe:</Text>
         <Picker
           selectedValue={animal.size ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          onValueChange={(itemValue) =>
+            setAnimal({ ...animal, size: itemValue })
+          }
           style={styles.picker}
         >
           <Picker.Item label="klein" value="small" />
@@ -153,7 +170,9 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
         <Picker
           selectedValue={animal.character ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
+          onValueChange={(itemValue) =>
+            setAnimal({ ...animal, character: itemValue })
+          }
           style={styles.picker}
         >
           <Picker.Item label="scheu" value="shy" />
@@ -165,7 +184,9 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
         <Picker
           selectedValue={animal.status ?? "Unbekannt"}
-          onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
+          onValueChange={(itemValue) =>
+            setAnimal({ ...animal, status: itemValue })
+          }
           style={styles.picker}
         >
           <Picker.Item label="adopted" value="adopted" />
@@ -178,7 +199,9 @@ export default function EditAnimal() {
           style={styles.input}
           value={animal.age?.toString() || ""}
           keyboardType="numeric"
-          onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
+          onChangeText={(text) =>
+            setAnimal({ ...animal, age: parseInt(text) || null })
+          }
         />
 
         <View style={styles.buttonContainer}>
@@ -193,7 +216,13 @@ const styles = StyleSheet.create({
   container: { padding: 20, flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   name: { fontSize: 28, fontWeight: "bold", marginBottom: 30 },
-  input: { backgroundColor: "#fff", borderColor: "#5f5f5fff", borderWidth: 1, width: "30%", height: 25 },
+  input: {
+    backgroundColor: "#fff",
+    borderColor: "#5f5f5fff",
+    borderWidth: 1,
+    width: "30%",
+    height: 25,
+  },
   picker: { width: "30%", height: 25 },
   buttonContainer: { marginTop: 30, overflow: "hidden", width: "30%" },
   button: { marginVertical: 8, overflow: "hidden" },
