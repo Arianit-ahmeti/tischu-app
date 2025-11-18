@@ -1,5 +1,5 @@
-import { supabase } from "./supabase";
-import { Animal } from "./types";
+import { supabase } from "@lib/supabase";
+import { Animal } from "@types";
 
 export async function addAnimal(animal: Partial<Animal>) {
   const { data, error } = await supabase

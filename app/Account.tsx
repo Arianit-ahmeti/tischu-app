@@ -1,8 +1,8 @@
+import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
-import { supabase } from "../lib/supabase";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);

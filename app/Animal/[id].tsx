@@ -1,9 +1,9 @@
+import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { useIsFocused } from "@react-navigation/native";
+import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
-import { deleteAnimal, fetchAnimalDetails } from "../../lib/animalService";
-import { Animal } from "../../lib/types";
 
 export default function AnimalDetailScreen() {
   const isFocused = useIsFocused();

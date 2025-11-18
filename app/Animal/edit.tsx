@@ -35,7 +35,6 @@ export default function EditAnimal() {
     error: adoptionStatusesError,
   } = useEnum(getAdoptionStatusesEnum);
 
-
   async function loadAnimal() {
     setLoading(true);
     const data = await fetchAnimalDetails(id as string);
@@ -121,67 +120,61 @@ export default function EditAnimal() {
       <Text style={{ fontWeight: "bold" }}>Art:</Text>
       <View style={styles.pickerContainer}>
         <Dropdown
-          data={animalTypes.values.map((val) => ({value: val}))}
+          data={animalTypes.values.map((val) => ({ value: val }))}
           valueField={"value"}
           labelField={"value"}
           value={animal.type}
           onChange={(itemValue) => setAnimal({ ...animal, type: itemValue })}
           style={styles.picker}
-        >
-        </Dropdown>
+        ></Dropdown>
       </View>
-
 
       <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
       <View style={styles.pickerContainer}>
-         <Dropdown
-          data={sexes.values.map((val) => ({value: val}))}
+        <Dropdown
+          data={sexes.values.map((val) => ({ value: val }))}
           valueField={"value"}
           labelField={"value"}
           value={animal.sex}
           onChange={(itemValue) => setAnimal({ ...animal, type: itemValue.value })}
           style={styles.picker}
-        >
-        </Dropdown>
+        ></Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold" }}>Größe:</Text>
       <View style={styles.pickerContainer}>
-         <Dropdown
-          data={animalSizes.values.map((val) => ({value: val}))}
+        <Dropdown
+          data={animalSizes.values.map((val) => ({ value: val }))}
           valueField={"value"}
           labelField={"value"}
           value={animal.size}
           onChange={(itemValue) => setAnimal({ ...animal, size: itemValue.value })}
           style={styles.picker}
-        >
-        </Dropdown>
+        ></Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
       <View style={styles.pickerContainer}>
         <Dropdown
-          data={characterTypes.values.map((val) => ({value: val}))}
+          data={characterTypes.values.map((val) => ({ value: val }))}
           valueField={"value"}
           labelField={"value"}
           value={animal.character}
           onChange={(itemValue) => setAnimal({ ...animal, character: itemValue.value })}
           style={styles.picker}
-        >
-        </Dropdown>
+        ></Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
       <View style={styles.pickerContainer}>
         <Dropdown
-          data={adoptionStatuses.values.map((val) => ({value: val}))}
+          data={adoptionStatuses.values.map((val) => ({ value: val }))}
           valueField={"value"}
           labelField={"value"}
           value={animal.status}
           onChange={(itemValue) => setAnimal({ ...animal, status: itemValue.value })}
           style={styles.picker}
-        >
-        </Dropdown>
+        ></Dropdown>
       </View>
 
       <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
@@ -225,7 +218,7 @@ const styles = StyleSheet.create({
   },
   picker: {
     height: 55,
-    padding: 10
+    padding: 10,
   },
   buttonContainer: { marginTop: 30, overflow: "hidden", width: "30%" },
 });

@@ -1,7 +1,7 @@
+import SelectableButton from "@components/SelectableButton";
+import { addAnimal } from "@lib/animalService";
 import React, { useState } from "react";
 import { Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
-import SelectableButton from "../../components/SelectableButton";
-import { addAnimal } from "../../lib/animalService";
 
 export default function Add() {
   const [name, setName] = useState("");
