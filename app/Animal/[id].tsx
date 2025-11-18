@@ -2,7 +2,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
 import ImageCarousel from "../../components/ImageCarousel";
-import { getAnimalMediaDownloadURls, uploadAnimalMedia } from "../../lib/AnimalMediaService";
+import { getAnimalMediaDownloadURls } from "../../lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "../../lib/animalService";
 import { Animal } from "../../lib/types";
 
@@ -41,16 +41,6 @@ export default function AnimalDetailScreen() {
       console.error("Error fetching animal images:", error);
     } finally {
       setLoading(false);
-    }
-  }
-
-  async function handleImageUpload() {
-    try {
-      await uploadAnimalMedia(animalId);
-      await fetchImages();
-    } catch (error) {
-      Alert.alert("Fehler beim Hochladen");
-      console.error(error);
     }
   }
 
@@ -111,9 +101,6 @@ export default function AnimalDetailScreen() {
         </View>
         <View style={styles.button}>
           <Button title="Bearbeiten" onPress={() => router.push(`/Animal/edit?id=${animal.id}`)} />
-        </View>
-        <View style={styles.button}>
-          <Button title="Bild Hinzufügen" onPress={handleImageUpload} />
         </View>
       </View>
     </View>

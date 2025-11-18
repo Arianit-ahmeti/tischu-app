@@ -2,13 +2,17 @@ import { Picker } from "@react-native-picker/picker";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import ImageCarousel from "../../components/ImageCarousel";
+import { getAnimalMediaDownloadURls, uploadAnimalMedia } from "../../lib/AnimalMediaService";
 import { fetchAnimalDetails, updateAnimal } from "../../lib/animalService";
 
 export default function EditAnimal() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const animalId = Array.isArray(id) ? id[0] : id;
 
   const [animal, setAnimal] = useState<any | null>(null);
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
@@ -27,9 +31,32 @@ export default function EditAnimal() {
     setLoading(false);
   }
 
+  async function fetchImages() {
+    try {
+      setLoading(true);
+      const urls = await getAnimalMediaDownloadURls(animalId);
+      setImageUrls(urls);
+    } catch (error) {
+      console.error("Error fetching animal images:", error);
+    } finally {
+      setLoading(false);
+    }
+  }
+
+  async function handleImageUpload() {
+    try {
+      await uploadAnimalMedia(animalId);
+      await fetchImages();
+    } catch (error) {
+      Alert.alert("Fehler beim Hochladen");
+      console.error(error);
+    }
+  }
+
   useEffect(() => {
     if (!id) return;
     loadAnimal();
+    fetchImages();
   }, [id]);
 
   if (loading)
@@ -69,86 +96,94 @@ export default function EditAnimal() {
   };
 
   return (
-    <View style={styles.container}>
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
-      <TextInput
-        style={styles.input}
-        value={animal.name || ""}
-        onChangeText={(text) => setAnimal({ ...animal, name: text })}
-      />
+    <View style={{ flex: 1 }}>
+      <View style={{ height: 250 }}>
+        <ImageCarousel urls={imageUrls} />
+      </View>
+      <View style={styles.container}>
+        <View style={styles.button}>
+          <Button title="Bild Hinzufügen" onPress={handleImageUpload} />
+        </View>
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
+        <TextInput
+          style={styles.input}
+          value={animal.name || ""}
+          onChangeText={(text) => setAnimal({ ...animal, name: text })}
+        />
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
-      <TextInput
-        style={styles.input}
-        value={animal.origin || ""}
-        keyboardType="numeric"
-        onChangeText={(text) => setAnimal({ ...animal, origin: text })}
-      />
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
+        <TextInput
+          style={styles.input}
+          value={animal.origin || ""}
+          keyboardType="numeric"
+          onChangeText={(text) => setAnimal({ ...animal, origin: text })}
+        />
 
-      <Text style={{ fontWeight: "bold" }}>Art:</Text>
-      <Picker
-        selectedValue={animal.size || ""}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="katze" value="cat" />
-        <Picker.Item label="hund" value="dog" />
-      </Picker>
+        <Text style={{ fontWeight: "bold" }}>Art:</Text>
+        <Picker
+          selectedValue={animal.size || ""}
+          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="katze" value="cat" />
+          <Picker.Item label="hund" value="dog" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
-      <Picker
-        selectedValue={animal.size ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="male" value="male" />
-        <Picker.Item label="female" value="female" />
-      </Picker>
+        <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
+        <Picker
+          selectedValue={animal.size ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="male" value="male" />
+          <Picker.Item label="female" value="female" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold" }}>Größe:</Text>
-      <Picker
-        selectedValue={animal.size ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="klein" value="small" />
-        <Picker.Item label="mittel" value="medium" />
-        <Picker.Item label="groß" value="large" />
-      </Picker>
+        <Text style={{ fontWeight: "bold" }}>Größe:</Text>
+        <Picker
+          selectedValue={animal.size ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, size: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="klein" value="small" />
+          <Picker.Item label="mittel" value="medium" />
+          <Picker.Item label="groß" value="large" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
-      <Picker
-        selectedValue={animal.character ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="scheu" value="shy" />
-        <Picker.Item label="freundlich" value="friendly" />
-        <Picker.Item label="ängstlich" value="anxious" />
-        <Picker.Item label="aggressiv" value="aggressive" />
-      </Picker>
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
+        <Picker
+          selectedValue={animal.character ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, character: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="scheu" value="shy" />
+          <Picker.Item label="freundlich" value="friendly" />
+          <Picker.Item label="ängstlich" value="anxious" />
+          <Picker.Item label="aggressiv" value="aggressive" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
-      <Picker
-        selectedValue={animal.status ?? "Unbekannt"}
-        onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
-        style={styles.picker}
-      >
-        <Picker.Item label="adopted" value="adopted" />
-        <Picker.Item label="open" value="open" />
-        <Picker.Item label="reserved" value="reserved" />
-      </Picker>
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
+        <Picker
+          selectedValue={animal.status ?? "Unbekannt"}
+          onValueChange={(itemValue) => setAnimal({ ...animal, status: itemValue })}
+          style={styles.picker}
+        >
+          <Picker.Item label="adopted" value="adopted" />
+          <Picker.Item label="open" value="open" />
+          <Picker.Item label="reserved" value="reserved" />
+        </Picker>
 
-      <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
-      <TextInput
-        style={styles.input}
-        value={animal.age?.toString() || ""}
-        keyboardType="numeric"
-        onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
-      />
+        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
+        <TextInput
+          style={styles.input}
+          value={animal.age?.toString() || ""}
+          keyboardType="numeric"
+          onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
+        />
 
-      <View style={styles.buttonContainer}>
-        <Button title="Speichern" onPress={handleSave} disabled={saving} />
+        <View style={styles.buttonContainer}>
+          <Button title="Speichern" onPress={handleSave} disabled={saving} />
+        </View>
       </View>
     </View>
   );
@@ -161,4 +196,5 @@ const styles = StyleSheet.create({
   input: { backgroundColor: "#fff", borderColor: "#5f5f5fff", borderWidth: 1, width: "30%", height: 25 },
   picker: { width: "30%", height: 25 },
   buttonContainer: { marginTop: 30, overflow: "hidden", width: "30%" },
+  button: { marginVertical: 8, overflow: "hidden" },
 });
