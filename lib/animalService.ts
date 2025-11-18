@@ -46,10 +46,17 @@ export async function loadAllAnimals() {
 
 export async function fetchAnimalDetails(animalId: string) {
   try {
-    const { data: animal, error } = await supabase.from("animals").select("*").eq("id", animalId).single();
+    const { data: animal, error } = await supabase
+      .from("animals")
+      .select("*")
+      .eq("id", animalId)
+      .single();
 
     if (error) {
-      console.error(`Supabase Error on fetching animal details for ${animalId}:`, error.message);
+      console.error(
+        `Supabase Error on fetching animal details for ${animalId}:`,
+        error.message
+      );
       return null;
     }
 
