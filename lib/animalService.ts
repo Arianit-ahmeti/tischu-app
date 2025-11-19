@@ -99,36 +99,59 @@ export async function updateAnimal(animal: Animal) {
 }
 export async function fetchFilteredAnimals(filters: AnimalFilters): Promise<Animal[] | null> {
     try {
-        let query = supabase.from("animals").select("*");
+      let query = supabase.from("animals").select("*");
 
-        if (filters.type) {
-            query = query.eq('type', filters.type);
+      if (filters.type) {
+        if (Array.isArray(filters.type)) {
+          query = query.in('type', filters.type)
         }
-        if (filters.sex) {
+        else {
+          query = query.eq('type', filters.type);
+        }
+      }
+      if (filters.sex) {
             query = query.eq('sex', filters.sex);
+      }
+      if (filters.size) {
+        if (Array.isArray(filters.size)) {
+          query = query.in('size', filters.size)
         }
-        if (filters.size) {
-            query = query.eq('size', filters.size);
+        else {
+          query = query.eq('size', filters.size);
         }
-        if (filters.character) {
-            query = query.eq('character', filters.character);
+      }
+      if (filters.character) {
+        if (Array.isArray(filters.character)) {
+          query = query.in('character', filters.character)
         }
+        else {
+          query = query.eq('character', filters.character);
+        }
+      }
+      if (filters.status) {
+        if (Array.isArray(filters.status)) {
+          query = query.in('status', filters.status)
+        }
+        else {
+          query = query.eq('status', filters.status);
+        }
+      }
 
-        if (filters.age_min) {
-            query = query.gte('age', filters.age_min);
-        }
-        if (filters.age_max) {
-            query = query.lte('age', filters.age_max);
-        }
+      if (filters.age_min) {
+        query = query.gte('age', filters.age_min);
+      }
+      if (filters.age_max) {
+        query = query.lte('age', filters.age_max);
+      }
 
-        const { data: animals, error } = await query;
+    const { data: animals, error } = await query;
 
-        if (error) {
+    if (error) {
             console.error("Supabase Error on fetching filtered animals:", error.message);
             return null;
-        }
+    }
 
-        return animals as Animal[];
+    return animals as Animal[];
 
     } catch (error) {
         console.error("Unexpected error in fetchFilteredAnimals:", error);
