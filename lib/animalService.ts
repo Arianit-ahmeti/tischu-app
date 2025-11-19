@@ -1,5 +1,5 @@
 import { supabase } from "@lib/supabase";
-import { Animal } from "@types";
+import { Animal, AnimalFilters } from "@types";
 
 export async function addAnimal(animal: Partial<Animal>) {
   const { data, error } = await supabase
@@ -96,4 +96,42 @@ export async function updateAnimal(animal: Animal) {
     console.error("Unexpected error in updateAnimal:", err);
     return null;
   }
+}
+export async function fetchFilteredAnimals(filters: AnimalFilters): Promise<Animal[] | null> {
+    try {
+        let query = supabase.from("animals").select("*");
+
+        if (filters.type) {
+            query = query.eq('type', filters.type);
+        }
+        if (filters.sex) {
+            query = query.eq('sex', filters.sex);
+        }
+        if (filters.size) {
+            query = query.eq('size', filters.size);
+        }
+        if (filters.character) {
+            query = query.eq('character', filters.character);
+        }
+
+        if (filters.age_min) {
+            query = query.gte('age', filters.age_min);
+        }
+        if (filters.age_max) {
+            query = query.lte('age', filters.age_max);
+        }
+
+        const { data: animals, error } = await query;
+
+        if (error) {
+            console.error("Supabase Error on fetching filtered animals:", error.message);
+            return null;
+        }
+
+        return animals as Animal[];
+
+    } catch (error) {
+        console.error("Unexpected error in fetchFilteredAnimals:", error);
+        return null;
+    }
 }
