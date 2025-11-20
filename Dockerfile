@@ -9,10 +9,10 @@ RUN apk add --no-cache \
 WORKDIR /app
 
 # Install Expo CLI globally
-RUN npm install -g expo-cli @expo/ngrok
+RUN npm install -g @expo/cli @expo/ngrok
 
 # Expose Expo dev server port and Metro bundler port
 EXPOSE 8081 19000 19001 19002
 
 # Keep container running and start Expo
-CMD ["sh", "-c", "npm install && npx expo start --tunnel"]
+CMD ["sh", "-c", "npm install --legacy-peer-deps && npx expo start --tunnel"]

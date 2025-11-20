@@ -27,6 +27,7 @@ docker compose up
 ```
 
 This will:
+
 - Start the Expo development server
 - Install all dependencies
 - Make the app available on your network
@@ -36,3 +37,17 @@ This will:
 1. Open the **Expo Go** app on your phone
 2. Scan the QR code displayed in your terminal
 3. The app will load on your device
+
+### 5. Running Tests
+
+To run the unit tests for the application:
+
+```bash
+npm test
+```
+
+For continuous testing during development:
+
+```bash
+npm run test:watch
+```
