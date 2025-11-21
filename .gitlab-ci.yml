@@ -1,0 +1,13 @@
+stages:
+  - test
+
+test:
+  stage: test
+  image: node:25-alpine
+  cache:
+    paths:
+      - node_modules/
+  before_script:
+    - npm install --legacy-peer-deps
+  script:
+    - npm test
