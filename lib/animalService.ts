@@ -97,10 +97,11 @@ export async function updateAnimal(animal: Animal) {
     return null;
   }
 }
-export async function fetchFilteredAnimals(filters: AnimalFilters): Promise<Animal[] | null> {
-    try {
-      let query = supabase.from("animals").select("*");
+export async function fetchFilteredAnimals(filters?: AnimalFilters): Promise<Animal[] | null> {
+  try {
+    let query = supabase.from("animals").select("*");
 
+    if (filters) {
       if (filters.type) {
         if (Array.isArray(filters.type)) {
           query = query.in('type', filters.type)
@@ -110,7 +111,7 @@ export async function fetchFilteredAnimals(filters: AnimalFilters): Promise<Anim
         }
       }
       if (filters.sex) {
-            query = query.eq('sex', filters.sex);
+        query = query.eq('sex', filters.sex);
       }
       if (filters.size) {
         if (Array.isArray(filters.size)) {
@@ -143,6 +144,7 @@ export async function fetchFilteredAnimals(filters: AnimalFilters): Promise<Anim
       if (filters.age_max) {
         query = query.lte('age', filters.age_max);
       }
+    }
 
     const { data: animals, error } = await query;
 
