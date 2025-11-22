@@ -25,24 +25,6 @@ export async function addAnimal(animal: Partial<Animal>) {
   }
 }
 
-export async function loadAllAnimals() {
-  try {
-    const { data: animal, error } = await supabase.from("animals").select("*");
-
-    if (error) {
-      console.log("Supabase Error on fetching all animal ids:", error.message);
-      return null;
-    }
-    console.log("Loaded Animal data successfully");
-
-    return animal;
-  } catch (error) {
-    error instanceof Error
-      ? console.log("Error fetching Animal data: ", error.message)
-      : console.log("Unexpected Error ocurred:", error);
-    return null;
-  }
-}
 
 export async function fetchAnimalDetails(animalId: string) {
   try {
@@ -97,7 +79,7 @@ export async function updateAnimal(animal: Animal) {
     return null;
   }
 }
-export async function fetchFilteredAnimals(filters?: AnimalFilters): Promise<Animal[] | null> {
+export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Animal[] | null> {
   try {
     let query = supabase.from("animals").select("*");
 

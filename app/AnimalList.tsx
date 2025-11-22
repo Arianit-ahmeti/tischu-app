@@ -1,6 +1,6 @@
 import FilterModal from "@components/FilterModal";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
-import { fetchFilteredAnimals } from '@lib/animalService';
+import { fetchAnimalsForList } from '@lib/animalService';
 import { FlashList } from "@shopify/flash-list";
 import type { Animal, AnimalFilters } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
@@ -46,7 +46,7 @@ export default function AnimalList() {
     try {
       let data: Animal[] | null;
 
-      data = await fetchFilteredAnimals(filter);
+      data = await fetchAnimalsForList(filter);
 
       if (data == null) {
         return (<View>
