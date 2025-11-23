@@ -1,14 +1,7 @@
 import ImageCarousel from "@components/ImageCarousel";
-import { useEnum } from "@hooks/useEnum";
+import { useAnimalFieldEnums } from '@hooks/useAnimalFieldEnums';
 import { getAnimalMediaDownloadURls, uploadAnimalMedia } from "@lib/AnimalMediaService";
 import { fetchAnimalDetails, updateAnimal } from "@lib/animalService";
-import {
-  getAdoptionStatusesEnum,
-  getAnimalSizesEnum,
-  getAnimalTypesEnum,
-  getCharacterTypesEnum,
-  getSexesEnum,
-} from "@lib/supabaseEnumHandler";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
@@ -24,19 +17,7 @@ export default function EditAnimal() {
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
 
-  const { enumObj: animalTypes, loading: animalTypesLoading, error: animalTypesError } = useEnum(getAnimalTypesEnum);
-  const { enumObj: animalSizes, loading: animalSizesLoading, error: animalSizesError } = useEnum(getAnimalSizesEnum);
-  const { enumObj: sexes, loading: sexesLoading, error: sexesError } = useEnum(getSexesEnum);
-  const {
-    enumObj: characterTypes,
-    loading: characterTypesLoading,
-    error: characterTypesError,
-  } = useEnum(getCharacterTypesEnum);
-  const {
-    enumObj: adoptionStatuses,
-    loading: adoptionStatusesLoading,
-    error: adoptionStatusesError,
-  } = useEnum(getAdoptionStatusesEnum);
+  const { enums, enumsAreLoading, enumsError } = useAnimalFieldEnums();
 
   async function loadAnimal() {
     setLoading(true);
@@ -76,11 +57,7 @@ export default function EditAnimal() {
 
   if (
     loading ||
-    animalTypesLoading ||
-    animalSizesLoading ||
-    sexesLoading ||
-    characterTypesLoading ||
-    adoptionStatusesLoading
+    enumsAreLoading
   )
     return (
       <View style={styles.center}>
@@ -95,16 +72,12 @@ export default function EditAnimal() {
     );
 
   if (
-    animalTypesError ||
-    !animalTypes ||
-    animalSizesError ||
-    !animalSizes ||
-    sexesError ||
-    !sexes ||
-    characterTypesError ||
-    !characterTypes ||
-    adoptionStatusesError ||
-    !adoptionStatuses
+    enumsError ||
+    !enums.animalTypes ||
+    !enums.animalSizes ||
+    !enums.sexes ||
+    !enums.characterTypes ||
+    !enums.adoptionStatuses
   )
     return (
       <View style={styles.center}>
@@ -154,7 +127,7 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold" }}>Art:</Text>
         <View style={styles.pickerContainer}>
           <Dropdown
-            data={animalTypes.values.map((val) => ({ value: val }))}
+            data={enums.animalTypes.values.map((val) => ({ value: val }))}
             valueField={"value"}
             labelField={"value"}
             value={animal.type}
@@ -166,7 +139,7 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
         <View style={styles.pickerContainer}>
           <Dropdown
-            data={sexes.values.map((val) => ({ value: val }))}
+            data={enums.sexes.values.map((val) => ({ value: val }))}
             valueField={"value"}
             labelField={"value"}
             value={animal.sex}
@@ -178,7 +151,7 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold" }}>Größe:</Text>
         <View style={styles.pickerContainer}>
           <Dropdown
-            data={animalSizes.values.map((val) => ({ value: val }))}
+            data={enums.animalSizes.values.map((val) => ({ value: val }))}
             valueField={"value"}
             labelField={"value"}
             value={animal.size}
@@ -190,7 +163,7 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
         <View style={styles.pickerContainer}>
           <Dropdown
-            data={characterTypes.values.map((val) => ({ value: val }))}
+            data={enums.characterTypes.values.map((val) => ({ value: val }))}
             valueField={"value"}
             labelField={"value"}
             value={animal.character}
@@ -202,7 +175,7 @@ export default function EditAnimal() {
         <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
         <View style={styles.pickerContainer}>
           <Dropdown
-            data={adoptionStatuses.values.map((val) => ({ value: val }))}
+            data={enums.adoptionStatuses.values.map((val) => ({ value: val }))}
             valueField={"value"}
             labelField={"value"}
             value={animal.status}
