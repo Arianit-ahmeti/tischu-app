@@ -1,10 +1,28 @@
-import { getAdoptionStatusesEnum, getAnimalSizesEnum, getAnimalTypesEnum, getCharacterTypesEnum, getSexesEnum } from "@lib/supabaseEnumHandler";
-import { useEnum } from './useEnum';
+import { useEnum } from "@hooks/useEnum";
+import {
+  getAdoptionStatusesEnum,
+  getAnimalSizesEnum,
+  getAnimalTypesEnum,
+  getCharacterTypesEnum,
+  getSexesEnum,
+} from "@lib/supabaseEnumHandler";
 
 export function useAnimalFieldEnums() {
-  const { enumObj: animalTypes, loading: animalTypesLoading, error: animalTypesError } = useEnum(getAnimalTypesEnum);
-  const { enumObj: animalSizes, loading: animalSizesLoading, error: animalSizesError } = useEnum(getAnimalSizesEnum);
-  const { enumObj: sexes, loading: sexesLoading, error: sexesError } = useEnum(getSexesEnum);
+  const {
+    enumObj: animalTypes,
+    loading: animalTypesLoading,
+    error: animalTypesError,
+  } = useEnum(getAnimalTypesEnum);
+  const {
+    enumObj: animalSizes,
+    loading: animalSizesLoading,
+    error: animalSizesError,
+  } = useEnum(getAnimalSizesEnum);
+  const {
+    enumObj: sexes,
+    loading: sexesLoading,
+    error: sexesError,
+  } = useEnum(getSexesEnum);
   const {
     enumObj: characterTypes,
     loading: characterTypesLoading,

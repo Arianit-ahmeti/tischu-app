@@ -1,12 +1,24 @@
 import ImageCarousel from "@components/ImageCarousel";
-import { useAnimalFieldEnums } from '@hooks/useAnimalFieldEnums';
-import { getAnimalMediaDownloadURls, uploadAnimalMedia } from "@lib/AnimalMediaService";
+import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
+import {
+  getAnimalMediaDownloadURls,
+  uploadAnimalMedia,
+} from "@lib/AnimalMediaService";
 import { fetchAnimalDetails, updateAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
-import { Animal } from '@lib/types';
+import { Animal } from "@lib/types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 export default function EditAnimal() {
@@ -35,7 +47,7 @@ export default function EditAnimal() {
       const urls = await getAnimalMediaDownloadURls(animalId);
       setImageUrls(urls);
     } catch (error) {
-      console.error(ERROR_MESSAGES.IMAGE_UPLOAD_FAILED, error);
+      console.error(ERROR_MESSAGES.IMAGE_DOWNLOAD_FAILED, error);
     } finally {
       setLoading(false);
     }
@@ -57,10 +69,7 @@ export default function EditAnimal() {
     fetchImages();
   }, [id]);
 
-  if (
-    loading ||
-    enumsAreLoading
-  )
+  if (loading || enumsAreLoading)
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
@@ -133,7 +142,9 @@ export default function EditAnimal() {
             valueField={"value"}
             labelField={"value"}
             value={animal.type}
-            onChange={(itemValue) => setAnimal({ ...animal, type: itemValue.value })}
+            onChange={(itemValue) =>
+              setAnimal({ ...animal, type: itemValue.value })
+            }
             style={styles.picker}
           ></Dropdown>
         </View>
@@ -145,7 +156,9 @@ export default function EditAnimal() {
             valueField={"value"}
             labelField={"value"}
             value={animal.sex}
-            onChange={(itemValue) => setAnimal({ ...animal, sex: itemValue.value })}
+            onChange={(itemValue) =>
+              setAnimal({ ...animal, sex: itemValue.value })
+            }
             style={styles.picker}
           ></Dropdown>
         </View>
@@ -157,7 +170,9 @@ export default function EditAnimal() {
             valueField={"value"}
             labelField={"value"}
             value={animal.size}
-            onChange={(itemValue) => setAnimal({ ...animal, size: itemValue.value })}
+            onChange={(itemValue) =>
+              setAnimal({ ...animal, size: itemValue.value })
+            }
             style={styles.picker}
           ></Dropdown>
         </View>
@@ -169,7 +184,9 @@ export default function EditAnimal() {
             valueField={"value"}
             labelField={"value"}
             value={animal.character}
-            onChange={(itemValue) => setAnimal({ ...animal, character: itemValue.value })}
+            onChange={(itemValue) =>
+              setAnimal({ ...animal, character: itemValue.value })
+            }
             style={styles.picker}
           ></Dropdown>
         </View>
@@ -181,7 +198,9 @@ export default function EditAnimal() {
             valueField={"value"}
             labelField={"value"}
             value={animal.status}
-            onChange={(itemValue) => setAnimal({ ...animal, status: itemValue.value })}
+            onChange={(itemValue) =>
+              setAnimal({ ...animal, status: itemValue.value })
+            }
             style={styles.picker}
           ></Dropdown>
         </View>
@@ -191,7 +210,9 @@ export default function EditAnimal() {
           style={styles.input}
           value={animal.age?.toString() || ""}
           keyboardType="numeric"
-          onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
+          onChangeText={(text) =>
+            setAnimal({ ...animal, age: parseInt(text) || null })
+          }
         />
 
         <View style={styles.buttonContainer}>
