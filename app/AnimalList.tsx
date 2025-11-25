@@ -41,7 +41,6 @@ export default function AnimalList() {
   async function load() {
     setLoading(true);
 
-
     console.log(filter)
     try {
       let data: Animal[] | null;
@@ -49,12 +48,11 @@ export default function AnimalList() {
       data = await fetchAnimalsForList(filter);
 
       if (data == null) {
-        return (<View>
-          <Text>Daten werden geladen...</Text>
-        </View>);
+        data = [];
       }
       setAnimals(data);
       fetchImages(data);
+
     }
     catch (err) {
       console.log("Error loading animals", err);
