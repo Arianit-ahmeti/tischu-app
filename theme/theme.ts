@@ -10,7 +10,7 @@ export const theme = {
       dark: "242424",
       light: "#3C3C43",
       inverted: "#FFF",
-      muted: "8A8A8E",
+      muted: "#8A8A8E",
     },
     background: {
       base: "#FFF",
