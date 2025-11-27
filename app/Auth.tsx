@@ -1,6 +1,14 @@
 import { supabase } from "@lib/supabase";
 import React, { useState } from "react";
-import { Alert, AppState, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import {
+  Alert,
+  AppState,
+  Button,
+  StyleSheet,
+  Text,
+  TextInput,
+  View,
+} from "react-native";
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
@@ -37,7 +45,8 @@ export default function Auth() {
     });
 
     if (error) Alert.alert(error.message);
-    if (!session) Alert.alert("Please check your inbox for email verification!");
+    if (!session)
+      Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
   }
 
@@ -63,10 +72,18 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <Button
+          title="Sign in"
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        />
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <Button
+          title="Sign up"
+          disabled={loading}
+          onPress={() => signUpWithEmail()}
+        />
       </View>
     </View>
   );

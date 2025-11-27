@@ -8,7 +8,7 @@ interface UseEnumResult<T extends string> {
 }
 
 export function useEnum<T extends string>(
-  fetchFn: () => Promise<EnumObject<T>>
+  fetchFn: () => Promise<EnumObject<T>>,
 ): UseEnumResult<T> {
   const [enumObj, setEnumObj] = useState<EnumObject<T> | null>(null);
   const [loading, setLoading] = useState(true);

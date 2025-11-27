@@ -43,7 +43,7 @@ describe("animalService", () => {
       expect(mockedSupabase.from).toHaveBeenCalledWith("animals");
       expect(console.log).toHaveBeenCalledWith(
         "Animal added successfully:",
-        expect.anything()
+        expect.anything(),
       );
     });
 
@@ -62,7 +62,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.log).toHaveBeenCalledWith(
         "Error adding animal:",
-        "Database error"
+        "Database error",
       );
     });
   });
@@ -83,7 +83,7 @@ describe("animalService", () => {
       expect(mockedSupabase.from).toHaveBeenCalledWith("animals");
       expect(result).toEqual(mockAnimals);
       expect(console.log).toHaveBeenCalledWith(
-        "Loaded Animal data successfully"
+        "Loaded Animal data successfully",
       );
     });
 
@@ -99,7 +99,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.log).toHaveBeenCalledWith(
         "Supabase Error on fetching all animal ids:",
-        "Supabase error #1"
+        "Supabase error #1",
       );
     });
 
@@ -115,7 +115,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.log).toHaveBeenCalledWith(
         "Error fetching Animal data: ",
-        "Unexpected error"
+        "Unexpected error",
       );
     });
   });
@@ -160,7 +160,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         "Supabase Error on fetching animal details for 123:",
-        "Supabase error #2"
+        "Supabase error #2",
       );
     });
 
@@ -179,7 +179,7 @@ describe("animalService", () => {
 
       expect(result).toBeNull();
       expect(console.warn).toHaveBeenCalledWith(
-        "Animal with id 404 not found."
+        "Animal with id 404 not found.",
       );
     });
 
@@ -200,7 +200,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         "Unexpected error on fetchAnimalDetails:",
-        mockError
+        mockError,
       );
     });
   });
@@ -236,7 +236,7 @@ describe("animalService", () => {
       expect(result).toBe(false);
       expect(console.error).toHaveBeenCalledWith(
         "Fehler beim Löschen des Tiers:",
-        "Delete failed"
+        "Delete failed",
       );
     });
   });
@@ -305,7 +305,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         "Supabase Error on updating animal data:",
-        "Update failed"
+        "Update failed",
       );
     });
 
@@ -339,7 +339,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         "Unexpected error in updateAnimal:",
-        mockError
+        mockError,
       );
     });
   });

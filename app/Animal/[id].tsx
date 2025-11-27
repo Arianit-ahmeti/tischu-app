@@ -5,7 +5,14 @@ import { useIsFocused } from "@react-navigation/native";
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
+import {
+  ActivityIndicator,
+  Alert,
+  Button,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 
 export default function AnimalDetailScreen() {
   const isFocused = useIsFocused();
@@ -85,25 +92,32 @@ export default function AnimalDetailScreen() {
           <Button
             title="Tier löschen"
             onPress={() => {
-              Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
-                {
-                  text: "Abbrechen",
-                  style: "cancel",
-                },
-                {
-                  text: "Löschen",
-                  style: "destructive",
-                  onPress: async () => {
-                    await deleteAnimal(animalId as string);
-                    router.back();
+              Alert.alert(
+                "Tier löschen",
+                `Möchten Sie ${animal.name} wirklich löschen?`,
+                [
+                  {
+                    text: "Abbrechen",
+                    style: "cancel",
                   },
-                },
-              ]);
+                  {
+                    text: "Löschen",
+                    style: "destructive",
+                    onPress: async () => {
+                      await deleteAnimal(animalId as string);
+                      router.back();
+                    },
+                  },
+                ],
+              );
             }}
           />
         </View>
         <View style={styles.button}>
-          <Button title="Bearbeiten" onPress={() => router.push(`/Animal/edit?id=${animal.id}`)} />
+          <Button
+            title="Bearbeiten"
+            onPress={() => router.push(`/Animal/edit?id=${animal.id}`)}
+          />
         </View>
       </View>
     </View>

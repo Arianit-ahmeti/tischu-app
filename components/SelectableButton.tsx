@@ -12,7 +12,12 @@ export default function SelectableButton({
 }) {
   return (
     <Pressable onPress={onPress}>
-      <View style={[styles.button, isSelected ? styles.selectedButton : styles.deselectedButton]}>
+      <View
+        style={[
+          styles.button,
+          isSelected ? styles.selectedButton : styles.deselectedButton,
+        ]}
+      >
         <Text>{title}</Text>
       </View>
     </Pressable>
