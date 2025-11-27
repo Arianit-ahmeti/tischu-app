@@ -7,7 +7,13 @@ interface ThemedTextProps extends TextProps {
   color?: string;
 }
 
-export const ThemedText: React.FC<ThemedTextProps> = ({ variant = "body", color, style, children, ...props }) => {
+export const ThemedText: React.FC<ThemedTextProps> = ({
+  variant = "body",
+  color,
+  style,
+  children,
+  ...props
+}) => {
   const typographyStyle = theme.typography[variant];
 
   const combinedStyle: TextStyle = {

@@ -74,7 +74,10 @@ export default function Account({ session }: { session: Session }) {
       </View>
       <View style={styles.verticallySpaced}>
         <ThemedText>Username</ThemedText>
-        <TextInput value={username || ""} onChangeText={(text) => setUsername(text)} />
+        <TextInput
+          value={username || ""}
+          onChangeText={(text) => setUsername(text)}
+        />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <Button
