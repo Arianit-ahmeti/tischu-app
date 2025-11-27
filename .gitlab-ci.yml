@@ -11,15 +11,7 @@ prettier:
   before_script:
     - npm install
   script:
-    - npm ci
-    - npx prettier --check .
-  artifacts:
-    when: always
-    reports:
-      junit: gl-prettier-report.json
-    paths:
-      - ./reports/gl-prettier-report.json
-    expire_in: 1 week
+    - npm run prettier:check
   allow_failure: false
 
 test:
