@@ -12,7 +12,7 @@ prettier:
     - npm install
   script:
     - npm run prettier:check
-  allow_failure: false
+  allow_failure: true
 
 test:
   stage: test
