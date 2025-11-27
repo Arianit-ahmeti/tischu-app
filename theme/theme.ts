@@ -7,7 +7,7 @@ export const theme = {
       hover: "#FF7380",
     },
     text: {
-      dark: "242424",
+      dark: "#242424",
       light: "#3C3C43",
       inverted: "#FFF",
       muted: "#8A8A8E",
