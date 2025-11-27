@@ -142,7 +142,7 @@ export async function fetchAnimalsForList(
 
     return animals as Animal[];
   } catch (error) {
-    console.error("Unexpected error in fetchFilteredAnimals:", error);
+    console.error("Unexpected error in fetching filtered animals:", error);
     return null;
   }
 }
