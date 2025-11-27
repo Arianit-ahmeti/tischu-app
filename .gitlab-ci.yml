@@ -11,7 +11,11 @@ prettier:
   before_script:
     - npm install
   script:
-    - npm run prettier:check
+    - npm ci
+    - npx prettier-formatter-gitlab 'prettier -l ./'
+  artifacts:
+    reports:
+      codequality: gl-prettier-report.json
   allow_failure: false
 
 test:
