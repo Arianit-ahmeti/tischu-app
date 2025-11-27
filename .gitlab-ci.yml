@@ -9,7 +9,7 @@ prettier:
     paths:
       - node_modules/
   before_script:
-    - npm install --legacy-peer-deps
+    - npm install
   script:
     - npm run prettier:check
   allow_failure: false
@@ -21,6 +21,6 @@ test:
     paths:
       - node_modules/
   before_script:
-    - npm install --legacy-peer-deps
+    - npm install
   script:
     - npm test
