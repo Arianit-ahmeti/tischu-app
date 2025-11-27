@@ -12,10 +12,14 @@ prettier:
     - npm install
   script:
     - npm ci
-    - npx prettier-formatter-gitlab 'prettier -l ./'
+    - npx prettier --check .
   artifacts:
+    when: always
     reports:
-      codequality: gl-prettier-report.json
+      junit: gl-prettier-report.json
+    paths:
+      - ./reports/gl-prettier-report.json
+    expire_in: 1 week
   allow_failure: false
 
 test:
