@@ -88,11 +88,17 @@ export default function Account({ session }: { session: Session }) {
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Add Animal" onPress={() => router.navigate("Animal/Add")} />
+        <Button
+          title="Add Animal"
+          onPress={() => router.navigate("Animal/Add")}
+        />
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Show AnimalList" onPress={() => router.navigate("AnimalList")} />
+        <Button
+          title="Show AnimalList"
+          onPress={() => router.navigate("AnimalList")}
+        />
       </View>
     </View>
   );

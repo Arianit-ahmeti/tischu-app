@@ -1,0 +1,26 @@
+stages:
+  - lint
+  - test
+
+prettier:
+  stage: lint
+  image: node:25-alpine
+  cache:
+    paths:
+      - node_modules/
+  before_script:
+    - npm install
+  script:
+    - npm run prettier:check
+  allow_failure: true
+
+test:
+  stage: test
+  image: node:25-alpine
+  cache:
+    paths:
+      - node_modules/
+  before_script:
+    - npm install
+  script:
+    - npm test

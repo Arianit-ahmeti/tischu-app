@@ -24,3 +24,13 @@ export interface FileResponse {
   data: FileObject[];
   error: string | null;
 }
+
+export interface AnimalFilters {
+  type?: string | string[];
+  sex?: string;
+  size?: string | string[];
+  character?: string | string[];
+  status?: string | string[];
+  age_min?: number;
+  age_max?: number;
+}
