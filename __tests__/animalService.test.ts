@@ -2,7 +2,7 @@ import {
   addAnimal,
   deleteAnimal,
   fetchAnimalDetails,
-  loadAllAnimals,
+  fetchAnimalsForList,
   updateAnimal,
 } from "../lib/animalService";
 import { supabase } from "../lib/supabase";
@@ -67,7 +67,7 @@ describe("animalService", () => {
     });
   });
 
-  describe("loadAllAnimals", () => {
+  describe("fetchAnimalsForList", () => {
     it("should load all animals successfully", async () => {
       const mockAnimals = [
         { id: "1", name: "Wuffi", type: "dog" },
@@ -78,13 +78,10 @@ describe("animalService", () => {
         select: jest.fn().mockResolvedValue({ data: mockAnimals, error: null }),
       } as any);
 
-      const result = await loadAllAnimals();
+      const result = await fetchAnimalsForList();
 
       expect(mockedSupabase.from).toHaveBeenCalledWith("animals");
       expect(result).toEqual(mockAnimals);
-      expect(console.log).toHaveBeenCalledWith(
-        "Loaded Animal data successfully",
-      );
     });
 
     it("should handle supabase errors", async () => {
@@ -94,11 +91,11 @@ describe("animalService", () => {
         select: jest.fn().mockResolvedValue({ data: null, error: mockError }),
       } as any);
 
-      const result = await loadAllAnimals();
+      const result = await fetchAnimalsForList();
 
       expect(result).toBeNull();
-      expect(console.log).toHaveBeenCalledWith(
-        "Supabase Error on fetching all animal ids:",
+      expect(console.error).toHaveBeenCalledWith(
+        "Supabase Error on fetching filtered animals:",
         "Supabase error #1",
       );
     });
@@ -110,12 +107,12 @@ describe("animalService", () => {
         select: jest.fn().mockRejectedValue(mockError),
       } as any);
 
-      const result = await loadAllAnimals();
+      const result = await fetchAnimalsForList();
 
       expect(result).toBeNull();
-      expect(console.log).toHaveBeenCalledWith(
-        "Error fetching Animal data: ",
-        "Unexpected error",
+      expect(console.error).toHaveBeenCalledWith(
+        "Unexpected error in fetching filtered animals:",
+        mockError,
       );
     });
   });
