@@ -1,4 +1,4 @@
-import SelectableButton from "@components/SelectableButton";
+import { SelectableButton } from "@components/SelectableButton";
 import { addAnimal } from "@lib/animalService";
 import React, { useState } from "react";
 import {
@@ -94,74 +94,64 @@ export default function Add() {
 
       <Text>Tierart</Text>
       <View style={styles.buttonGroup}>
-        <SelectableButton
-          isSelected={type == 0}
-          title="Hund"
-          onPress={() => setType(0)}
-        />
+        <SelectableButton isSelected={type == 0} onPress={() => setType(0)}>
+          Hund
+        </SelectableButton>
 
-        <SelectableButton
-          isSelected={type == 1}
-          title="Katze"
-          onPress={() => setType(1)}
-        />
+        <SelectableButton isSelected={type == 1} onPress={() => setType(1)}>
+          Katze
+        </SelectableButton>
       </View>
 
       <Text>Geschlecht</Text>
       <View style={styles.buttonGroup}>
-        <SelectableButton
-          isSelected={sex == 0}
-          title="männlich"
-          onPress={() => setSex(0)}
-        />
-        <SelectableButton
-          isSelected={sex == 1}
-          title="weiblich"
-          onPress={() => setSex(1)}
-        />
+        <SelectableButton isSelected={sex == 0} onPress={() => setSex(0)}>
+          männlich
+        </SelectableButton>
+        <SelectableButton isSelected={sex == 1} onPress={() => setSex(1)}>
+          weiblich
+        </SelectableButton>
       </View>
 
       <Text>Größe</Text>
       <View style={styles.buttonGroup}>
-        <SelectableButton
-          isSelected={size == 0}
-          title="klein"
-          onPress={() => setSize(0)}
-        />
-        <SelectableButton
-          isSelected={size == 1}
-          title="mittel"
-          onPress={() => setSize(1)}
-        />
-        <SelectableButton
-          isSelected={size == 2}
-          title="groß"
-          onPress={() => setSize(2)}
-        />
+        <SelectableButton isSelected={size == 0} onPress={() => setSize(0)}>
+          klein
+        </SelectableButton>
+        <SelectableButton isSelected={size == 1} onPress={() => setSize(1)}>
+          mittel
+        </SelectableButton>
+        <SelectableButton isSelected={size == 2} onPress={() => setSize(2)}>
+          groß
+        </SelectableButton>
       </View>
 
       <Text>Charakter</Text>
       <View style={styles.buttonGroup}>
         <SelectableButton
           isSelected={character == 0}
-          title="scheu"
           onPress={() => setCharacter(0)}
-        />
+        >
+          scheu
+        </SelectableButton>
         <SelectableButton
           isSelected={character == 1}
-          title="freundlich"
           onPress={() => setCharacter(1)}
-        />
+        >
+          freundlich
+        </SelectableButton>
         <SelectableButton
           isSelected={character == 2}
-          title="ängstlich"
           onPress={() => setCharacter(2)}
-        />
+        >
+          ängstlich
+        </SelectableButton>
         <SelectableButton
           isSelected={character == 3}
-          title="aggressiv"
           onPress={() => setCharacter(3)}
-        />
+        >
+          aggressiv
+        </SelectableButton>
       </View>
 
       <Button title="Tier hinzufügen" onPress={async () => handleAddAnimal()} />
