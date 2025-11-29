@@ -1,8 +1,9 @@
+import { ThemedButton, ThemedText } from "@components";
 import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, StyleSheet, TextInput, View } from "react-native";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -68,30 +69,40 @@ export default function Account({ session }: { session: Session }) {
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Text>Email</Text>
+        <ThemedText>Email</ThemedText>
         <TextInput value={session?.user?.email} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Text>Username</Text>
-        <TextInput value={username || ""} onChangeText={(text) => setUsername(text)} />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? "Loading ..." : "Update"}
-          onPress={() => updateProfile({ username })}
-          disabled={loading}
+        <ThemedText>Username</ThemedText>
+        <TextInput
+          value={username || ""}
+          onChangeText={(text) => setUsername(text)}
         />
       </View>
+      <View style={[styles.verticallySpaced, styles.mt20]}>
+        <ThemedButton
+          onPress={() => updateProfile({ username })}
+          disabled={loading}
+        >
+          {loading ? "Loading ..." : "Update"}
+        </ThemedButton>
+      </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+        <ThemedButton onPress={() => supabase.auth.signOut()}>
+          Sign Out
+        </ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Add Animal" onPress={() => router.navigate("Animal/Add")} />
+        <ThemedButton onPress={() => router.navigate("Animal/Add")}>
+          Add Animal
+        </ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Show AnimalList" onPress={() => router.navigate("AnimalList")} />
+        <ThemedButton onPress={() => router.navigate("AnimalList")}>
+          Show AnimalList
+        </ThemedButton>
       </View>
     </View>
   );

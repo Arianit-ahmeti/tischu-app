@@ -6,7 +6,14 @@ const { width } = Dimensions.get("window");
 export default function ImageCarousel({ urls }: { urls: string[] }) {
   if (urls.length == 0) {
     return (
-      <View style={{ width, height: 250, justifyContent: "center", alignItems: "center" }}>
+      <View
+        style={{
+          width,
+          height: 250,
+          justifyContent: "center",
+          alignItems: "center",
+        }}
+      >
         <Text style={{ fontSize: 20 }}>Keine Bilder verfügbar</Text>
       </View>
     );

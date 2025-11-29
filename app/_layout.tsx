@@ -1,12 +1,34 @@
+import { theme } from "@theme";
+import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
+  const [loaded, error] = useFonts({
+    Inter: require("../assets/fonts/Inter/Inter-Variable.ttf"),
+    PlusJakartaSans: require("../assets/fonts/PlusJakartaSans/PlusJakartaSans-Variable.ttf"),
+  });
+
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
+  if (!loaded && !error) {
+    return null;
+  }
+
   return (
     <Stack
       screenOptions={{
         headerTintColor: "#333",
         headerShadowVisible: false,
         headerTitleAlign: "center",
+        contentStyle: { backgroundColor: theme.colors.background.base },
       }}
     >
       <Stack.Screen name="index" options={{ title: "Account" }} />

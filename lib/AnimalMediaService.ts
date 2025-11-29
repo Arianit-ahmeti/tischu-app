@@ -3,7 +3,9 @@ import { FileResponse } from "@types";
 import * as ImagePicker from "expo-image-picker";
 
 async function listAnimalMedia(animalId: string): Promise<FileResponse> {
-  const { data, error } = await supabase.storage.from("animal-entry-media").list(animalId);
+  const { data, error } = await supabase.storage
+    .from("animal-entry-media")
+    .list(animalId);
 
   return {
     data: data || [],
@@ -11,7 +13,9 @@ async function listAnimalMedia(animalId: string): Promise<FileResponse> {
   };
 }
 
-export async function getAnimalMediaDownloadURls(animalId: string): Promise<string[]> {
+export async function getAnimalMediaDownloadURls(
+  animalId: string,
+): Promise<string[]> {
   const fileResponse = await listAnimalMedia(animalId);
   if (fileResponse.error) {
     throw new Error(fileResponse.error);
@@ -19,7 +23,9 @@ export async function getAnimalMediaDownloadURls(animalId: string): Promise<stri
 
   const downloadUrls: string[] = [];
   for (const file of fileResponse.data) {
-    const { data } = supabase.storage.from("animal-entry-media").getPublicUrl(`${animalId}/${file.name}`);
+    const { data } = supabase.storage
+      .from("animal-entry-media")
+      .getPublicUrl(`${animalId}/${file.name}`);
 
     if (data?.publicUrl) {
       downloadUrls.push(data.publicUrl);
@@ -52,9 +58,11 @@ export async function uploadAnimalMedia(animalId: string): Promise<string> {
 
   const fileExt = image.uri?.split(".").pop()?.toLowerCase() ?? "jpeg";
   const path = `${animalId}/${Date.now()}.${fileExt}`;
-  const { data, error: uploadError } = await supabase.storage.from("animal-entry-media").upload(path, arraybuffer, {
-    contentType: image.mimeType ?? "image/jpeg",
-  });
+  const { data, error: uploadError } = await supabase.storage
+    .from("animal-entry-media")
+    .upload(path, arraybuffer, {
+      contentType: image.mimeType ?? "image/jpeg",
+    });
 
   if (uploadError) {
     throw uploadError;

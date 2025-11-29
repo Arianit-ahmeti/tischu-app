@@ -25,7 +25,6 @@ export async function addAnimal(animal: Partial<Animal>) {
   }
 }
 
-
 export async function fetchAnimalDetails(animalId: string) {
   try {
     const { data: animal, error } = await supabase
@@ -37,7 +36,7 @@ export async function fetchAnimalDetails(animalId: string) {
     if (error) {
       console.error(
         `Supabase Error on fetching animal details for ${animalId}:`,
-        error.message
+        error.message,
       );
       return null;
     }
@@ -67,7 +66,12 @@ export async function deleteAnimal(animalId: string) {
 
 export async function updateAnimal(animal: Animal) {
   try {
-    const { error } = await supabase.from("animals").update(animal).select().eq("id", animal.id).single();
+    const { error } = await supabase
+      .from("animals")
+      .update(animal)
+      .select()
+      .eq("id", animal.id)
+      .single();
 
     if (error) {
       console.error("Supabase Error on updating animal data:", error.message);
@@ -79,66 +83,66 @@ export async function updateAnimal(animal: Animal) {
     return null;
   }
 }
-export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Animal[] | null> {
+export async function fetchAnimalsForList(
+  filters?: AnimalFilters,
+): Promise<Animal[] | null> {
   try {
     let query = supabase.from("animals").select("*");
 
     if (filters) {
       if (filters.type) {
         if (Array.isArray(filters.type)) {
-          query = query.in('type', filters.type)
-        }
-        else {
-          query = query.eq('type', filters.type);
+          query = query.in("type", filters.type);
+        } else {
+          query = query.eq("type", filters.type);
         }
       }
       if (filters.sex) {
-        query = query.eq('sex', filters.sex);
+        query = query.eq("sex", filters.sex);
       }
       if (filters.size) {
         if (Array.isArray(filters.size)) {
-          query = query.in('size', filters.size)
-        }
-        else {
-          query = query.eq('size', filters.size);
+          query = query.in("size", filters.size);
+        } else {
+          query = query.eq("size", filters.size);
         }
       }
       if (filters.character) {
         if (Array.isArray(filters.character)) {
-          query = query.in('character', filters.character)
-        }
-        else {
-          query = query.eq('character', filters.character);
+          query = query.in("character", filters.character);
+        } else {
+          query = query.eq("character", filters.character);
         }
       }
       if (filters.status) {
         if (Array.isArray(filters.status)) {
-          query = query.in('status', filters.status)
-        }
-        else {
-          query = query.eq('status', filters.status);
+          query = query.in("status", filters.status);
+        } else {
+          query = query.eq("status", filters.status);
         }
       }
 
       if (filters.age_min) {
-        query = query.gte('age', filters.age_min);
+        query = query.gte("age", filters.age_min);
       }
       if (filters.age_max) {
-        query = query.lte('age', filters.age_max);
+        query = query.lte("age", filters.age_max);
       }
     }
 
     const { data: animals, error } = await query;
 
     if (error) {
-            console.error("Supabase Error on fetching filtered animals:", error.message);
-            return null;
+      console.error(
+        "Supabase Error on fetching filtered animals:",
+        error.message,
+      );
+      return null;
     }
 
     return animals as Animal[];
-
-    } catch (error) {
-        console.error("Unexpected error in fetchFilteredAnimals:", error);
-        return null;
-    }
+  } catch (error) {
+    console.error("Unexpected error in fetching filtered animals:", error);
+    return null;
+  }
 }
