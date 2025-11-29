@@ -1,7 +1,7 @@
+import { ThemedText } from "@components/ThemedText";
 import { theme } from "@theme";
 import React from "react";
 import { Pressable, PressableProps, StyleSheet } from "react-native";
-import { ThemedText } from "./ThemedText";
 
 interface SelectableButtonProps extends PressableProps {
   backgroundColor?: string;
@@ -38,7 +38,7 @@ export const SelectableButton: React.FC<
       ]}
       {...props}
     >
-      <ThemedText color={textColor} variant="buttonSecondary">
+      <ThemedText color={textColor} variant="buttonSecondary" numberOfLines={1}>
         {children}
       </ThemedText>
     </Pressable>
