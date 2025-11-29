@@ -1,9 +1,9 @@
-import { ThemedText } from "@components";
+import { ThemedButton, ThemedText } from "@components";
 import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Button, StyleSheet, TextInput, View } from "react-native";
+import { Alert, StyleSheet, TextInput, View } from "react-native";
 
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
@@ -80,28 +80,29 @@ export default function Account({ session }: { session: Session }) {
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? "Loading ..." : "Update"}
+        <ThemedButton
           onPress={() => updateProfile({ username })}
           disabled={loading}
-        />
+        >
+          {loading ? "Loading ..." : "Update"}
+        </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
-      </View>
-
-      <View style={styles.verticallySpaced}>
-        <Button
-          title="Add Animal"
-          onPress={() => router.navigate("Animal/Add")}
-        />
+        <ThemedButton onPress={() => supabase.auth.signOut()}>
+          Sign Out
+        </ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button
-          title="Show AnimalList"
-          onPress={() => router.navigate("AnimalList")}
-        />
+        <ThemedButton onPress={() => router.navigate("Animal/Add")}>
+          Add Animal
+        </ThemedButton>
+      </View>
+
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("AnimalList")}>
+          Show AnimalList
+        </ThemedButton>
       </View>
     </View>
   );
