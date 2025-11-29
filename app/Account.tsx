@@ -1,5 +1,4 @@
-import { ListTile, ThemedText } from "@components";
-import { MaterialIcons } from "@expo/vector-icons";
+import { ThemedText } from "@components";
 import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
@@ -92,15 +91,8 @@ export default function Account({ session }: { session: Session }) {
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ListTile
+        <Button
           title="Add Animal"
-          subtitle="Register a new animal"
-          leading={
-            <MaterialIcons name="add-circle" size={24} color="#4CAF50" />
-          }
-          trailing={
-            <MaterialIcons name="chevron-right" size={24} color="#999" />
-          }
           onPress={() => router.navigate("Animal/Add")}
         />
       </View>
