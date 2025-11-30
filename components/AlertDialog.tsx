@@ -76,10 +76,12 @@ const styles = StyleSheet.create({
   title: {
     color: theme.colors.brand.primary,
     marginBottom: 12,
+    textAlign: "center",
   },
   message: {
     color: theme.colors.text.light,
     marginBottom: 24,
+    textAlign: "center",
   },
   buttonContainer: {
     flexDirection: "column",
