@@ -1,5 +1,5 @@
 import { supabase } from "@lib/supabase";
-import { useRouter } from 'expo-router';
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -56,32 +56,15 @@ export default function Auth() {
     setLoading(true);
     const {
       data: { session },
-      error
+      error,
     } = await supabase.auth.signUp({
-    email: email,
-    password: password,
+      email: email,
+      password: password,
     });
 
     if (error) Alert.alert(error.message);
     else if (session) {
-        router.replace("/OrganizationSignUp");
-    }
-    setLoading(false);
-  }
-
-  async function signUpForOrganization() {
-    setLoading(true);
-    const {
-      data: { session },
-      error
-    } = await supabase.auth.signUp({
-    email: email,
-    password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    else if (session) {
-        router.replace("/OrganizationSignUp");
+      router.replace("/OrganizationSignUp");
     }
     setLoading(false);
   }
@@ -122,10 +105,18 @@ export default function Auth() {
         />
       </View>
       <View style={[styles.verticallySpaced]}>
-        <Button title="Organization Sign up" disabled={loading} onPress={() => signUpForOrganization()} />
+        <Button
+          title="Organization Sign up"
+          disabled={loading}
+          onPress={() => signUpForOrganization()}
+        />
       </View>
       <View style={[styles.verticallySpaced]}>
-        <Button title="Organization Sign up" disabled={loading} onPress={() => signUpForOrganization()} />
+        <Button
+          title="Organization Sign up"
+          disabled={loading}
+          onPress={() => signUpForOrganization()}
+        />
       </View>
     </View>
   );
