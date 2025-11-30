@@ -1,3 +1,4 @@
+import { AlertDialog } from "@components";
 import ImageCarousel from "@components/ImageCarousel";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import {
@@ -20,7 +21,6 @@ import {
   View,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { AlertDialog } from "../../components/AlertDialog";
 
 export default function EditAnimal() {
   const { id } = useLocalSearchParams();
