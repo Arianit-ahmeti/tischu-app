@@ -1,5 +1,6 @@
 import { ThemedButton, ThemedText } from "@components";
 import { supabase } from "@lib/supabase";
+import { checkOrganizationAccess } from "@lib/UserService";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -75,16 +76,8 @@ export default function Account({ session }: { session: Session }) {
       setIsOrganizationUser(false);
       return;
     }
-    try {
-      const { data, error } = await supabase
-        .from("organization")
-        .select("id")
-        .eq("id", session.user.id);
-      const isOrg = data !== null && data.length > 0;
-      setIsOrganizationUser(isOrg);
-    } catch (error) {
-      setIsOrganizationUser(false);
-    }
+    const isOrg = await checkOrganizationAccess(session.user.id);
+    setIsOrganizationUser(isOrg);
   }
 
   return (

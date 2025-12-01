@@ -1,4 +1,4 @@
-import { supabase } from "@lib/supabase";
+import { getCurrentSession, getProfile } from "@lib/UserService";
 import { Organization } from "@types";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
@@ -26,28 +26,20 @@ export default function OrganizationProfile() {
 
   async function loadProfileData() {
     setLoading(true);
-    const {
-      data: { session },
-      error: sessionError,
-    } = await supabase.auth.getSession();
+    const session = await getCurrentSession();
 
-    if (sessionError || !session?.user) {
+    if (!session || !session.user) {
       Alert.alert("Fehler: ", ERROR_MESSAGES.ORG_SESSION_FAILED);
       setLoading(false);
       return;
     }
     const user_id = session.user.id;
     try {
-      const { data, error } = await supabase
-        .from("organization")
-        .select(
-          `name, street, house_number, postal_code, city, country, status`,
-        )
-        .eq("id", user_id)
-        .single();
-
-      if (data) {
-        setProfile({ ...initialProfileState, ...data });
+      const profileData = await getProfile(user_id);
+      if (profileData) {
+        setProfile({ ...initialProfileState, ...profileData });
+      } else {
+        Alert.alert("Fehler:", ERROR_MESSAGES.ORG_PROFILE_LOAD_FAILED);
       }
     } catch (e) {
       Alert.alert("Fehler: ", ERROR_MESSAGES.ORG_PROFILE_LOAD_FAILED);
