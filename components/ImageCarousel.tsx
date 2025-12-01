@@ -17,7 +17,6 @@ const { width } = Dimensions.get("window");
 interface ImageCarouselProps {
   // TODO: outsource showAmount into ImagePreview component so it can be used in the list without size issues
   showAmount?: boolean;
-  showNumberIndicator?: boolean;
   emptyStateComponent?: ReactNode;
   imageStyle?: ImageStyle;
   urls: string[];
