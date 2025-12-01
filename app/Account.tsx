@@ -8,11 +8,15 @@ import { Alert, StyleSheet, TextInput, View } from "react-native";
 export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
+  const [isOrganizationUser, setIsOrganizationUser] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
-    if (session) getProfile();
+    if (session) {
+      getProfile();
+      checkOrganization();
+    }
   }, [session]);
 
   async function getProfile() {
@@ -66,6 +70,23 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
+  async function checkOrganization() {
+    if (!session?.user) {
+      setIsOrganizationUser(false);
+      return;
+    }
+    try {
+      const { data, error } = await supabase
+        .from("organization")
+        .select("id")
+        .eq("id", session.user.id);
+      const isOrg = data !== null && data.length > 0;
+      setIsOrganizationUser(isOrg);
+    } catch (error) {
+      setIsOrganizationUser(false);
+    }
+  }
+
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -104,6 +125,13 @@ export default function Account({ session }: { session: Session }) {
           Show AnimalList
         </ThemedButton>
       </View>
+      {isOrganizationUser && (
+        <View style={styles.verticallySpaced}>
+          <ThemedButton onPress={() => router.navigate("/OrganizationProfile")}>
+            Profile
+          </ThemedButton>
+        </View>
+      )}
     </View>
   );
 }
