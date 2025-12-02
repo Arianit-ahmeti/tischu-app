@@ -52,6 +52,5 @@ const styles = StyleSheet.create({
   container: {
     padding: 20,
     alignItems: "center",
-    margin: 4,
   },
 });
