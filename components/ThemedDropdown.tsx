@@ -3,7 +3,7 @@ import { theme } from "@theme";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { DropdownProps } from 'react-native-element-dropdown/lib/typescript/components/Dropdown/model';
+import { DropdownProps } from "react-native-element-dropdown/lib/typescript/components/Dropdown/model";
 import { EnumObject } from "../lib/supabaseEnumHandler";
 
 // dropdownData: Array of strings or EnumObject<String> (zB animalTypes)
@@ -11,11 +11,11 @@ import { EnumObject } from "../lib/supabaseEnumHandler";
 // currentVal (optional): Wert, der schon vorausgewählt sein soll
 // placeholder: String, der angezeigt wird, wenn Auswahl leer ist
 
-interface ThemedDropdownProps extends DropdownProps<any>{
+interface ThemedDropdownProps extends DropdownProps<any> {
   dropdownData: EnumObject<string> | string[];
   valueSetter: (item: any) => void;
-  currentVal?: string | string[],
-  placeholder?: string,
+  currentVal?: string | string[];
+  placeholder?: string;
 }
 
 export const ThemedDropdown: React.FC<ThemedDropdownProps> = ({
@@ -69,7 +69,7 @@ export const ThemedDropdown: React.FC<ThemedDropdownProps> = ({
       }}
     />
   );
-}
+};
 
 const styles = StyleSheet.create({
   placeholderText: {
@@ -92,7 +92,6 @@ const styles = StyleSheet.create({
     borderRadius: 25,
     justifyContent: "center",
   },
-  dropdownMargin: {marginVertical:10},
-  containerMargin: { marginTop:5},
-
+  dropdownMargin: { marginVertical: 10 },
+  containerMargin: { marginTop: 5 },
 });
