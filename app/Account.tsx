@@ -1,6 +1,6 @@
 import { ThemedButton, ThemedText } from "@components";
 import { supabase } from "@lib/supabase";
-import { checkOrganizationAccess } from "@lib/UserService";
+import { checkOrganizationAccess } from "@lib/userService";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";

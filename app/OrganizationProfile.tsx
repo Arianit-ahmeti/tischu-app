@@ -1,4 +1,4 @@
-import { getCurrentSession, getProfile } from "@lib/UserService";
+import { getCurrentSession, getProfile } from "@lib/userService";
 import { Organization } from "@types";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
