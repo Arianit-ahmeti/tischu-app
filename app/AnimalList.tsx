@@ -110,14 +110,7 @@ export default function AnimalList() {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <SafeAreaView>
-                <Pressable
-                  onPress={() =>
-                    router.navigate({
-                      pathname: "Animal/[id]",
-                      params: { id: item.id },
-                    })
-                  }
-                >
+                <Pressable onPress={() => router.navigate(`Animal/${item.id}`)}>
                   <View style={styles.card}>
                     {previewImage[item.id] && (
                       <Image
