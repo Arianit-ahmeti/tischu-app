@@ -23,10 +23,14 @@ export const PaginationDots: React.FC<PaginationDotsProps> = ({
             style={[
               paginationStyles.dotBase,
               isActive && paginationStyles.activeOuterStyle,
-              { opacity: isActive ? 1 : 0.41 },
             ]}
           >
-            {isActive && <View style={paginationStyles.activeInnerDot} />}
+            <View
+              style={[
+                paginationStyles.activeInnerDot,
+                { opacity: isActive ? 1 : 0.41 },
+              ]}
+            />
           </View>
         );
       })}
@@ -47,8 +51,9 @@ const paginationStyles = StyleSheet.create({
     width: DOT_SIZE,
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
-    backgroundColor: "#FFFFFF",
     marginHorizontal: 4,
+    justifyContent: "center",
+    alignItems: "center",
   },
   activeOuterStyle: {
     width: ACTIVE_OUTER_SIZE,
@@ -56,15 +61,11 @@ const paginationStyles = StyleSheet.create({
     borderRadius: ACTIVE_OUTER_SIZE / 2,
     borderWidth: ACTIVE_BORDER_WIDTH,
     borderColor: "#FFFFFF",
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "transparent",
   },
   activeInnerDot: {
     width: DOT_SIZE,
     height: DOT_SIZE,
     borderRadius: DOT_SIZE / 2,
     backgroundColor: "#FFFFFF",
-    opacity: 1,
   },
 });
