@@ -1,3 +1,4 @@
+export { AlertDialog } from "@components/AlertDialog";
 export { ColumnView } from "@components/ColumnView";
 export { RowView } from "@components/RowView";
 export { ThemedText } from "@components/ThemedText";
