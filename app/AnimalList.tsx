@@ -1,3 +1,4 @@
+import { ThemedButton, ThemedText } from '@components';
 import FilterModal from "@components/FilterModal";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
@@ -6,15 +7,16 @@ import type { Animal, AnimalFilters } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  Button,
+  ActivityIndicator,
   Image,
   Pressable,
   StyleSheet,
   Text,
   useWindowDimensions,
-  View,
+  View
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { theme } from '../theme/theme';
 
 export default function AnimalList() {
   const router = useRouter();
@@ -22,6 +24,7 @@ export default function AnimalList() {
   const numColumns = Math.max(1, Math.floor(width / 200));
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [previewImage, setPreviewImage] = useState<Record<string, string>>({});
+  const [doneImgLoad, setDoneImgLoad] = useState(true);
   const [loading, setLoading] = useState(true);
   const [filter, setFilter] = useState<AnimalFilters>({});
   const [modalVisibility, setModalVisibility] = useState(false);
@@ -30,6 +33,7 @@ export default function AnimalList() {
     const previewMap: Record<string, string> = {};
 
     for (const animal of data ?? []) {
+      setDoneImgLoad(false);
       try {
         const urls = await getAnimalMediaDownloadURls(animal.id);
         if (urls.length > 0) {
@@ -44,6 +48,7 @@ export default function AnimalList() {
     }
 
     setPreviewImage(previewMap);
+    setDoneImgLoad(true);
   }
 
   async function load() {
@@ -79,20 +84,29 @@ export default function AnimalList() {
 
   if (loading) {
     return (
-      <View>
-        <Text>Daten werden geladen...</Text>
+      <View style={styles.emptyComponent}>
+        <ThemedText variant='h3'> Loading... <ActivityIndicator></ActivityIndicator></ThemedText>
       </View>
     );
+  }
+  let headertext;
+  if (!filter.type) {
+    headertext = "All Animals"
+  } else {
+    headertext = "All " + filter.type + "s"
   }
 
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.view}>
         <View style={styles.container}>
-          <Button
-            title="Filter"
-            onPress={() => setModalVisibility(!modalVisibility)}
-          ></Button>
+          <View style={styles.buttonArea}>
+            <ThemedButton borderRadius={100} backgroundColor={theme.colors.brand.secondary}> F </ThemedButton>
+            <ThemedButton borderRadius={100} backgroundColor={theme.colors.background.warm} textColor={theme.colors.text.dark} onPress={() => setModalVisibility(!modalVisibility)}> S </ThemedButton>
+          </View>
+          <ThemedText variant='h2' style={styles.header}>{headertext}</ThemedText>
+
+
           <FilterModal
             isVisible={modalVisibility}
             changeVisibility={() => setModalVisibility(!modalVisibility)}
@@ -101,7 +115,6 @@ export default function AnimalList() {
             }}
             currentFilter={filter}
           />
-
           <FlashList
             data={animals}
             masonry
@@ -135,7 +148,7 @@ export default function AnimalList() {
             )}
             ListEmptyComponent={
               <View style={styles.emptyComponent}>
-                <Text>No animals yet</Text>
+                <ThemedText variant='h2'> No animals yet</ThemedText>
               </View>
             }
           />
@@ -151,10 +164,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   container: { flex: 1, padding: 5, marginBottom: 4 },
+  buttonArea: {
+    flexDirection: "row-reverse"
+  },
   filterButton: {
     borderRadius: 20,
     padding: 10,
     elevation: 2,
+  },
+  header: {
+    padding: 10,
   },
   list: { justifyContent: "space-evenly" },
   card: {
@@ -168,5 +187,5 @@ const styles = StyleSheet.create({
   image: { width: "100%", height: 100, borderRadius: 12, marginBottom: 8 },
   title: { fontSize: 18, textAlign: "center" },
   meta: { marginTop: 4 },
-  emptyComponent: { alignItems: "center" },
+  emptyComponent: { alignItems: "center", padding: 10},
 });
