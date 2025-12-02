@@ -1,4 +1,5 @@
 import { supabase } from "@lib/supabase";
+import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import {
   Alert,
@@ -22,6 +23,7 @@ export default function Auth() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
 
   async function signInWithEmail() {
     setLoading(true);
@@ -47,6 +49,23 @@ export default function Auth() {
     if (error) Alert.alert(error.message);
     if (!session)
       Alert.alert("Please check your inbox for email verification!");
+    setLoading(false);
+  }
+
+  async function signUpForOrganization() {
+    setLoading(true);
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (error) Alert.alert(error.message);
+    else if (session) {
+      router.replace("/OrganizationSignUp");
+    }
     setLoading(false);
   }
 
@@ -83,6 +102,20 @@ export default function Auth() {
           title="Sign up"
           disabled={loading}
           onPress={() => signUpWithEmail()}
+        />
+      </View>
+      <View style={[styles.verticallySpaced]}>
+        <Button
+          title="Organization Sign up"
+          disabled={loading}
+          onPress={() => signUpForOrganization()}
+        />
+      </View>
+      <View style={[styles.verticallySpaced]}>
+        <Button
+          title="Organization Sign up"
+          disabled={loading}
+          onPress={() => signUpForOrganization()}
         />
       </View>
     </View>

@@ -1,3 +1,4 @@
+import { AlertDialog } from "@components";
 import ImageCarousel from "@components/ImageCarousel";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import {
@@ -30,6 +31,7 @@ export default function EditAnimal() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   const { enums, enumsAreLoading, enumsError } = useAnimalFieldEnums();
 
@@ -102,9 +104,9 @@ export default function EditAnimal() {
     setSaving(true);
 
     const updated = await updateAnimal(animal);
+
     if (updated) {
-      Alert.alert("Erfolg", SUCCESS_MESSAGES.ANIMAL_UPDATED);
-      router.back();
+      setAlertVisible(true);
     } else {
       Alert.alert("Fehler", ERROR_MESSAGES.ANIMAL_UPDATE_FAILED);
     }
@@ -112,114 +114,130 @@ export default function EditAnimal() {
   };
 
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={{ height: 250, marginBottom: 10 }}>
-        <ImageCarousel urls={imageUrls} />
-      </View>
-      <View style={styles.container}>
-        <View style={styles.button}>
-          <Button title="Bild Hinzufügen" onPress={handleImageUpload} />
+    <>
+      <AlertDialog
+        visible={alertVisible}
+        title="Erfolg"
+        message={SUCCESS_MESSAGES.ANIMAL_UPDATED}
+        buttons={[
+          {
+            text: "OK",
+            onPress: () => router.back(),
+          },
+        ]}
+        onDismiss={() => setAlertVisible(false)}
+      />
+      <ScrollView style={{ flex: 1 }}>
+        <View style={{ height: 250, marginBottom: 10 }}>
+          <ImageCarousel urls={imageUrls} />
         </View>
+        <View style={styles.container}>
+          <View style={styles.button}>
+            <Button title="Bild Hinzufügen" onPress={handleImageUpload} />
+          </View>
 
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
-        <TextInput
-          style={styles.input}
-          value={animal.name || ""}
-          onChangeText={(text) => setAnimal({ ...animal, name: text })}
-        />
+          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
+          <TextInput
+            style={styles.input}
+            value={animal.name || ""}
+            onChangeText={(text) => setAnimal({ ...animal, name: text })}
+          />
 
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
-        <TextInput
-          style={styles.input}
-          value={animal.origin || ""}
-          onChangeText={(text) => setAnimal({ ...animal, origin: text })}
-        />
+          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
+          <TextInput
+            style={styles.input}
+            value={animal.origin || ""}
+            onChangeText={(text) => setAnimal({ ...animal, origin: text })}
+          />
 
-        <Text style={{ fontWeight: "bold" }}>Art:</Text>
-        <View style={styles.pickerContainer}>
-          <Dropdown
-            data={enums.animalTypes.values.map((val) => ({ value: val }))}
-            valueField={"value"}
-            labelField={"value"}
-            value={animal.type}
-            onChange={(itemValue) =>
-              setAnimal({ ...animal, type: itemValue.value })
+          <Text style={{ fontWeight: "bold" }}>Art:</Text>
+          <View style={styles.pickerContainer}>
+            <Dropdown
+              data={enums.animalTypes.values.map((val) => ({ value: val }))}
+              valueField={"value"}
+              labelField={"value"}
+              value={animal.type}
+              onChange={(itemValue) =>
+                setAnimal({ ...animal, type: itemValue.value })
+              }
+              style={styles.picker}
+            ></Dropdown>
+          </View>
+
+          <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
+          <View style={styles.pickerContainer}>
+            <Dropdown
+              data={enums.sexes.values.map((val) => ({ value: val }))}
+              valueField={"value"}
+              labelField={"value"}
+              value={animal.sex}
+              onChange={(itemValue) =>
+                setAnimal({ ...animal, sex: itemValue.value })
+              }
+              style={styles.picker}
+            ></Dropdown>
+          </View>
+
+          <Text style={{ fontWeight: "bold" }}>Größe:</Text>
+          <View style={styles.pickerContainer}>
+            <Dropdown
+              data={enums.animalSizes.values.map((val) => ({ value: val }))}
+              valueField={"value"}
+              labelField={"value"}
+              value={animal.size}
+              onChange={(itemValue) =>
+                setAnimal({ ...animal, size: itemValue.value })
+              }
+              style={styles.picker}
+            ></Dropdown>
+          </View>
+
+          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
+          <View style={styles.pickerContainer}>
+            <Dropdown
+              data={enums.characterTypes.values.map((val) => ({ value: val }))}
+              valueField={"value"}
+              labelField={"value"}
+              value={animal.character}
+              onChange={(itemValue) =>
+                setAnimal({ ...animal, character: itemValue.value })
+              }
+              style={styles.picker}
+            ></Dropdown>
+          </View>
+
+          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
+          <View style={styles.pickerContainer}>
+            <Dropdown
+              data={enums.adoptionStatuses.values.map((val) => ({
+                value: val,
+              }))}
+              valueField={"value"}
+              labelField={"value"}
+              value={animal.status}
+              onChange={(itemValue) =>
+                setAnimal({ ...animal, status: itemValue.value })
+              }
+              style={styles.picker}
+            ></Dropdown>
+          </View>
+
+          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
+          <TextInput
+            style={styles.input}
+            value={animal.age?.toString() || ""}
+            keyboardType="numeric"
+            onChangeText={(text) =>
+              setAnimal({ ...animal, age: parseInt(text) || null })
             }
-            style={styles.picker}
-          ></Dropdown>
-        </View>
+          />
 
-        <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
-        <View style={styles.pickerContainer}>
-          <Dropdown
-            data={enums.sexes.values.map((val) => ({ value: val }))}
-            valueField={"value"}
-            labelField={"value"}
-            value={animal.sex}
-            onChange={(itemValue) =>
-              setAnimal({ ...animal, sex: itemValue.value })
-            }
-            style={styles.picker}
-          ></Dropdown>
+          <View style={styles.buttonContainer}>
+            <Button title="Speichern" onPress={handleSave} disabled={saving} />
+          </View>
         </View>
-
-        <Text style={{ fontWeight: "bold" }}>Größe:</Text>
-        <View style={styles.pickerContainer}>
-          <Dropdown
-            data={enums.animalSizes.values.map((val) => ({ value: val }))}
-            valueField={"value"}
-            labelField={"value"}
-            value={animal.size}
-            onChange={(itemValue) =>
-              setAnimal({ ...animal, size: itemValue.value })
-            }
-            style={styles.picker}
-          ></Dropdown>
-        </View>
-
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
-        <View style={styles.pickerContainer}>
-          <Dropdown
-            data={enums.characterTypes.values.map((val) => ({ value: val }))}
-            valueField={"value"}
-            labelField={"value"}
-            value={animal.character}
-            onChange={(itemValue) =>
-              setAnimal({ ...animal, character: itemValue.value })
-            }
-            style={styles.picker}
-          ></Dropdown>
-        </View>
-
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
-        <View style={styles.pickerContainer}>
-          <Dropdown
-            data={enums.adoptionStatuses.values.map((val) => ({ value: val }))}
-            valueField={"value"}
-            labelField={"value"}
-            value={animal.status}
-            onChange={(itemValue) =>
-              setAnimal({ ...animal, status: itemValue.value })
-            }
-            style={styles.picker}
-          ></Dropdown>
-        </View>
-
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
-        <TextInput
-          style={styles.input}
-          value={animal.age?.toString() || ""}
-          keyboardType="numeric"
-          onChangeText={(text) =>
-            setAnimal({ ...animal, age: parseInt(text) || null })
-          }
-        />
-
-        <View style={styles.buttonContainer}>
-          <Button title="Speichern" onPress={handleSave} disabled={saving} />
-        </View>
-      </View>
-    </ScrollView>
+      </ScrollView>
+    </>
   );
 }
 
