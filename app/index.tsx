@@ -3,6 +3,8 @@ import Auth from "@app/Auth";
 import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { useEffect, useState } from "react";
+import { View } from "react-native";
+import { BottomNavigation } from "@components";
 
 export default function App() {
   const [session, setSession] = useState<Session | null>(null);
@@ -17,9 +19,16 @@ export default function App() {
     });
   }, []);
 
-  if (session && session.user) {
-    return <Account key={session.user.id} session={session} />;
-  } else {
-    return <Auth />;
-  }
+ return (
+  <View style={{ flex: 1 }}>
+    {session && session.user ? (
+      <>
+        <Account key={session.user.id} session={session} />
+        <BottomNavigation />
+      </>
+    ) : (
+      <Auth />
+    )}
+  </View>
+);
 }
