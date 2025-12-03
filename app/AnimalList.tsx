@@ -1,5 +1,5 @@
-import { ThemedButton, ThemedText } from '@components';
-import { AnimalCard } from '@components/AnimalCard';
+import { ThemedButton, ThemedText } from "@components";
+import { AnimalCard } from "@components/AnimalCard";
 import FilterModal from "@components/FilterModal";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
@@ -11,10 +11,10 @@ import {
   ActivityIndicator,
   StyleSheet,
   useWindowDimensions,
-  View
+  View,
 } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { theme } from '../theme/theme';
+import { theme } from "../theme/theme";
 
 export default function AnimalList() {
   const router = useRouter();
@@ -83,15 +83,18 @@ export default function AnimalList() {
   if (loading) {
     return (
       <View style={styles.emptyComponent}>
-        <ThemedText variant='h3'> Loading... <ActivityIndicator></ActivityIndicator></ThemedText>
+        <ThemedText variant="h3">
+          {" "}
+          Loading... <ActivityIndicator></ActivityIndicator>
+        </ThemedText>
       </View>
     );
   }
   let headertext;
   if (!filter.type) {
-    headertext = "All Animals"
+    headertext = "All Animals";
   } else {
-    headertext = "All " + filter.type + "s"
+    headertext = "All " + filter.type + "s";
   }
 
   return (
@@ -99,11 +102,26 @@ export default function AnimalList() {
       <SafeAreaView style={styles.view}>
         <View style={styles.container}>
           <View style={styles.buttonArea}>
-            <ThemedButton borderRadius={100} backgroundColor={theme.colors.brand.secondary}> F </ThemedButton>
-            <ThemedButton borderRadius={100} backgroundColor={theme.colors.background.warm} textColor={theme.colors.text.dark} onPress={() => setModalVisibility(!modalVisibility)}> S </ThemedButton>
+            <ThemedButton
+              borderRadius={100}
+              backgroundColor={theme.colors.brand.secondary}
+            >
+              {" "}
+              F{" "}
+            </ThemedButton>
+            <ThemedButton
+              borderRadius={100}
+              backgroundColor={theme.colors.background.warm}
+              textColor={theme.colors.text.dark}
+              onPress={() => setModalVisibility(!modalVisibility)}
+            >
+              {" "}
+              S{" "}
+            </ThemedButton>
           </View>
-          <ThemedText variant='h2' style={styles.header}>{headertext}</ThemedText>
-
+          <ThemedText variant="h2" style={styles.header}>
+            {headertext}
+          </ThemedText>
 
           <FilterModal
             isVisible={modalVisibility}
@@ -120,11 +138,15 @@ export default function AnimalList() {
             style={styles.list}
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
-              <AnimalCard animal={item} previewImage={previewImage[item.id]} doneLoading={doneImgLoad}/>
+              <AnimalCard
+                animal={item}
+                previewImage={previewImage[item.id]}
+                doneLoading={doneImgLoad}
+              />
             )}
             ListEmptyComponent={
               <View style={styles.emptyComponent}>
-                <ThemedText variant='h2'> No animals yet</ThemedText>
+                <ThemedText variant="h2"> No animals yet</ThemedText>
               </View>
             }
           />
@@ -141,12 +163,12 @@ const styles = StyleSheet.create({
   },
   container: { flex: 1, padding: 5, marginBottom: 2 },
   buttonArea: {
-    flexDirection: "row-reverse"
+    flexDirection: "row-reverse",
   },
   header: {
     padding: 10,
   },
   list: { justifyContent: "space-evenly" },
   meta: { marginTop: 4 },
-  emptyComponent: { alignItems: "center", padding: 10},
+  emptyComponent: { alignItems: "center", padding: 10 },
 });
