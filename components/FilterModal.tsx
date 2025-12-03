@@ -1,3 +1,4 @@
+import { IconButton } from "@components/IconButton";
 import { useEnum } from "@hooks/useEnum";
 import {
   getAdoptionStatusesEnum,
@@ -6,6 +7,7 @@ import {
   getCharacterTypesEnum,
   getSexesEnum,
 } from "@lib/supabaseEnumHandler";
+import { theme } from "@theme";
 import type { AnimalFilters } from "@types";
 import { useEffect, useState } from "react";
 import { Button, Modal, StyleSheet, Text, View } from "react-native";
@@ -200,12 +202,15 @@ export default function FilterModal({
               changeVisibility();
             }}
           ></Button>
-          <Button
-            title="Schließen"
+          <IconButton
+            iconSet="Feather"
+            iconName="x"
+            size={24}
+            iconColor={theme.colors.text.dark}
             onPress={() => {
               changeVisibility();
             }}
-          ></Button>
+          />
         </View>
       </View>
     </Modal>
