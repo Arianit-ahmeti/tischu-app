@@ -19,16 +19,16 @@ export default function App() {
     });
   }, []);
 
- return (
-  <View style={{ flex: 1 }}>
-    {session && session.user ? (
-      <>
-        <Account key={session.user.id} session={session} />
-        <BottomNavigation />
-      </>
-    ) : (
-      <Auth />
-    )}
-  </View>
-);
+  return (
+    <View style={{ flex: 1 }}>
+      {session && session.user ? (
+        <>
+          <Account key={session.user.id} session={session} />
+          <BottomNavigation />
+        </>
+      ) : (
+        <Auth />
+      )}
+    </View>
+  );
 }

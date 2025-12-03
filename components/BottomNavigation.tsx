@@ -33,9 +33,7 @@ export const BottomNavigation: React.FC = () => {
               name={tab.icon}
               size={24}
               color={
-                isActive
-                  ? theme.colors.brand.primary
-                  : theme.colors.text.muted
+                isActive ? theme.colors.brand.primary : theme.colors.text.muted
               }
             />
             <Text
@@ -59,10 +57,10 @@ export const BottomNavigation: React.FC = () => {
 
 const styles = StyleSheet.create({
   container: {
-    position: 'absolute',        
-    bottom: 0,                    
-    left: 0,                   
-    right: 0,  
+    position: "absolute",
+    bottom: 0,
+    left: 0,
+    right: 0,
     flexDirection: "row",
     backgroundColor: theme.colors.background.base,
     borderTopWidth: 1,
