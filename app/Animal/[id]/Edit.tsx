@@ -1,5 +1,6 @@
 import { AlertDialog, ThemedButton, ThemedText } from "@components";
 import { ImageCarousel } from "@components/ImageCarousel";
+import { ThemedTextInput } from "@components/ThemedTextInput";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import {
   getAnimalMediaDownloadURls,
@@ -17,7 +18,6 @@ import {
   ScrollView,
   StyleSheet,
   Text,
-  TextInput,
   View,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
@@ -153,15 +153,13 @@ export default function EditAnimal() {
           </View>
 
           <ThemedText variant="h3">Name:</ThemedText>
-          <TextInput
-            style={[styles.sharedComponentContainer, styles.inputContainer]}
+          <ThemedTextInput
             value={animal.name || ""}
             onChangeText={(text) => setAnimal({ ...animal, name: text })}
           />
 
           <ThemedText variant="h3">Herkunft:</ThemedText>
-          <TextInput
-            style={[styles.sharedComponentContainer, styles.inputContainer]}
+          <ThemedTextInput
             value={animal.origin || ""}
             onChangeText={(text) => setAnimal({ ...animal, origin: text })}
           />
@@ -239,8 +237,7 @@ export default function EditAnimal() {
           </View>
 
           <ThemedText variant="h3">Alter:</ThemedText>
-          <TextInput
-            style={[styles.sharedComponentContainer, styles.inputContainer]}
+          <ThemedTextInput
             value={animal.age?.toString() || ""}
             keyboardType="numeric"
             onChangeText={(text) =>
