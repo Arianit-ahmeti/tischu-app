@@ -193,10 +193,10 @@ const styles = StyleSheet.create({
     paddingVertical: 32,
   },
   profileImage: {
-     width: 90,
-     height: 90,
-     borderRadius: 45,
-     backgroundColor: COLORS.secondary,
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: COLORS.secondary,
     marginRight: 24,
   },
   profileInfo: {
