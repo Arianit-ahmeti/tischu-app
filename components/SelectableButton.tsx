@@ -47,7 +47,7 @@ export const SelectableButton: React.FC<
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 14,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 32,
     margin: 4,
