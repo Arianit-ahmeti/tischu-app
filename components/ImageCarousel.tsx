@@ -1,19 +1,30 @@
-import React, { useState } from "react";
+import React, { ReactNode, useState } from "react";
 import {
   Dimensions,
   FlatList,
-  Image,
+  ImageBackground,
+  ImageStyle,
   NativeScrollEvent,
   NativeSyntheticEvent,
   Text,
   View,
 } from "react-native";
 import { PaginationDots } from "./PaginationDots";
+import { ThemedText } from "./ThemedText";
 
 const { width } = Dimensions.get("window");
 
-export default function ImageCarousel({ urls }: { urls: string[] }) {
+interface ImageCarouselProps {
+  // TODO: outsource showAmount into ImagePreview component so it can be used in the list without size issues
+  showAmount?: boolean;
+  emptyStateComponent?: ReactNode;
+  imageStyle?: ImageStyle;
+  urls: string[];
+}
+
+export const ImageCarousel: React.FC<ImageCarouselProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  let child: ReactNode;
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
     const scrollX = event.nativeEvent.contentOffset.x;
@@ -21,7 +32,64 @@ export default function ImageCarousel({ urls }: { urls: string[] }) {
     setActiveIndex(currentIndex);
   };
 
-  if (urls.length == 0) {
+  if (props.urls.length == 0) {
+    child = props.emptyStateComponent ?? (
+      <Text style={{ fontSize: 20 }}>Keine Bilder verfügbar</Text>
+    );
+  } else {
+    child = (
+      <View>
+        <FlatList
+          data={props.urls}
+          keyExtractor={(item) => item}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+          pagingEnabled
+          snapToAlignment="center"
+          decelerationRate="fast"
+          onScroll={handleScroll}
+          scrollEventThrottle={16}
+          renderItem={({ item }) => (
+            <ImageBackground
+              source={{
+                uri: item,
+                cache: "force-cache",
+              }}
+              style={[
+                props.imageStyle,
+                {
+                  height: "100%",
+                  width,
+                  backgroundColor: "#eee",
+                },
+              ]}
+              resizeMode="cover"
+            />
+          )}
+        />
+        <PaginationDots
+          activeIndex={activeIndex}
+          dataLength={props.urls.length}
+        />
+      </View>
+    );
+
+    const amountIndicator: ReactNode = (
+      <View
+        style={{
+          position: "absolute",
+          bottom: "5%",
+          right: "5%",
+          backgroundColor: "rgba(0, 0, 0, 0.75)",
+          borderRadius: 4,
+          paddingVertical: 4,
+          paddingHorizontal: 8,
+        }}
+      >
+        <ThemedText color="white">{props.urls.length}</ThemedText>
+      </View>
+    );
+
     return (
       <View
         style={{
@@ -29,40 +97,12 @@ export default function ImageCarousel({ urls }: { urls: string[] }) {
           height: 250,
           justifyContent: "center",
           alignItems: "center",
+          position: "relative",
         }}
       >
-        <Text style={{ fontSize: 20 }}>Keine Bilder verfügbar</Text>
+        {child}
+        {props.showAmount && props.urls.length > 0 && amountIndicator}
       </View>
     );
   }
-  return (
-    <View style={{ width, height: 250 }}>
-      <FlatList
-        data={urls}
-        keyExtractor={(item) => item}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-        pagingEnabled
-        snapToAlignment="center"
-        decelerationRate="fast"
-        onScroll={handleScroll}
-        scrollEventThrottle={16} //60 FPS
-        renderItem={({ item }) => (
-          <Image
-            source={{
-              uri: item,
-              cache: "force-cache",
-            }}
-            style={{
-              width: width,
-              height: 250,
-              resizeMode: "cover",
-              backgroundColor: "#eee",
-            }}
-          />
-        )}
-      />
-      <PaginationDots activeIndex={activeIndex} dataLength={urls.length} />
-    </View>
-  );
-}
+};
