@@ -111,13 +111,6 @@ export default function Auth() {
           onPress={() => signUpForOrganization()}
         />
       </View>
-      <View style={[styles.verticallySpaced]}>
-        <Button
-          title="Organization Sign up"
-          disabled={loading}
-          onPress={() => signUpForOrganization()}
-        />
-      </View>
     </View>
   );
 }

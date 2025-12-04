@@ -1,5 +1,5 @@
-import { AlertDialog } from "@components";
-import ImageCarousel from "@components/ImageCarousel";
+import { AlertDialog, ThemedButton, ThemedText } from "@components";
+import { ImageCarousel } from "@components/ImageCarousel";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import {
   getAnimalMediaDownloadURls,
@@ -8,12 +8,12 @@ import {
 import { fetchAnimalDetails, updateAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
 import { Animal } from "@lib/types";
+import { theme } from "@theme";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   ActivityIndicator,
   Alert,
-  Button,
   ScrollView,
   StyleSheet,
   Text,
@@ -28,6 +28,7 @@ export default function EditAnimal() {
   const animalId = Array.isArray(id) ? id[0] : id;
 
   const [animal, setAnimal] = useState<Animal | null>(null);
+  const [originalAnimal, setOriginalAnimal] = useState<Animal | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -36,11 +37,18 @@ export default function EditAnimal() {
   const { enums, enumsAreLoading, enumsError } = useAnimalFieldEnums();
 
   async function loadAnimal() {
-    setLoading(true);
-    const data = await fetchAnimalDetails(id as string);
-    if (data) setAnimal(data);
-    else Alert.alert("Fehler", ERROR_MESSAGES.ANIMAL_LOAD_FAILED);
-    setLoading(false);
+    try {
+      setLoading(true);
+      const data = await fetchAnimalDetails(id as string);
+      if (data) {
+        setAnimal(data);
+        setOriginalAnimal(data);
+      } else Alert.alert("Fehler", ERROR_MESSAGES.ANIMAL_LOAD_FAILED);
+    } catch (error) {
+      console.error(ERROR_MESSAGES.ANIMAL_LOAD_FAILED, error);
+    } finally {
+      setLoading(false);
+    }
   }
 
   async function fetchImages() {
@@ -65,41 +73,10 @@ export default function EditAnimal() {
     }
   }
 
-  useEffect(() => {
-    if (!id) return;
-    loadAnimal();
-    fetchImages();
-  }, [id]);
-
-  if (loading || enumsAreLoading)
-    return (
-      <View style={styles.center}>
-        <ActivityIndicator size="large" />
-      </View>
-    );
-  if (!animal)
-    return (
-      <View style={styles.center}>
-        <Text>{ERROR_MESSAGES.ANIMAL_NOT_FOUND}</Text>
-      </View>
-    );
-
-  if (
-    enumsError ||
-    !enums.animalTypes ||
-    !enums.animalSizes ||
-    !enums.sexes ||
-    !enums.characterTypes ||
-    !enums.adoptionStatuses
-  )
-    return (
-      <View style={styles.center}>
-        <Text>{ERROR_MESSAGES.ENUM_LOAD_FAILED}</Text>
-      </View>
-    );
-
   const handleSave = async () => {
     if (!animal) return;
+
+    if (animal === originalAnimal) router.back();
 
     setSaving(true);
 
@@ -112,6 +89,43 @@ export default function EditAnimal() {
     }
     setSaving(false);
   };
+
+  useEffect(() => {
+    if (!id) return;
+    loadAnimal();
+    fetchImages();
+  }, [id]);
+
+  if (loading || enumsAreLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!animal) {
+    return (
+      <View style={styles.center}>
+        <Text>{ERROR_MESSAGES.ANIMAL_NOT_FOUND}</Text>
+      </View>
+    );
+  }
+
+  if (
+    enumsError ||
+    !enums.animalTypes ||
+    !enums.animalSizes ||
+    !enums.sexes ||
+    !enums.characterTypes ||
+    !enums.adoptionStatuses
+  ) {
+    return (
+      <View style={styles.center}>
+        <Text>{ERROR_MESSAGES.ENUM_LOAD_FAILED}</Text>
+      </View>
+    );
+  }
 
   return (
     <>
@@ -128,30 +142,32 @@ export default function EditAnimal() {
         onDismiss={() => setAlertVisible(false)}
       />
       <ScrollView style={{ flex: 1 }}>
-        <View style={{ height: 250, marginBottom: 10 }}>
+        <View style={{ height: 250 }}>
           <ImageCarousel urls={imageUrls} />
         </View>
         <View style={styles.container}>
-          <View style={styles.button}>
-            <Button title="Bild Hinzufügen" onPress={handleImageUpload} />
+          <View style={styles.buttonContainer}>
+            <ThemedButton onPress={handleImageUpload}>
+              Bild Hinzufügen
+            </ThemedButton>
           </View>
 
-          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Name:</Text>
+          <ThemedText variant="h3">Name:</ThemedText>
           <TextInput
-            style={styles.input}
+            style={[styles.sharedComponentContainer, styles.inputContainer]}
             value={animal.name || ""}
             onChangeText={(text) => setAnimal({ ...animal, name: text })}
           />
 
-          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Herkunft:</Text>
+          <ThemedText variant="h3">Herkunft:</ThemedText>
           <TextInput
-            style={styles.input}
+            style={[styles.sharedComponentContainer, styles.inputContainer]}
             value={animal.origin || ""}
             onChangeText={(text) => setAnimal({ ...animal, origin: text })}
           />
 
-          <Text style={{ fontWeight: "bold" }}>Art:</Text>
-          <View style={styles.pickerContainer}>
+          <ThemedText variant="h3">Art:</ThemedText>
+          <View style={styles.sharedComponentContainer}>
             <Dropdown
               data={enums.animalTypes.values.map((val) => ({ value: val }))}
               valueField={"value"}
@@ -161,11 +177,11 @@ export default function EditAnimal() {
                 setAnimal({ ...animal, type: itemValue.value })
               }
               style={styles.picker}
-            ></Dropdown>
+            />
           </View>
 
-          <Text style={{ fontWeight: "bold" }}>Geschlecht:</Text>
-          <View style={styles.pickerContainer}>
+          <ThemedText variant="h3">Geschlecht:</ThemedText>
+          <View style={styles.sharedComponentContainer}>
             <Dropdown
               data={enums.sexes.values.map((val) => ({ value: val }))}
               valueField={"value"}
@@ -175,11 +191,11 @@ export default function EditAnimal() {
                 setAnimal({ ...animal, sex: itemValue.value })
               }
               style={styles.picker}
-            ></Dropdown>
+            />
           </View>
 
-          <Text style={{ fontWeight: "bold" }}>Größe:</Text>
-          <View style={styles.pickerContainer}>
+          <ThemedText variant="h3">Größe:</ThemedText>
+          <View style={styles.sharedComponentContainer}>
             <Dropdown
               data={enums.animalSizes.values.map((val) => ({ value: val }))}
               valueField={"value"}
@@ -189,11 +205,11 @@ export default function EditAnimal() {
                 setAnimal({ ...animal, size: itemValue.value })
               }
               style={styles.picker}
-            ></Dropdown>
+            />
           </View>
 
-          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Charakter:</Text>
-          <View style={styles.pickerContainer}>
+          <ThemedText variant="h3">Charakter:</ThemedText>
+          <View style={styles.sharedComponentContainer}>
             <Dropdown
               data={enums.characterTypes.values.map((val) => ({ value: val }))}
               valueField={"value"}
@@ -203,11 +219,11 @@ export default function EditAnimal() {
                 setAnimal({ ...animal, character: itemValue.value })
               }
               style={styles.picker}
-            ></Dropdown>
+            />
           </View>
 
-          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Status:</Text>
-          <View style={styles.pickerContainer}>
+          <ThemedText variant="h3">Status:</ThemedText>
+          <View style={styles.sharedComponentContainer}>
             <Dropdown
               data={enums.adoptionStatuses.values.map((val) => ({
                 value: val,
@@ -219,12 +235,12 @@ export default function EditAnimal() {
                 setAnimal({ ...animal, status: itemValue.value })
               }
               style={styles.picker}
-            ></Dropdown>
+            />
           </View>
 
-          <Text style={{ fontWeight: "bold", marginTop: 10 }}>Alter:</Text>
+          <ThemedText variant="h3">Alter:</ThemedText>
           <TextInput
-            style={styles.input}
+            style={[styles.sharedComponentContainer, styles.inputContainer]}
             value={animal.age?.toString() || ""}
             keyboardType="numeric"
             onChangeText={(text) =>
@@ -233,7 +249,9 @@ export default function EditAnimal() {
           />
 
           <View style={styles.buttonContainer}>
-            <Button title="Speichern" onPress={handleSave} disabled={saving} />
+            <ThemedButton onPress={handleSave} disabled={saving}>
+              Speichern
+            </ThemedButton>
           </View>
         </View>
       </ScrollView>
@@ -242,32 +260,26 @@ export default function EditAnimal() {
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, paddingBottom: 40 },
+  container: { paddingHorizontal: 16, paddingBottom: 24 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  name: { fontSize: 28, fontWeight: "bold", marginBottom: 30 },
-  input: {
-    backgroundColor: "#fff",
-    borderColor: "#5f5f5fff",
+  sharedComponentContainer: {
+    backgroundColor: theme.colors.background.warm,
+    borderColor: theme.colors.border.light,
     borderWidth: 1,
-    borderRadius: 5,
-    height: 45,
-    paddingHorizontal: 10,
+    borderRadius: 8,
+    height: 56,
+    marginTop: 4,
+    marginBottom: 16,
     fontSize: 16,
-    color: "#000",
-  },
-  pickerContainer: {
-    backgroundColor: "#fff",
-    borderColor: "#5f5f5fff",
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 45,
     justifyContent: "center",
-    marginVertical: 5,
+  },
+  inputContainer: {
+    paddingHorizontal: 10,
+    color: theme.colors.text.dark,
   },
   picker: {
     height: 55,
     padding: 10,
   },
-  buttonContainer: { marginTop: 30, overflow: "hidden", width: "30%" },
-  button: { marginVertical: 8, overflow: "hidden" },
+  buttonContainer: { marginVertical: 10, overflow: "hidden" },
 });

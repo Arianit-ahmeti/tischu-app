@@ -1,4 +1,4 @@
-import ImageCarousel from "@components/ImageCarousel";
+import { ImageCarousel } from "@components/ImageCarousel";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
@@ -78,8 +78,8 @@ export default function AnimalDetailScreen() {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.imageContainer}>
+    <View style={{ flex: 1 }}>
+      <View style={{ height: 250 }}>
         <ImageCarousel urls={imageUrls} />
       </View>
       <View style={styles.container}>
@@ -115,7 +115,7 @@ export default function AnimalDetailScreen() {
         <View style={styles.button}>
           <Button
             title="Bearbeiten"
-            onPress={() => router.push(`/Animal/edit?id=${animal.id}`)}
+            onPress={() => router.push(`/Animal/${animal.id}/Edit`)}
           />
         </View>
       </View>
