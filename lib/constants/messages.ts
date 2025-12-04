@@ -5,6 +5,9 @@ export const ERROR_MESSAGES = {
   IMAGE_UPLOAD_FAILED: "Fehler beim Hochladen",
   IMAGE_DOWNLOAD_FAILED: "Fehler beim Herunterladen",
   ENUM_LOAD_FAILED: "Fehler beim Laden",
+  ORG_PROFILE_LOAD_FAILED: "Vereinprofil konnte nicht geladen werden.",
+  ORG_SESSION_FAILED: "Sitzung fehlgeschlagen.",
+  ORG_SAVE_FAILED: "Fehler beim Speichern des Vereins.",
 } as const;
 
 export const SUCCESS_MESSAGES = {
