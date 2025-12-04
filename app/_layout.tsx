@@ -62,18 +62,19 @@ export default function RootLayout() {
   }
 
   return (
-    //TODO Fix screen background colors
     <Tabs
       screenOptions={({ navigation, route }) => ({
-        headerTintColor: "#333",
         headerShadowVisible: false,
         headerTitleAlign: "center",
-        tabBarActiveTintColor: theme.colors.brand.primary || "#007AFF",
-        tabBarInactiveTintColor: "#999",
+        tabBarActiveTintColor: theme.colors.brand.primary,
+        tabBarInactiveTintColor: theme.colors.text.muted,
         tabBarStyle: {
           backgroundColor: theme.colors.background.base,
         },
         headerStyle: {
+          backgroundColor: theme.colors.background.base,
+        },
+        sceneStyle: {
           backgroundColor: theme.colors.background.base,
         },
         headerLeft: () => {
