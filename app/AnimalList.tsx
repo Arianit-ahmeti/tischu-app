@@ -1,18 +1,14 @@
-import { ThemedButton, ThemedText } from "@components";
+import { ThemedText } from "@components";
 import { AnimalCard } from "@components/AnimalCard";
 import FilterModal from "@components/FilterModal";
+import { IconButton } from "@components/IconButton";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
 import { FlashList } from "@shopify/flash-list";
 import type { Animal, AnimalFilters } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  StyleSheet,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { StyleSheet, useWindowDimensions, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme/theme";
 
@@ -38,10 +34,7 @@ export default function AnimalList() {
           previewMap[animal.id] = urls[0];
         }
       } catch (err) {
-        console.log(
-          `Could not load preview image for animal ${animal.id}:`,
-          err,
-        );
+        console.log(`Could not load preview image for animal ${animal.id}:`, err);
       }
     }
 
@@ -73,7 +66,7 @@ export default function AnimalList() {
   useFocusEffect(
     React.useCallback(() => {
       load();
-    }, []),
+    }, [])
   );
 
   useEffect(() => {
@@ -101,28 +94,13 @@ export default function AnimalList() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.view}>
         <View style={styles.container}>
-          <View style={styles.buttonArea}>
-            <ThemedButton
-              borderRadius={100}
-              backgroundColor={theme.colors.brand.secondary}
-            >
-              {" "}
-              F{" "}
-            </ThemedButton>
-            <ThemedButton
-              borderRadius={100}
-              backgroundColor={theme.colors.background.warm}
-              textColor={theme.colors.text.dark}
-              onPress={() => setModalVisibility(!modalVisibility)}
-            >
-              {" "}
-              S{" "}
-            </ThemedButton>
-          </View>
-          <ThemedText variant="h2" style={styles.header}>
-            {headertext}
-          </ThemedText>
-
+          <IconButton
+            iconSet="Feather"
+            iconName="filter"
+            size={24}
+            iconColor={theme.colors.brand.primary}
+            onPress={() => setModalVisibility(!modalVisibility)}
+          />
           <FilterModal
             isVisible={modalVisibility}
             changeVisibility={() => setModalVisibility(!modalVisibility)}

@@ -1,21 +1,13 @@
-import ImageCarousel from "@components/ImageCarousel";
+import { ImageCarousel } from "@components/ImageCarousel";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
-import { useIsFocused } from "@react-navigation/native";
+import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
 
 export default function AnimalDetailScreen() {
-  const isFocused = useIsFocused();
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const animalId = Array.isArray(id) ? id[0] : id;
@@ -26,30 +18,24 @@ export default function AnimalDetailScreen() {
 
   async function loadAnimal() {
     try {
-      setLoading(true);
       const data = await fetchAnimalDetails(animalId as string);
 
       if (data) {
         setAnimal(data);
       } else {
-        Alert.alert("Fehler", "Tier konnte nicht geladen werden.");
+        Alert.alert("Fehler", ERROR_MESSAGES.ANIMAL_NOT_FOUND);
       }
     } catch (error) {
       console.error("Error fetching animal images", error);
-    } finally {
-      setLoading(false);
     }
   }
 
   async function fetchImages() {
     try {
-      setLoading(true);
       const urls = await getAnimalMediaDownloadURls(animalId);
       setImageUrls(urls);
     } catch (error) {
       console.error("Error fetching animal images:", error);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -58,8 +44,14 @@ export default function AnimalDetailScreen() {
       setLoading(false);
       return;
     }
-    loadAnimal();
-    fetchImages();
+
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([loadAnimal(), fetchImages()]);
+      setLoading(false);
+    };
+
+    fetchData();
   }, [animalId]);
 
   if (loading) {
@@ -84,7 +76,7 @@ export default function AnimalDetailScreen() {
         <ImageCarousel urls={imageUrls} />
       </View>
       <View style={styles.container}>
-        <Text style={styles.name}>{animal?.name}</Text>
+        <Text style={styles.name}>{animal.name}</Text>
         <Text>Herkunft: {animal.origin}</Text>
         <Text>Alter: {animal.age || "Unbekannt"}</Text>
         <Text>Charakter: {animal.character}</Text>
@@ -92,32 +84,25 @@ export default function AnimalDetailScreen() {
           <Button
             title="Tier löschen"
             onPress={() => {
-              Alert.alert(
-                "Tier löschen",
-                `Möchten Sie ${animal.name} wirklich löschen?`,
-                [
-                  {
-                    text: "Abbrechen",
-                    style: "cancel",
+              Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
+                {
+                  text: "Abbrechen",
+                  style: "cancel",
+                },
+                {
+                  text: "Löschen",
+                  style: "destructive",
+                  onPress: async () => {
+                    await deleteAnimal(animalId as string);
+                    router.back();
                   },
-                  {
-                    text: "Löschen",
-                    style: "destructive",
-                    onPress: async () => {
-                      await deleteAnimal(animalId as string);
-                      router.back();
-                    },
-                  },
-                ],
-              );
+                },
+              ]);
             }}
           />
         </View>
         <View style={styles.button}>
-          <Button
-            title="Bearbeiten"
-            onPress={() => router.push(`/Animal/edit?id=${animal.id}`)}
-          />
+          <Button title="Bearbeiten" onPress={() => router.push(`/Animal/${animal.id}/Edit`)} />
         </View>
       </View>
     </View>
@@ -125,6 +110,8 @@ export default function AnimalDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+  root: { flex: 1 },
+  imageContainer: { height: 250 },
   container: { padding: 20, flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   name: { fontSize: 28, fontWeight: "bold", marginBottom: 10 },

@@ -9,9 +9,7 @@ interface SelectableButtonProps extends PressableProps {
   isSelected: boolean;
 }
 
-export const SelectableButton: React.FC<
-  React.PropsWithChildren<SelectableButtonProps>
-> = ({
+export const SelectableButton: React.FC<React.PropsWithChildren<SelectableButtonProps>> = ({
   backgroundColor = theme.colors.brand.primary,
   borderColor = theme.colors.brand.primary,
   isSelected = false,
@@ -47,7 +45,7 @@ export const SelectableButton: React.FC<
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 14,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 32,
     margin: 4,

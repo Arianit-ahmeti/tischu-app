@@ -2,13 +2,7 @@ import { Animal } from "@lib/types";
 import { ThemedText } from "components";
 import { useRouter } from "expo-router";
 import React from "react";
-import {
-  ActivityIndicator,
-  Image,
-  Pressable,
-  StyleSheet,
-  View,
-} from "react-native";
+import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
 import { theme } from "../theme/theme";
 
 interface AnimalCardProps {
@@ -41,8 +35,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = (props) => {
       return (
         <View style={styles.noImage}>
           <ThemedText variant="h4" color={theme.colors.text.muted}>
-            {" "}
-            No Image{" "}
+            No Image
           </ThemedText>
         </View>
       );

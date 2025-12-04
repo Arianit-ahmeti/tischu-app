@@ -2,15 +2,7 @@ import { supabase } from "@lib/supabase";
 import { Organization } from "@types";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import {
-  Alert,
-  Button,
-  ScrollView,
-  StyleSheet,
-  Text,
-  TextInput,
-  View,
-} from "react-native";
+import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
 
 export async function saveOrganization(organization: Partial<Organization>) {
   const {
@@ -24,9 +16,7 @@ export async function saveOrganization(organization: Partial<Organization>) {
   }
 
   if (!user) {
-    console.error(
-      "Error: No user is currently logged in. Organization signup requires a logged-in user.",
-    );
+    console.error("Error: No user is currently logged in. Organization signup requires a logged-in user.");
     return null;
   }
 
@@ -97,12 +87,7 @@ export default function OrganizationSignUp() {
         />
 
         <Text style={{ fontWeight: "bold" }}>Straße:</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setStreet(text)}
-          value={street}
-          placeholder="Straße"
-        />
+        <TextInput style={styles.input} onChangeText={(text) => setStreet(text)} value={street} placeholder="Straße" />
 
         <Text style={{ fontWeight: "bold" }}>Hausnummer:</Text>
         <TextInput
@@ -125,25 +110,12 @@ export default function OrganizationSignUp() {
         />
 
         <Text style={{ fontWeight: "bold", marginTop: 10 }}>Stadt:</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setCity(text)}
-          value={city}
-          placeholder="Stadt"
-        />
+        <TextInput style={styles.input} onChangeText={(text) => setCity(text)} value={city} placeholder="Stadt" />
 
         <Text style={{ fontWeight: "bold", marginTop: 10 }}>Land:</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setCountry(text)}
-          value={country}
-          placeholder="Land"
-        />
+        <TextInput style={styles.input} onChangeText={(text) => setCountry(text)} value={country} placeholder="Land" />
 
-        <Button
-          title="Registrieren"
-          onPress={async () => handleOrganizationSignUp()}
-        />
+        <Button title="Registrieren" onPress={async () => handleOrganizationSignUp()} />
         <View style={{ height: 20 }}></View>
       </View>
     </ScrollView>
