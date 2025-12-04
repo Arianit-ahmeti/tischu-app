@@ -17,20 +17,11 @@ export const BackButton: React.FC<BackButtonProps> = ({
 }) => {
   return (
     <Pressable
-      style={({ pressed }) => [
-        styles.button,
-        { opacity: pressed ? 0.7 : 1 },
-        style as ViewStyle,
-      ]}
+      style={({ pressed }) => [styles.button, { opacity: pressed ? 0.7 : 1 }, style as ViewStyle]}
       onPress={() => router.back()}
       {...props}
     >
-      <Ionicons
-        name="chevron-back"
-        size={size}
-        color={color}
-        style={{ marginRight: 2 }}
-      />
+      <Ionicons name="chevron-back" size={size} color={color} style={{ marginRight: 2 }} />
     </Pressable>
   );
 };

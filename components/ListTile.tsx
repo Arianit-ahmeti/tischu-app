@@ -1,12 +1,6 @@
 import { ColumnView, RowView, ThemedText } from "components";
 import { ReactNode } from "react";
-import {
-  GestureResponderEvent,
-  Pressable,
-  StyleSheet,
-  View,
-  ViewStyle,
-} from "react-native";
+import { GestureResponderEvent, Pressable, StyleSheet, View, ViewStyle } from "react-native";
 
 interface ListTileProps {
   onPress?: (event: GestureResponderEvent) => void;
@@ -25,37 +19,25 @@ export const ListTile: React.FC<ListTileProps> = (props) => {
   return (
     <Pressable
       onPress={props.onPress}
-      style={({ pressed }) => [
-        styles.container,
-        { minHeight, opacity: pressed ? 0.6 : 1 },
-        props.style,
-      ]}
+      style={({ pressed }) => [styles.container, { minHeight, opacity: pressed ? 0.6 : 1 }, props.style]}
     >
       <RowView style={styles.row}>
         {props.leading && <View style={styles.leading}>{props.leading}</View>}
 
-        <ColumnView
-          style={[styles.content, { marginLeft: props.leading ? 16 : 0 }]}
-        >
+        <ColumnView style={[styles.content, { marginLeft: props.leading ? 16 : 0 }]}>
           {props.title && (
             <ThemedText variant="body" numberOfLines={1}>
               {props.title}
             </ThemedText>
           )}
           {hasSubtitle && (
-            <ThemedText
-              variant="bodySmall"
-              numberOfLines={1}
-              style={styles.subtitle}
-            >
+            <ThemedText variant="bodySmall" numberOfLines={1} style={styles.subtitle}>
               {props.subtitle}
             </ThemedText>
           )}
         </ColumnView>
 
-        {props.trailing && (
-          <View style={styles.trailing}>{props.trailing}</View>
-        )}
+        {props.trailing && <View style={styles.trailing}>{props.trailing}</View>}
       </RowView>
     </Pressable>
   );

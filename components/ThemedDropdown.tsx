@@ -18,11 +18,7 @@ interface ThemedDropdownProps extends DropdownProps<any> {
   placeholder?: string;
 }
 
-export const ThemedDropdown: React.FC<ThemedDropdownProps> = ({
-  currentVal = null,
-  placeholder = null,
-  ...props
-}) => {
+export const ThemedDropdown: React.FC<ThemedDropdownProps> = ({ currentVal = null, placeholder = null, ...props }) => {
   const [internalVal, setInternalVal] = useState<string>();
   let data: any[];
   const IconSize = 30;
@@ -30,13 +26,7 @@ export const ThemedDropdown: React.FC<ThemedDropdownProps> = ({
   const containerS = [styles.picker, styles.containerMargin];
 
   const renderRightIcon = () => {
-    return (
-      <MaterialCommunityIcons
-        name="menu-down"
-        size={IconSize}
-        color={theme.colors.brand.secondary}
-      />
-    );
+    return <MaterialCommunityIcons name="menu-down" size={IconSize} color={theme.colors.brand.secondary} />;
   };
   const renderLeftIcon = () => {
     return <View style={{ width: IconSize }} />;

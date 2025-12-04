@@ -26,21 +26,9 @@ export default function FilterModal({
 }) {
   const [dropdownFilter, setDropdownFilter] = useState<AnimalFilters>({});
 
-  const {
-    enumObj: animalTypes,
-    loading: animalTypesLoading,
-    error: animalTypesError,
-  } = useEnum(getAnimalTypesEnum);
-  const {
-    enumObj: animalSizes,
-    loading: animalSizesLoading,
-    error: animalSizesError,
-  } = useEnum(getAnimalSizesEnum);
-  const {
-    enumObj: sexes,
-    loading: sexesLoading,
-    error: sexesError,
-  } = useEnum(getSexesEnum);
+  const { enumObj: animalTypes, loading: animalTypesLoading, error: animalTypesError } = useEnum(getAnimalTypesEnum);
+  const { enumObj: animalSizes, loading: animalSizesLoading, error: animalSizesError } = useEnum(getAnimalSizesEnum);
+  const { enumObj: sexes, loading: sexesLoading, error: sexesError } = useEnum(getSexesEnum);
   const {
     enumObj: characterTypes,
     loading: characterTypesLoading,
@@ -58,13 +46,7 @@ export default function FilterModal({
     }
   }, [isVisible, currentFilter]);
 
-  if (
-    animalTypesLoading ||
-    animalSizesLoading ||
-    sexesLoading ||
-    characterTypesLoading ||
-    adoptionStatusesLoading
-  ) {
+  if (animalTypesLoading || animalSizesLoading || sexesLoading || characterTypesLoading || adoptionStatusesLoading) {
     return (
       <View>
         <Text>Daten werden geladen...</Text>
@@ -101,11 +83,7 @@ export default function FilterModal({
     >
       <View style={styles.centerModal}>
         <View style={styles.modal}>
-          <Text
-            style={{ fontSize: 18, fontWeight: "bold", alignSelf: "center" }}
-          >
-            Filter
-          </Text>
+          <Text style={{ fontSize: 18, fontWeight: "bold", alignSelf: "center" }}>Filter</Text>
           <View style={styles.pickerContainer}>
             <Text style={{ paddingLeft: 2 }}>Art:</Text>
             <Dropdown
@@ -115,9 +93,7 @@ export default function FilterModal({
               value={dropdownFilter?.type ?? null}
               placeholder="Art"
               placeholderStyle={styles.placeholder}
-              onChange={(itemValue) =>
-                setDropdownFilter({ ...dropdownFilter, type: itemValue.value })
-              }
+              onChange={(itemValue) => setDropdownFilter({ ...dropdownFilter, type: itemValue.value })}
               style={styles.picker}
             ></Dropdown>
           </View>
@@ -130,9 +106,7 @@ export default function FilterModal({
               value={dropdownFilter?.sex ?? currentFilter?.sex ?? null}
               placeholder="Geschlecht"
               placeholderStyle={styles.placeholder}
-              onChange={(itemValue) =>
-                setDropdownFilter({ ...dropdownFilter, sex: itemValue.value })
-              }
+              onChange={(itemValue) => setDropdownFilter({ ...dropdownFilter, sex: itemValue.value })}
               style={styles.picker}
             ></Dropdown>
           </View>
@@ -145,9 +119,7 @@ export default function FilterModal({
               value={dropdownFilter?.size ?? null}
               placeholder="Größe"
               placeholderStyle={styles.placeholder}
-              onChange={(itemValue) =>
-                setDropdownFilter({ ...dropdownFilter, size: itemValue.value })
-              }
+              onChange={(itemValue) => setDropdownFilter({ ...dropdownFilter, size: itemValue.value })}
               style={styles.picker}
             ></Dropdown>
           </View>

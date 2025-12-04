@@ -9,28 +9,14 @@ const DOT_SIZE = 10.29;
 const ACTIVE_OUTER_SIZE = 20;
 const ACTIVE_BORDER_WIDTH = 1.29;
 
-export const PaginationDots: React.FC<PaginationDotsProps> = ({
-  activeIndex,
-  dataLength,
-}) => {
+export const PaginationDots: React.FC<PaginationDotsProps> = ({ activeIndex, dataLength }) => {
   return (
     <View style={paginationStyles.paginationContainer}>
       {Array.from({ length: dataLength }).map((_, index) => {
         const isActive = index === activeIndex;
         return (
-          <View
-            key={index}
-            style={[
-              paginationStyles.dotBase,
-              isActive && paginationStyles.activeOuterStyle,
-            ]}
-          >
-            <View
-              style={[
-                paginationStyles.activeInnerDot,
-                { opacity: isActive ? 1 : 0.41 },
-              ]}
-            />
+          <View key={index} style={[paginationStyles.dotBase, isActive && paginationStyles.activeOuterStyle]}>
+            <View style={[paginationStyles.activeInnerDot, { opacity: isActive ? 1 : 0.41 }]} />
           </View>
         );
       })}

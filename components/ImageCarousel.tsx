@@ -33,9 +33,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = (props) => {
   };
 
   if (props.urls.length == 0) {
-    child = props.emptyStateComponent ?? (
-      <Text style={{ fontSize: 20 }}>Keine Bilder verfügbar</Text>
-    );
+    child = props.emptyStateComponent ?? <Text style={{ fontSize: 20 }}>Keine Bilder verfügbar</Text>;
   } else {
     child = (
       <View>
@@ -67,10 +65,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = (props) => {
             />
           )}
         />
-        <PaginationDots
-          activeIndex={activeIndex}
-          dataLength={props.urls.length}
-        />
+        <PaginationDots activeIndex={activeIndex} dataLength={props.urls.length} />
       </View>
     );
 

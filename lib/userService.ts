@@ -2,9 +2,7 @@ import { Session } from "@supabase/supabase-js";
 import { Organization } from "@types";
 import { supabase } from "./supabase";
 
-export async function getProfile(
-  user_id: string,
-): Promise<Organization | null> {
+export async function getProfile(user_id: string): Promise<Organization | null> {
   try {
     const { data, error } = await supabase
       .from("organization")
@@ -27,14 +25,9 @@ export async function getProfile(
   }
 }
 
-export async function checkOrganizationAccess(
-  userId: string,
-): Promise<boolean> {
+export async function checkOrganizationAccess(userId: string): Promise<boolean> {
   try {
-    const { data, error } = await supabase
-      .from("organization")
-      .select("id")
-      .eq("id", userId);
+    const { data, error } = await supabase.from("organization").select("id").eq("id", userId);
     if (error) {
       console.error("Error checking organization status:", error.message);
       return false;

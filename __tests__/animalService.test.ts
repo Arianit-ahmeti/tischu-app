@@ -1,10 +1,4 @@
-import {
-  addAnimal,
-  deleteAnimal,
-  fetchAnimalDetails,
-  fetchAnimalsForList,
-  updateAnimal,
-} from "../lib/animalService";
+import { addAnimal, deleteAnimal, fetchAnimalDetails, fetchAnimalsForList, updateAnimal } from "../lib/animalService";
 import { supabase } from "../lib/supabase";
 
 const mockedSupabase = jest.mocked(supabase);
@@ -41,10 +35,7 @@ describe("animalService", () => {
 
       expect(result).toBeNull();
       expect(mockedSupabase.from).toHaveBeenCalledWith("animals");
-      expect(console.log).toHaveBeenCalledWith(
-        "Animal added successfully:",
-        expect.anything(),
-      );
+      expect(console.log).toHaveBeenCalledWith("Animal added successfully:", expect.anything());
     });
 
     it("should handle errors when adding an animal", async () => {
@@ -60,10 +51,7 @@ describe("animalService", () => {
       const result = await addAnimal(mockAnimal);
 
       expect(result).toBeNull();
-      expect(console.log).toHaveBeenCalledWith(
-        "Error adding animal:",
-        "Database error",
-      );
+      expect(console.log).toHaveBeenCalledWith("Error adding animal:", "Database error");
     });
   });
 
@@ -94,10 +82,7 @@ describe("animalService", () => {
       const result = await fetchAnimalsForList();
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Supabase Error on fetching filtered animals:",
-        "Supabase error #1",
-      );
+      expect(console.error).toHaveBeenCalledWith("Supabase Error on fetching filtered animals:", "Supabase error #1");
     });
 
     it("should handle unexpected errors", async () => {
@@ -110,10 +95,7 @@ describe("animalService", () => {
       const result = await fetchAnimalsForList();
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Unexpected error in fetching filtered animals:",
-        mockError,
-      );
+      expect(console.error).toHaveBeenCalledWith("Unexpected error in fetching filtered animals:", mockError);
     });
   });
 
@@ -125,9 +107,7 @@ describe("animalService", () => {
       mockedSupabase.from.mockReturnValue({
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnValue({
-            single: jest
-              .fn()
-              .mockResolvedValue({ data: mockAnimal, error: null }),
+            single: jest.fn().mockResolvedValue({ data: mockAnimal, error: null }),
           }),
         }),
       } as any);
@@ -145,9 +125,7 @@ describe("animalService", () => {
       mockedSupabase.from.mockReturnValue({
         select: jest.fn().mockReturnValue({
           eq: jest.fn().mockReturnValue({
-            single: jest
-              .fn()
-              .mockResolvedValue({ data: null, error: mockError }),
+            single: jest.fn().mockResolvedValue({ data: null, error: mockError }),
           }),
         }),
       } as any);
@@ -157,7 +135,7 @@ describe("animalService", () => {
       expect(result).toBeNull();
       expect(console.error).toHaveBeenCalledWith(
         "Supabase Error on fetching animal details for 123:",
-        "Supabase error #2",
+        "Supabase error #2"
       );
     });
 
@@ -175,9 +153,7 @@ describe("animalService", () => {
       const result = await fetchAnimalDetails(animalId);
 
       expect(result).toBeNull();
-      expect(console.warn).toHaveBeenCalledWith(
-        "Animal with id 404 not found.",
-      );
+      expect(console.warn).toHaveBeenCalledWith("Animal with id 404 not found.");
     });
 
     it("should handle unexpected errors", async () => {
@@ -195,10 +171,7 @@ describe("animalService", () => {
       const result = await fetchAnimalDetails(animalId);
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Unexpected error on fetchAnimalDetails:",
-        mockError,
-      );
+      expect(console.error).toHaveBeenCalledWith("Unexpected error on fetchAnimalDetails:", mockError);
     });
   });
 
@@ -231,10 +204,7 @@ describe("animalService", () => {
       const result = await deleteAnimal(animalId);
 
       expect(result).toBe(false);
-      expect(console.error).toHaveBeenCalledWith(
-        "Fehler beim Löschen des Tiers:",
-        "Delete failed",
-      );
+      expect(console.error).toHaveBeenCalledWith("Fehler beim Löschen des Tiers:", "Delete failed");
     });
   });
 
@@ -256,9 +226,7 @@ describe("animalService", () => {
         update: jest.fn().mockReturnValue({
           select: jest.fn().mockReturnValue({
             eq: jest.fn().mockReturnValue({
-              single: jest
-                .fn()
-                .mockResolvedValue({ data: mockUpdatedAnimal, error: null }),
+              single: jest.fn().mockResolvedValue({ data: mockUpdatedAnimal, error: null }),
             }),
           }),
         }),
@@ -289,9 +257,7 @@ describe("animalService", () => {
         update: jest.fn().mockReturnValue({
           select: jest.fn().mockReturnValue({
             eq: jest.fn().mockReturnValue({
-              single: jest
-                .fn()
-                .mockResolvedValue({ data: null, error: mockError }),
+              single: jest.fn().mockResolvedValue({ data: null, error: mockError }),
             }),
           }),
         }),
@@ -300,10 +266,7 @@ describe("animalService", () => {
       const result = await updateAnimal(mockUpdatedAnimal);
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Supabase Error on updating animal data:",
-        "Update failed",
-      );
+      expect(console.error).toHaveBeenCalledWith("Supabase Error on updating animal data:", "Update failed");
     });
 
     it("should handle unexpected errors", async () => {
@@ -334,10 +297,7 @@ describe("animalService", () => {
       const result = await updateAnimal(mockUpdatedAnimal);
 
       expect(result).toBeNull();
-      expect(console.error).toHaveBeenCalledWith(
-        "Unexpected error in updateAnimal:",
-        mockError,
-      );
+      expect(console.error).toHaveBeenCalledWith("Unexpected error in updateAnimal:", mockError);
     });
   });
 });
