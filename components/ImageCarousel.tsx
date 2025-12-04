@@ -1,9 +1,26 @@
-import React from "react";
-import { Dimensions, FlatList, Image, Text, View } from "react-native";
+import React, { useState } from "react";
+import {
+  Dimensions,
+  FlatList,
+  Image,
+  NativeScrollEvent,
+  NativeSyntheticEvent,
+  Text,
+  View,
+} from "react-native";
+import { PaginationDots } from "./PaginationDots";
 
 const { width } = Dimensions.get("window");
 
 export default function ImageCarousel({ urls }: { urls: string[] }) {
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const scrollX = event.nativeEvent.contentOffset.x;
+    const currentIndex = Math.round(scrollX / width);
+    setActiveIndex(currentIndex);
+  };
+
   if (urls.length == 0) {
     return (
       <View
@@ -28,6 +45,8 @@ export default function ImageCarousel({ urls }: { urls: string[] }) {
         pagingEnabled
         snapToAlignment="center"
         decelerationRate="fast"
+        onScroll={handleScroll}
+        scrollEventThrottle={16} //60 FPS
         renderItem={({ item }) => (
           <Image
             source={{
@@ -43,6 +62,7 @@ export default function ImageCarousel({ urls }: { urls: string[] }) {
           />
         )}
       />
+      <PaginationDots activeIndex={activeIndex} dataLength={urls.length} />
     </View>
   );
 }
