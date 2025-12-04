@@ -1,10 +1,10 @@
-import { ThemedButton, ThemedText } from "@components";
-import SelectableButton from "@components/SelectableButton";
+import { AlertDialog, ThemedButton, ThemedText } from "@components";
+import { SelectableButton } from "@components/SelectableButton";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import { addAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
-import "lib/utils/stringExtensions";
 import { useRouter } from "expo-router";
+import "lib/utils/stringExtensions";
 import React, { useState } from "react";
 import {
   ActivityIndicator,
@@ -19,10 +19,10 @@ export default function Add() {
   const [name, setName] = useState("");
   const [origin, setOrigin] = useState("");
   const [age, setAge] = useState<number>();
-  const [type, setType] = useState(0);
-  const [sex, setSex] = useState(0);
-  const [size, setSize] = useState(0);
-  const [character, setCharacter] = useState(0);
+  const [type, setType] = useState<string>();
+  const [sex, setSex] = useState<string>();
+  const [size, setSize] = useState<string>();
+  const [character, setCharacter] = useState<string>();
   const [alertVisible, setAlertVisible] = useState(false);
 
   const { enums, enumsAreLoading, enumsError } = useAnimalFieldEnums();
@@ -32,10 +32,10 @@ export default function Add() {
       name,
       age,
       origin,
-      type,
-      size,
-      sex,
-      character,
+      type: type,
+      size: size,
+      sex: sex,
+      character: character,
       status: "open",
     });
     setAlertVisible(true);
@@ -65,97 +65,116 @@ export default function Add() {
   }
 
   return (
-    <ScrollView style={styles.container}>
-      <ThemedText variant="h3">Name</ThemedText>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setName(text)}
-        value={name}
-        placeholder="Name des Tiers"
+    <>
+      <AlertDialog
+        visible={alertVisible}
+        title="Erfolg"
+        message={SUCCESS_MESSAGES.ANIMAL_CREATED}
+        buttons={[
+          {
+            text: "OK",
+            onPress: () => router.back(),
+          },
+        ]}
+        onDismiss={() => setAlertVisible(false)}
       />
 
-      <ThemedText variant="h3">Herkunft</ThemedText>
-      <TextInput
-        style={styles.input}
-        onChangeText={(text) => setOrigin(text)}
-        value={origin}
-        placeholder="Herkunft des Tiers"
-      />
+      <ScrollView style={styles.container}>
+        <ThemedText variant="h3">Name</ThemedText>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => setName(text)}
+          value={name}
+          placeholder="Name des Tiers"
+        />
 
-      <ThemedText variant="h3">Alter</ThemedText>
-      <TextInput
-        style={styles.input}
-        keyboardType="numeric"
-        onChangeText={(text) => setAge(parseInt(text) || 0)}
-        value={age?.toString()}
-        placeholder="Alter des Tiers"
-      />
+        <ThemedText variant="h3">Herkunft</ThemedText>
+        <TextInput
+          style={styles.input}
+          onChangeText={(text) => setOrigin(text)}
+          value={origin}
+          placeholder="Herkunft des Tiers"
+        />
 
-      <ThemedText variant="h3">Tierart</ThemedText>
-      <ScrollView
-        horizontal={true}
-        contentContainerStyle={styles.buttonGroup}
-        showsHorizontalScrollIndicator={false}
-      >
-        {enums.animalTypes.values.map((value) => (
-          <SelectableButton
-            isSelected={type == value}
-            title={value.capitalizeFirst()}
-            onPress={() => setType(value)}
-          />
-        ))}
+        <ThemedText variant="h3">Alter</ThemedText>
+        <TextInput
+          style={styles.input}
+          keyboardType="numeric"
+          onChangeText={(text) => setAge(parseInt(text) || 0)}
+          value={age?.toString()}
+          placeholder="Alter des Tiers"
+        />
+
+        <ThemedText variant="h3">Tierart</ThemedText>
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={styles.buttonGroup}
+          showsHorizontalScrollIndicator={false}
+        >
+          {enums.animalTypes.values.map((value) => (
+            <SelectableButton
+              isSelected={type == value}
+              onPress={() => setType(value)}
+            >
+              {value.capitalizeFirst()}
+            </SelectableButton>
+          ))}
+        </ScrollView>
+
+        <ThemedText variant="h3">Geschlecht</ThemedText>
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={styles.buttonGroup}
+          showsHorizontalScrollIndicator={false}
+        >
+          {enums.sexes.values.map((value) => (
+            <SelectableButton
+              isSelected={sex == value}
+              onPress={() => setSex(value)}
+            >
+              {value.capitalizeFirst()}
+            </SelectableButton>
+          ))}
+        </ScrollView>
+
+        <ThemedText variant="h3">Größe</ThemedText>
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={styles.buttonGroup}
+          showsHorizontalScrollIndicator={false}
+        >
+          {enums.animalSizes.values.map((value) => (
+            <SelectableButton
+              isSelected={size == value}
+              onPress={() => setSize(value)}
+            >
+              {value.capitalizeFirst()}
+            </SelectableButton>
+          ))}
+        </ScrollView>
+
+        <ThemedText variant="h3">Charakter</ThemedText>
+        <ScrollView
+          horizontal={true}
+          contentContainerStyle={styles.buttonGroup}
+          showsHorizontalScrollIndicator={false}
+        >
+          {enums.characterTypes.values.map((value) => (
+            <SelectableButton
+              isSelected={character == value}
+              onPress={() => setCharacter(value)}
+            >
+              {value.capitalizeFirst()}
+            </SelectableButton>
+          ))}
+        </ScrollView>
+
+        <ThemedButton onPress={async () => handleAddAnimal()}>
+          Tier hinzufügen
+        </ThemedButton>
+        <View style={{ height: 20 }}></View>
       </ScrollView>
-
-      <ThemedText variant="h3">Geschlecht</ThemedText>
-      <ScrollView
-        horizontal={true}
-        contentContainerStyle={styles.buttonGroup}
-        showsHorizontalScrollIndicator={false}
-      >
-        {enums.sexes.values.map((value) => (
-          <SelectableButton
-            isSelected={sex == value}
-            title={value.capitalizeFirst()}
-            onPress={() => setSex(value)}
-          />
-        ))}
-      </ScrollView>
-
-      <ThemedText variant="h3">Größe</ThemedText>
-      <ScrollView
-        horizontal={true}
-        contentContainerStyle={styles.buttonGroup}
-        showsHorizontalScrollIndicator={false}
-      >
-        {enums.animalSizes.values.map((value) => (
-          <SelectableButton
-            isSelected={size == value}
-            title={value.capitalizeFirst()}
-            onPress={() => setSize(value)}
-          />
-        ))}
-      </ScrollView>
-
-      <ThemedText variant="h3">Charakter</ThemedText>
-      <ScrollView
-        horizontal={true}
-        contentContainerStyle={styles.buttonGroup}
-        showsHorizontalScrollIndicator={false}
-      >
-        {enums.characterTypes.values.map((value) => (
-          <SelectableButton
-            isSelected={character == value}
-            title={value.capitalizeFirst()}
-            onPress={() => setCharacter(value)}
-          />
-        ))}
-      </ScrollView>
-
-      <ThemedButton onPress={async () => handleAddAnimal()}>
-        Tier hinzufügen
-      </ThemedButton>
-      <View style={{ height: 20 }}></View>
-    </ScrollView>
+    </>
   );
 }
 
