@@ -88,41 +88,27 @@ export default function Account({ session }: { session: Session }) {
       </View>
       <View style={styles.verticallySpaced}>
         <ThemedText>Username</ThemedText>
-        <TextInput
-          value={username || ""}
-          onChangeText={(text) => setUsername(text)}
-        />
+        <TextInput value={username || ""} onChangeText={(text) => setUsername(text)} />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <ThemedButton
-          onPress={() => updateProfile({ username })}
-          disabled={loading}
-        >
+        <ThemedButton onPress={() => updateProfile({ username })} disabled={loading}>
           {loading ? "Loading ..." : "Update"}
         </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => supabase.auth.signOut()}>
-          Sign Out
-        </ThemedButton>
+        <ThemedButton onPress={() => supabase.auth.signOut()}>Sign Out</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("Animal/Add")}>
-          Add Animal
-        </ThemedButton>
+        <ThemedButton onPress={() => router.navigate("Animal/Add")}>Add Animal</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("AnimalList")}>
-          Show AnimalList
-        </ThemedButton>
+        <ThemedButton onPress={() => router.navigate("AnimalList")}>Show AnimalList</ThemedButton>
       </View>
       {isOrganizationUser && (
         <View style={styles.verticallySpaced}>
-          <ThemedButton onPress={() => router.navigate("/OrganizationProfile")}>
-            Profile
-          </ThemedButton>
+          <ThemedButton onPress={() => router.navigate("/OrganizationProfile")}>Profile</ThemedButton>
         </View>
       )}
     </View>

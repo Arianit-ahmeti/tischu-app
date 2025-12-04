@@ -40,23 +40,11 @@ export default function RootLayout() {
       })}
     >
       <Stack.Screen name="index" options={{ title: "Account" }} />
-      <Stack.Screen
-        name="Animal/[id]/index"
-        options={{ title: "Tierprofil" }}
-      />
-      <Stack.Screen
-        name="Animal/[id]/Edit"
-        options={{ title: "Tier bearbeiten" }}
-      />
+      <Stack.Screen name="Animal/[id]/index" options={{ title: "Tierprofil" }} />
+      <Stack.Screen name="Animal/[id]/Edit" options={{ title: "Tier bearbeiten" }} />
       <Stack.Screen name="Animal/Add" options={{ title: "Tier hinzufügen" }} />
-      <Stack.Screen
-        name="OrganizationProfile"
-        options={{ title: "Vereinsprofil" }}
-      />
-      <Stack.Screen
-        name="OrganizationSignUp"
-        options={{ title: "Organisation Registrierung" }}
-      />
+      <Stack.Screen name="OrganizationProfile" options={{ title: "Vereinsprofil" }} />
+      <Stack.Screen name="OrganizationSignUp" options={{ title: "Organisation Registrierung" }} />
     </Stack>
   );
 }

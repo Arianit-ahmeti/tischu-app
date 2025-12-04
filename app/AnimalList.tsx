@@ -6,14 +6,7 @@ import { FlashList } from "@shopify/flash-list";
 import type { Animal, AnimalFilters } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme/theme";
 
@@ -37,10 +30,7 @@ export default function AnimalList() {
           previewMap[animal.id] = urls[0];
         }
       } catch (err) {
-        console.log(
-          `Could not load preview image for animal ${animal.id}:`,
-          err,
-        );
+        console.log(`Could not load preview image for animal ${animal.id}:`, err);
       }
     }
 
@@ -71,7 +61,7 @@ export default function AnimalList() {
   useFocusEffect(
     React.useCallback(() => {
       load();
-    }, []),
+    }, [])
   );
 
   useEffect(() => {

@@ -6,13 +6,7 @@ import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
 import { useRouter } from "expo-router";
 import "lib/utils/stringExtensions";
 import React, { useState } from "react";
-import {
-  ActivityIndicator,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  View,
-} from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 export default function Add() {
   const router = useRouter();
@@ -106,72 +100,42 @@ export default function Add() {
         />
 
         <ThemedText variant="h3">Tierart</ThemedText>
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={styles.buttonGroup}
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.animalTypes.values.map((value) => (
-            <SelectableButton
-              isSelected={type == value}
-              onPress={() => setType(value)}
-            >
+            <SelectableButton isSelected={type == value} onPress={() => setType(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
         </ScrollView>
 
         <ThemedText variant="h3">Geschlecht</ThemedText>
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={styles.buttonGroup}
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.sexes.values.map((value) => (
-            <SelectableButton
-              isSelected={sex == value}
-              onPress={() => setSex(value)}
-            >
+            <SelectableButton isSelected={sex == value} onPress={() => setSex(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
         </ScrollView>
 
         <ThemedText variant="h3">Größe</ThemedText>
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={styles.buttonGroup}
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.animalSizes.values.map((value) => (
-            <SelectableButton
-              isSelected={size == value}
-              onPress={() => setSize(value)}
-            >
+            <SelectableButton isSelected={size == value} onPress={() => setSize(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
         </ScrollView>
 
         <ThemedText variant="h3">Charakter</ThemedText>
-        <ScrollView
-          horizontal={true}
-          contentContainerStyle={styles.buttonGroup}
-          showsHorizontalScrollIndicator={false}
-        >
+        <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.characterTypes.values.map((value) => (
-            <SelectableButton
-              isSelected={character == value}
-              onPress={() => setCharacter(value)}
-            >
+            <SelectableButton isSelected={character == value} onPress={() => setCharacter(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
         </ScrollView>
 
-        <ThemedButton onPress={async () => handleAddAnimal()}>
-          Tier hinzufügen
-        </ThemedButton>
+        <ThemedButton onPress={async () => handleAddAnimal()}>Tier hinzufügen</ThemedButton>
         <View style={{ height: 20 }}></View>
       </ScrollView>
     </>

@@ -2,24 +2,14 @@ import { AlertDialog, ThemedButton, ThemedText } from "@components";
 import { ImageCarousel } from "@components/ImageCarousel";
 import { ThemedTextInput } from "@components/ThemedTextInput";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
-import {
-  getAnimalMediaDownloadURls,
-  uploadAnimalMedia,
-} from "@lib/AnimalMediaService";
+import { getAnimalMediaDownloadURls, uploadAnimalMedia } from "@lib/AnimalMediaService";
 import { fetchAnimalDetails, updateAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
 import { Animal } from "@lib/types";
 import { theme } from "@theme";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  ScrollView,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 
 export default function EditAnimal() {
@@ -147,16 +137,11 @@ export default function EditAnimal() {
         </View>
         <View style={styles.container}>
           <View style={styles.buttonContainer}>
-            <ThemedButton onPress={handleImageUpload}>
-              Bild Hinzufügen
-            </ThemedButton>
+            <ThemedButton onPress={handleImageUpload}>Bild Hinzufügen</ThemedButton>
           </View>
 
           <ThemedText variant="h3">Name:</ThemedText>
-          <ThemedTextInput
-            value={animal.name || ""}
-            onChangeText={(text) => setAnimal({ ...animal, name: text })}
-          />
+          <ThemedTextInput value={animal.name || ""} onChangeText={(text) => setAnimal({ ...animal, name: text })} />
 
           <ThemedText variant="h3">Herkunft:</ThemedText>
           <ThemedTextInput
@@ -171,9 +156,7 @@ export default function EditAnimal() {
               valueField={"value"}
               labelField={"value"}
               value={animal.type}
-              onChange={(itemValue) =>
-                setAnimal({ ...animal, type: itemValue.value })
-              }
+              onChange={(itemValue) => setAnimal({ ...animal, type: itemValue.value })}
               style={styles.picker}
             />
           </View>
@@ -185,9 +168,7 @@ export default function EditAnimal() {
               valueField={"value"}
               labelField={"value"}
               value={animal.sex}
-              onChange={(itemValue) =>
-                setAnimal({ ...animal, sex: itemValue.value })
-              }
+              onChange={(itemValue) => setAnimal({ ...animal, sex: itemValue.value })}
               style={styles.picker}
             />
           </View>
@@ -199,9 +180,7 @@ export default function EditAnimal() {
               valueField={"value"}
               labelField={"value"}
               value={animal.size}
-              onChange={(itemValue) =>
-                setAnimal({ ...animal, size: itemValue.value })
-              }
+              onChange={(itemValue) => setAnimal({ ...animal, size: itemValue.value })}
               style={styles.picker}
             />
           </View>
@@ -213,9 +192,7 @@ export default function EditAnimal() {
               valueField={"value"}
               labelField={"value"}
               value={animal.character}
-              onChange={(itemValue) =>
-                setAnimal({ ...animal, character: itemValue.value })
-              }
+              onChange={(itemValue) => setAnimal({ ...animal, character: itemValue.value })}
               style={styles.picker}
             />
           </View>
@@ -229,9 +206,7 @@ export default function EditAnimal() {
               valueField={"value"}
               labelField={"value"}
               value={animal.status}
-              onChange={(itemValue) =>
-                setAnimal({ ...animal, status: itemValue.value })
-              }
+              onChange={(itemValue) => setAnimal({ ...animal, status: itemValue.value })}
               style={styles.picker}
             />
           </View>
@@ -240,9 +215,7 @@ export default function EditAnimal() {
           <ThemedTextInput
             value={animal.age?.toString() || ""}
             keyboardType="numeric"
-            onChangeText={(text) =>
-              setAnimal({ ...animal, age: parseInt(text) || null })
-            }
+            onChangeText={(text) => setAnimal({ ...animal, age: parseInt(text) || null })}
           />
 
           <View style={styles.buttonContainer}>

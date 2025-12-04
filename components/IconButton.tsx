@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  ColorValue,
-  Pressable,
-  PressableProps,
-  StyleSheet,
-  Text,
-  ViewStyle,
-} from "react-native";
+import { ColorValue, Pressable, PressableProps, StyleSheet, Text, ViewStyle } from "react-native";
 
 import * as IconLibs from "@expo/vector-icons";
 import { theme } from "@theme";
@@ -37,9 +30,7 @@ export const IconButton: React.FC<IconButtonProps> = ({
   const IconComponent = IconLibs[iconSet];
 
   if (!IconComponent) {
-    console.error(
-      `IconButton: Angefordertes Icon-Set nicht gefunden: ${iconSet}`,
-    );
+    console.error(`IconButton: Angefordertes Icon-Set nicht gefunden: ${iconSet}`);
     return <Text style={{ color: theme.colors.error, fontSize: 10 }}>ERR</Text>;
   }
 

@@ -24,25 +24,17 @@ export const BottomNavigation: React.FC = () => {
       {tabs.map((tab) => {
         const isActive = activeTab === tab.id;
         return (
-          <Pressable
-            key={tab.id}
-            style={styles.tab}
-            onPress={() => setActiveTab(tab.id)}
-          >
+          <Pressable key={tab.id} style={styles.tab} onPress={() => setActiveTab(tab.id)}>
             <Ionicons
               name={tab.icon}
               size={24}
-              color={
-                isActive ? theme.colors.brand.primary : theme.colors.text.muted
-              }
+              color={isActive ? theme.colors.brand.primary : theme.colors.text.muted}
             />
             <Text
               style={[
                 styles.label,
                 {
-                  color: isActive
-                    ? theme.colors.brand.primary
-                    : theme.colors.text.muted,
+                  color: isActive ? theme.colors.brand.primary : theme.colors.text.muted,
                 },
               ]}
             >
