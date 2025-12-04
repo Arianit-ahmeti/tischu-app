@@ -3,6 +3,7 @@ import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
+import { BackButton } from "../components";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -24,12 +25,19 @@ export default function RootLayout() {
 
   return (
     <Stack
-      screenOptions={{
+      screenOptions={({ navigation }) => ({
         headerTintColor: "#333",
         headerShadowVisible: false,
         headerTitleAlign: "center",
         contentStyle: { backgroundColor: theme.colors.background.base },
-      }}
+
+        headerLeft: () => {
+          if (navigation.canGoBack()) {
+            return <BackButton style={{ marginLeft: -8 }} />;
+          }
+          return null;
+        },
+      })}
     >
       <Stack.Screen name="index" options={{ title: "Account" }} />
       <Stack.Screen
