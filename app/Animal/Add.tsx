@@ -1,12 +1,13 @@
 import { AlertDialog, ThemedButton, ThemedText } from "@components";
 import { SelectableButton } from "@components/SelectableButton";
+import { ThemedTextInput } from "@components/ThemedTextInput";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import { addAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
 import { useRouter } from "expo-router";
 import "lib/utils/stringExtensions";
 import React, { useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 
 export default function Add() {
   const router = useRouter();
@@ -75,24 +76,13 @@ export default function Add() {
 
       <ScrollView style={styles.container}>
         <ThemedText variant="h3">Name</ThemedText>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setName(text)}
-          value={name}
-          placeholder="Name des Tiers"
-        />
+        <ThemedTextInput onChangeText={(text) => setName(text)} value={name} placeholder="Name des Tiers" />
 
         <ThemedText variant="h3">Herkunft</ThemedText>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setOrigin(text)}
-          value={origin}
-          placeholder="Herkunft des Tiers"
-        />
+        <ThemedTextInput onChangeText={(text) => setOrigin(text)} value={origin} placeholder="Herkunft des Tiers" />
 
         <ThemedText variant="h3">Alter</ThemedText>
-        <TextInput
-          style={styles.input}
+        <ThemedTextInput
           keyboardType="numeric"
           onChangeText={(text) => setAge(parseInt(text) || 0)}
           value={age?.toString()}
@@ -102,7 +92,7 @@ export default function Add() {
         <ThemedText variant="h3">Tierart</ThemedText>
         <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.animalTypes.values.map((value) => (
-            <SelectableButton isSelected={type == value} onPress={() => setType(value)}>
+            <SelectableButton key={value} isSelected={type == value} onPress={() => setType(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
@@ -111,7 +101,7 @@ export default function Add() {
         <ThemedText variant="h3">Geschlecht</ThemedText>
         <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.sexes.values.map((value) => (
-            <SelectableButton isSelected={sex == value} onPress={() => setSex(value)}>
+            <SelectableButton key={value} isSelected={sex == value} onPress={() => setSex(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
@@ -120,7 +110,7 @@ export default function Add() {
         <ThemedText variant="h3">Größe</ThemedText>
         <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.animalSizes.values.map((value) => (
-            <SelectableButton isSelected={size == value} onPress={() => setSize(value)}>
+            <SelectableButton key={value} isSelected={size == value} onPress={() => setSize(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
@@ -129,7 +119,7 @@ export default function Add() {
         <ThemedText variant="h3">Charakter</ThemedText>
         <ScrollView horizontal={true} contentContainerStyle={styles.buttonGroup} showsHorizontalScrollIndicator={false}>
           {enums.characterTypes.values.map((value) => (
-            <SelectableButton isSelected={character == value} onPress={() => setCharacter(value)}>
+            <SelectableButton key={value} isSelected={character == value} onPress={() => setCharacter(value)}>
               {value.capitalizeFirst()}
             </SelectableButton>
           ))}
@@ -147,20 +137,10 @@ const styles = StyleSheet.create({
     padding: 16,
   },
   buttonGroup: {
-    paddingVertical: 8,
+    paddingTop: 4,
+    paddingBottom: 8,
     flexDirection: "row",
     justifyContent: "flex-start",
-  },
-  input: {
-    marginVertical: 8,
-    backgroundColor: "#fff",
-    borderColor: "#5f5f5fff",
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 45,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    color: "#000",
   },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
 });
