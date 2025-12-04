@@ -35,8 +35,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = (props) => {
       return (
         <View style={styles.noImage}>
           <ThemedText variant="h4" color={theme.colors.text.muted}>
-            {" "}
-            No Image{" "}
+            No Image
           </ThemedText>
         </View>
       );
