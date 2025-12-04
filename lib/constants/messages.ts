@@ -12,4 +12,5 @@ export const ERROR_MESSAGES = {
 
 export const SUCCESS_MESSAGES = {
   ANIMAL_UPDATED: "Tier wurde aktualisiert!",
+  ANIMAL_CREATED: "Tier wurde hinzugefügt!",
 } as const;

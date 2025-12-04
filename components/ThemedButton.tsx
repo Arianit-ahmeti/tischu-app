@@ -4,28 +4,42 @@ import React from "react";
 import { Pressable, PressableProps, StyleSheet } from "react-native";
 
 interface ButtonProps extends PressableProps {
+  variant?: "filled" | "text";
   borderRadius?: number;
   backgroundColor?: string;
   textColor?: string;
+  disabledTextColor?: string;
 }
 
 export const ThemedButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
+  variant = "filled",
   borderRadius = 12,
   backgroundColor = theme.colors.brand.focus,
   textColor = theme.colors.text.inverted,
+  disabledTextColor = theme.colors.text.muted,
   children,
+  disabled,
   ...props
 }) => {
-  if (props.disabled) {
-    backgroundColor = theme.colors.disabled;
-    textColor = theme.colors.text.muted;
-  }
+  let finalBackgroundColor = backgroundColor;
+  let finalTextColor = textColor;
+  let containerStyle = styles.filledContainer;
+  let interactionColor = theme.colors.brand.hover;
 
-  const interactionColor = theme.colors.brand.hover;
+  if (variant === "text") {
+    finalBackgroundColor = "transparent";
+    finalTextColor = disabled ? disabledTextColor : theme.colors.brand.focus;
+    containerStyle = styles.textContainer;
+  } else {
+    if (disabled) {
+      finalBackgroundColor = theme.colors.disabled;
+      finalTextColor = disabledTextColor;
+    }
+  }
 
   const content =
     typeof children === "string" ? (
-      <ThemedText variant="buttonPrimary" color={textColor}>
+      <ThemedText variant="buttonPrimary" color={finalTextColor}>
         {children}
       </ThemedText>
     ) : (
@@ -35,12 +49,16 @@ export const ThemedButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
   return (
     <Pressable
       style={({ pressed }) => [
-        styles.container,
-        {
+        containerStyle,
+        variant === "filled" && {
           borderRadius,
-          backgroundColor: pressed ? interactionColor : backgroundColor,
+          backgroundColor: pressed ? interactionColor : finalBackgroundColor,
+        },
+        variant === "text" && {
+          opacity: pressed ? 0.7 : 1,
         },
       ]}
+      disabled={disabled}
       {...props}
     >
       {content}
@@ -49,9 +67,13 @@ export const ThemedButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 };
 
 const styles = StyleSheet.create({
-  container: {
+  filledContainer: {
     padding: 20,
     alignItems: "center",
-    margin: 4,
+  },
+  textContainer: {
+    padding: 20,
+    alignItems: "center",
+    justifyContent: "center",
   },
 });
