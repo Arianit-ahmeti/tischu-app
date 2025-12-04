@@ -1,8 +1,8 @@
 import { Ionicons } from "@expo/vector-icons";
+import { theme } from "@theme";
 import { router } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, PressableProps, ViewStyle } from "react-native";
-import { theme } from "@theme";
+import { Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
 
 interface BackButtonProps extends PressableProps {
   color?: string;
