@@ -1,5 +1,5 @@
 import { AlertDialog, ThemedButton, ThemedText } from "@components";
-import ImageCarousel from "@components/ImageCarousel";
+import { ImageCarousel } from "@components/ImageCarousel";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import {
   getAnimalMediaDownloadURls,

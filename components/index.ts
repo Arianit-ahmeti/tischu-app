@@ -6,4 +6,5 @@ export { ThemedText } from "@components/ThemedText";
 export { ListTile } from "components/ListTile";
 export { SelectableButton } from "components/SelectableButton";
 export { ThemedButton } from "components/ThemedButton";
+export { BottomNavigation } from "./BottomNavigation";
 export { BackButton } from "components/BackButton";
