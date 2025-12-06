@@ -21,19 +21,21 @@ describe("animalService", () => {
       };
 
       const mockResponse = {
-        data: [{ id: "1", ...mockAnimal, status: "open" }],
+        data: { id: "1", ...mockAnimal, status: "open" },
         error: null,
       };
 
       mockedSupabase.from.mockReturnValue({
         insert: jest.fn().mockReturnValue({
-          select: jest.fn().mockResolvedValue(mockResponse),
+          select: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue(mockResponse),
+          }),
         }),
       } as any);
 
       const result = await addAnimal(mockAnimal);
 
-      expect(result).toBeNull();
+      expect(result).toEqual({ id: "1", ...mockAnimal, status: "open" });
       expect(mockedSupabase.from).toHaveBeenCalledWith("animals");
       expect(console.log).toHaveBeenCalledWith("Animal added successfully:", expect.anything());
     });
@@ -44,7 +46,9 @@ describe("animalService", () => {
 
       mockedSupabase.from.mockReturnValue({
         insert: jest.fn().mockReturnValue({
-          select: jest.fn().mockResolvedValue({ data: null, error: mockError }),
+          select: jest.fn().mockReturnValue({
+            single: jest.fn().mockResolvedValue({ data: null, error: mockError }),
+          }),
         }),
       } as any);
 
