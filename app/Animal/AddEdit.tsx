@@ -8,13 +8,14 @@ import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
 import { Animal } from "@lib/types";
 import "@lib/utils/stringExtensions";
 import { theme } from "@theme";
-import { useLocalSearchParams, useRouter } from "expo-router";
+import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 
 export default function AddEditAnimal() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
+  const navigation = useNavigation();
   let animalId = Array.isArray(id) ? id[0] : id;
   const isEditMode = !!id;
 
@@ -130,6 +131,12 @@ export default function AddEditAnimal() {
     setAlertVisible(true);
     setSaving(false);
   };
+
+  useEffect(() => {
+    navigation.setOptions({
+      title: isEditMode ? "Tier bearbeiten" : "Tier hinzufügen",
+    });
+  }, [isEditMode, navigation]);
 
   useEffect(() => {
     if (!id) return;

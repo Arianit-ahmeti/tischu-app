@@ -1,4 +1,5 @@
 import { Ionicons } from "@expo/vector-icons";
+import type { NavigationProp, RouteProp } from "@react-navigation/native";
 import { theme } from "@theme";
 import { useFonts } from "expo-font";
 import { Tabs } from "expo-router";
@@ -16,7 +17,7 @@ export default function RootLayout() {
 
   return (
     <Tabs
-      screenOptions={({ navigation, route }) => ({
+      screenOptions={({ navigation, route }: { navigation: NavigationProp<any>; route: RouteProp<any> }) => ({
         headerShadowVisible: false,
         headerTitleAlign: "center",
         tabBarActiveTintColor: theme.colors.brand.primary,
@@ -54,7 +55,7 @@ export default function RootLayout() {
       />
 
       <Tabs.Screen
-        name="Animal/Add"
+        name="Animal/AddEdit"
         options={{
           title: "Tier hinzufügen",
           tabBarLabel: "hinzufügen",
@@ -76,7 +77,7 @@ export default function RootLayout() {
       />
 
       <Tabs.Screen
-        name="Animal/[id]/index"
+        name="Animal/[id]"
         options={{
           title: "Tierprofil",
           href: null,
