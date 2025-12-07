@@ -1,4 +1,3 @@
-import { IconButton } from "@components/IconButton";
 import { useEnum } from "@hooks/useEnum";
 import {
   getAdoptionStatusesEnum,
@@ -12,6 +11,7 @@ import type { AnimalFilters } from "@types";
 import { useEffect, useState } from "react";
 import { Button, Modal, StyleSheet, Text, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
+import { IconButton } from "./IconButton";
 
 export default function FilterModal({
   isVisible,

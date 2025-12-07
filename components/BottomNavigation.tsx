@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
+import { theme } from "@theme";
 import React, { useState } from "react";
-import { View, Text, Pressable, StyleSheet } from "react-native";
-import { theme } from "../theme/theme";
+import { Pressable, StyleSheet, Text, View } from "react-native";
 
 type TabItem = {
   id: string;

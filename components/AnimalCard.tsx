@@ -1,9 +1,9 @@
 import { Animal } from "@lib/types";
-import { ThemedText } from "components";
+import { theme } from "@theme";
 import { useRouter } from "expo-router";
 import React from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
-import { theme } from "../theme/theme";
+import { ThemedText } from "./ThemedText";
 
 interface AnimalCardProps {
   animal: Animal;

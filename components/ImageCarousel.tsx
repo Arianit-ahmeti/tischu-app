@@ -9,7 +9,7 @@ import {
   Text,
   View,
 } from "react-native";
-import { PaginationDots } from "./PaginationDots";
+import { PaginationDots } from './PaginationDots';
 import { ThemedText } from "./ThemedText";
 
 const { width } = Dimensions.get("window");
