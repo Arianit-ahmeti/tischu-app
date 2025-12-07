@@ -6,7 +6,8 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, TextInput, View } from "react-native";
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [isOrganizationUser, setIsOrganizationUser] = useState(false);
@@ -14,21 +15,24 @@ export default function Account({ session }: { session: Session }) {
   const router = useRouter();
 
   useEffect(() => {
-    if (session) {
-      getProfile();
-      checkOrganization();
-    }
-  }, [session]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        getProfile(session);
+        checkOrganization(session);
+      }
+    });
+  }, []);
 
-  async function getProfile() {
+  async function getProfile(currentSession: Session) {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error("No user on the session!");
+      if (!currentSession?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
         .from("profiles")
         .select(`username`)
-        .eq("id", session?.user.id)
+        .eq("id", currentSession.user.id)
         .single();
       if (error && status !== 406) {
         throw error;
@@ -52,7 +56,7 @@ export default function Account({ session }: { session: Session }) {
       if (!session?.user) throw new Error("No user on the session!");
 
       const updates = {
-        id: session?.user.id,
+        id: session.user.id,
         username,
         updated_at: new Date(),
       };
@@ -71,12 +75,12 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
-  async function checkOrganization() {
-    if (!session?.user) {
+  async function checkOrganization(currentSession: Session) {
+    if (!currentSession?.user) {
       setIsOrganizationUser(false);
       return;
     }
-    const isOrg = await checkOrganizationAccess(session.user.id);
+    const isOrg = await checkOrganizationAccess(currentSession.user.id);
     setIsOrganizationUser(isOrg);
   }
 
