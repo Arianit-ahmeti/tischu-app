@@ -1,6 +1,7 @@
+
 import { ThemedText } from "@components";
 import { AnimalCard } from "@components/AnimalCard";
-import FilterModal from "@components/FilterModal";
+import { FilterModal } from "@components/FilterModal";
 import { IconButton } from "@components/IconButton";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
@@ -8,7 +9,7 @@ import { FlashList } from "@shopify/flash-list";
 import type { Animal, AnimalFilters } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, useWindowDimensions, View } from "react-native";
+import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
 import { theme } from "../theme/theme";
 
@@ -101,14 +102,13 @@ export default function AnimalList() {
             iconColor={theme.colors.brand.primary}
             onPress={() => setModalVisibility(!modalVisibility)}
           />
-          <FilterModal
-            isVisible={modalVisibility}
-            changeVisibility={() => setModalVisibility(!modalVisibility)}
+          {modalVisibility && (<FilterModal
+            closeModal={() => setModalVisibility(false)}
             applyFilter={(filter: AnimalFilters) => {
               setFilter(filter);
             }}
             currentFilter={filter}
-          />
+          />)}
           <FlashList
             data={animals}
             masonry

@@ -1,188 +1,125 @@
-import { IconButton } from "@components/IconButton";
-import { useEnum } from "@hooks/useEnum";
-import {
-  getAdoptionStatusesEnum,
-  getAnimalSizesEnum,
-  getAnimalTypesEnum,
-  getCharacterTypesEnum,
-  getSexesEnum,
-} from "@lib/supabaseEnumHandler";
-import { theme } from "@theme";
+import { ThemedText } from '@components/ThemedText';
+import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
+import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { theme } from '@theme';
 import type { AnimalFilters } from "@types";
 import { useEffect, useState } from "react";
-import { Button, Modal, StyleSheet, Text, View } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
+import { ActivityIndicator, Modal, ModalProps, ScrollView, StyleSheet, Text, View } from "react-native";
+import { IconButton } from './IconButton';
+import { ThemedButton } from './ThemedButton';
+import { ThemedDropdown } from './ThemedDropdown';
 
-export default function FilterModal({
-  isVisible,
-  changeVisibility,
-  applyFilter,
-  currentFilter,
-}: {
-  isVisible: boolean;
-  changeVisibility: () => void;
+interface FilterModalProps extends ModalProps{
+  closeModal: () => void;
   applyFilter: (filter: AnimalFilters) => void;
   currentFilter: AnimalFilters;
-}) {
+}
+export const FilterModal: React.FC<FilterModalProps> = ({
+  ...props
+}) => {
   const [dropdownFilter, setDropdownFilter] = useState<AnimalFilters>({});
+  const { enums, enumsAreLoading, enumsError } = useAnimalFieldEnums();
 
-  const { enumObj: animalTypes, loading: animalTypesLoading, error: animalTypesError } = useEnum(getAnimalTypesEnum);
-  const { enumObj: animalSizes, loading: animalSizesLoading, error: animalSizesError } = useEnum(getAnimalSizesEnum);
-  const { enumObj: sexes, loading: sexesLoading, error: sexesError } = useEnum(getSexesEnum);
-  const {
-    enumObj: characterTypes,
-    loading: characterTypesLoading,
-    error: characterTypesError,
-  } = useEnum(getCharacterTypesEnum);
-  const {
-    enumObj: adoptionStatuses,
-    loading: adoptionStatusesLoading,
-    error: adoptionStatusesError,
-  } = useEnum(getAdoptionStatusesEnum);
 
   useEffect(() => {
-    if (isVisible) {
-      setDropdownFilter(currentFilter);
-    }
-  }, [isVisible, currentFilter]);
+      setDropdownFilter(props.currentFilter);
+  }, [props.currentFilter]);
 
-  if (animalTypesLoading || animalSizesLoading || sexesLoading || characterTypesLoading || adoptionStatusesLoading) {
+  if (
+    enumsAreLoading
+  ) {
     return (
       <View>
-        <Text>Daten werden geladen...</Text>
+        <Text><ActivityIndicator size="large" /></Text>
       </View>
     );
   }
 
   if (
-    animalTypesError ||
-    !animalTypes ||
-    animalSizesError ||
-    !animalSizes ||
-    sexesError ||
-    !sexes ||
-    characterTypesError ||
-    !characterTypes ||
-    adoptionStatusesError ||
-    !adoptionStatuses
+    enumsError ||
+    !enums ||
+    !enums.animalTypes ||
+    !enums.animalSizes ||
+    !enums.sexes ||
+    !enums.characterTypes ||
+    !enums.adoptionStatuses
   ) {
     return (
       <View>
-        <Text>Fehler beim Laden</Text>
+        <Text>{ERROR_MESSAGES.ENUM_LOAD_FAILED}</Text>
       </View>
     );
   }
 
-  return (
-    <Modal
+
+  return (<Modal
       transparent={true}
-      visible={isVisible}
+      visible={true}
       onRequestClose={() => {
-        changeVisibility();
+        props.closeModal();
       }}
     >
       <View style={styles.centerModal}>
-        <View style={styles.modal}>
-          <Text style={{ fontSize: 18, fontWeight: "bold", alignSelf: "center" }}>Filter</Text>
-          <View style={styles.pickerContainer}>
-            <Text style={{ paddingLeft: 2 }}>Art:</Text>
-            <Dropdown
-              data={animalTypes.values.map((val) => ({ value: val }))}
-              valueField={"value"}
-              labelField={"value"}
-              value={dropdownFilter?.type ?? null}
-              placeholder="Art"
-              placeholderStyle={styles.placeholder}
-              onChange={(itemValue) => setDropdownFilter({ ...dropdownFilter, type: itemValue.value })}
-              style={styles.picker}
-            ></Dropdown>
-          </View>
-          <View style={styles.pickerContainer}>
-            <Text style={{ paddingLeft: 2 }}>Geschlecht:</Text>
-            <Dropdown
-              data={sexes.values.map((val) => ({ value: val }))}
-              valueField={"value"}
-              labelField={"value"}
-              value={dropdownFilter?.sex ?? currentFilter?.sex ?? null}
-              placeholder="Geschlecht"
-              placeholderStyle={styles.placeholder}
-              onChange={(itemValue) => setDropdownFilter({ ...dropdownFilter, sex: itemValue.value })}
-              style={styles.picker}
-            ></Dropdown>
-          </View>
-          <View style={styles.pickerContainer}>
-            <Text style={{ paddingLeft: 2 }}>Größe:</Text>
-            <Dropdown
-              data={animalSizes.values.map((val) => ({ value: val }))}
-              valueField={"value"}
-              labelField={"value"}
-              value={dropdownFilter?.size ?? null}
-              placeholder="Größe"
-              placeholderStyle={styles.placeholder}
-              onChange={(itemValue) => setDropdownFilter({ ...dropdownFilter, size: itemValue.value })}
-              style={styles.picker}
-            ></Dropdown>
-          </View>
-          <View style={styles.pickerContainer}>
-            <Text style={{ paddingLeft: 2 }}>Charakter:</Text>
-            <Dropdown
-              data={characterTypes.values.map((val) => ({ value: val }))}
-              valueField={"value"}
-              labelField={"value"}
-              value={dropdownFilter?.character ?? null}
-              placeholder="Charakter"
-              placeholderStyle={styles.placeholder}
-              onChange={(itemValue) =>
-                setDropdownFilter({
-                  ...dropdownFilter,
-                  character: itemValue.value,
-                })
-              }
-              style={styles.picker}
-            ></Dropdown>
-          </View>
-          <View style={styles.pickerContainer}>
-            <Text style={{ paddingLeft: 2 }}>Status:</Text>
-            <Dropdown
-              data={adoptionStatuses.values.map((val) => ({ value: val }))}
-              valueField={"value"}
-              labelField={"value"}
-              value={dropdownFilter?.status ?? null}
-              placeholder="Status"
-              placeholderStyle={styles.placeholder}
-              onChange={(itemValue) =>
-                setDropdownFilter({
-                  ...dropdownFilter,
-                  status: itemValue.value,
-                })
-              }
-              style={styles.picker}
-            ></Dropdown>
-          </View>
-          <Button
-            title="Anwenden"
-            onPress={() => {
-              changeVisibility();
-              applyFilter(dropdownFilter);
-            }}
-          ></Button>
-          <Button
-            title="Filter Löschen"
-            onPress={() => {
-              setDropdownFilter({});
-              applyFilter({});
-              changeVisibility();
-            }}
-          ></Button>
+      <View style={styles.modal}>
+        <View style={styles.headerRow}>
+        <ThemedText variant='h3' color={theme.colors.text.dark}> Suche filtern</ThemedText>
           <IconButton
             iconSet="Feather"
             iconName="x"
             size={24}
-            iconColor={theme.colors.text.dark}
+          iconColor={theme.colors.text.dark}
+          style={styles.close}
             onPress={() => {
-              changeVisibility();
+              props.closeModal();
             }}
           />
+          </View>
+          <View style={styles.buttonRow}>
+            <ThemedText> Art </ThemedText>
+          <ThemedDropdown dropdownData={enums.animalTypes} button={true} currentVal={dropdownFilter.type}
+            valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, type: itemValue })} />
+        </View>
+          <View style={styles.buttonRow}>
+            <ThemedText> Geschlecht </ThemedText>
+          <ThemedDropdown dropdownData={enums.sexes} button={true} currentVal={dropdownFilter.sex}
+            valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, sex: itemValue })} />
+        </View>
+
+          <View style={styles.buttonRow}>
+          <ThemedText> Größe </ThemedText>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            <ThemedDropdown dropdownData={enums.animalSizes} key="sizes" button={true} currentVal={dropdownFilter.size}
+            valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, size: itemValue })} />
+          </ScrollView>
+          </View>
+          <View style={styles.buttonRow}>
+          <ThemedText> Charakter </ThemedText>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <ThemedDropdown dropdownData={enums.characterTypes} key="character" button={true} currentVal={dropdownFilter.character}
+            valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, character: itemValue })} />
+          </ScrollView>
+          </View>
+          <View style={styles.buttonRow}>
+          <ThemedText> Status </ThemedText>
+          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+          <ThemedDropdown dropdownData={enums.adoptionStatuses} key="status" button={true} currentVal={dropdownFilter.status}
+              valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, status: itemValue })} />
+            </ScrollView>
+          </View>
+        <View style={styles.bottom}>
+          <ThemedButton
+            onPress={() => {
+              props.applyFilter(dropdownFilter);
+            }}
+          >Anwenden</ThemedButton>
+          <ThemedButton
+            variant='text'
+            textColor={theme.colors.brand.secondary}
+            onPress={() => {
+              setDropdownFilter({});
+            }}
+        >Filter Löschen</ThemedButton>
+        </View>
         </View>
       </View>
     </Modal>
@@ -191,11 +128,17 @@ export default function FilterModal({
 
 const styles = StyleSheet.create({
   centerModal: {
-    //justifyContent: "flex-start",
     position: "relative",
     top: 50,
     alignItems: "stretch",
     padding: 20,
+  },
+  headerRow: {
+    flexDirection: "row",
+    justifyContent: "space-between"
+  },
+  close: {
+    alignSelf: "flex-end"
   },
   modal: {
     alignItems: "stretch",
@@ -203,26 +146,18 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     elevation: 5,
     padding: 20,
-    paddingBottom: 30,
+    paddingBottom: 10,
     margin: 15,
     shadowColor: "#000",
     shadowRadius: 4,
     shadowOpacity: 0.25,
     shadowOffset: { width: 1, height: 2 },
   },
-  pickerContainer: {
-    justifyContent: "center",
-    marginTop: 20,
+  buttonRow: {
+    flexDirection: "row",
+    margin: 5
   },
-  picker: {
-    backgroundColor: "#fff",
-    borderColor: "#5f5f5fff",
-    borderWidth: 1,
-    borderRadius: 5,
-    margin: 1,
-    padding: 5,
-  },
-  placeholder: {
-    fontStyle: "italic",
-  },
+  bottom: {
+    padding:10
+  }
 });
