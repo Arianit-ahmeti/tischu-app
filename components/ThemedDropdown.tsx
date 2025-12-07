@@ -4,7 +4,7 @@ import { theme } from "@theme";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { DropdownProps } from 'react-native-element-dropdown/lib/typescript/components/Dropdown/model';
+import { DropdownProps } from "react-native-element-dropdown/lib/typescript/components/Dropdown/model";
 
 // dropdownData: Array of strings or EnumObject<String> (zB animalTypes)
 // valueSetter: valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, size: itemValue.value })}
