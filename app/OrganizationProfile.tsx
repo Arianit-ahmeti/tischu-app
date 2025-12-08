@@ -1,7 +1,9 @@
+import { ThemedText } from "@components";
+import { ThemedTextInput } from "@components/ThemedTextInput";
 import { getCurrentSession, getProfile } from "@lib/userService";
 import { Organization } from "@types";
 import React, { useEffect, useState } from "react";
-import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 import { ERROR_MESSAGES } from "../lib/constants/messages";
 
 const initialProfileState: Organization = {
@@ -52,70 +54,43 @@ export default function OrganizationProfile() {
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Vereinsname:</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputText}>{profile.name}</Text>
-        </View>
+        <ThemedText variant="h3">Vereinsname:</ThemedText>
+        <ThemedTextInput value={profile.name || ""} />
       </View>
 
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Straße:</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputText}>{profile.street}</Text>
-        </View>
+        <ThemedText variant="h3">Straße:</ThemedText>
+        <ThemedTextInput value={profile.street || ""} />
       </View>
 
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Hausnummer:</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputText}>{profile.house_number}</Text>
-        </View>
+        <ThemedText variant="h3">Hausnummer:</ThemedText>
+        <ThemedTextInput value={profile.house_number || ""} />
       </View>
 
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Postleitzahl:</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputText}>{profile.postal_code}</Text>
-        </View>
+        <ThemedText variant="h3">Postleitzahl:</ThemedText>
+        <ThemedTextInput value={profile.postal_code?.toString() || ""} />
       </View>
 
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Stadt:</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputText}>{profile.city}</Text>
-        </View>
+        <ThemedText variant="h3">Stadt:</ThemedText>
+        <ThemedTextInput value={profile.city || ""} />
       </View>
 
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Land:</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputText}>{profile.country}</Text>
-        </View>
+        <ThemedText variant="h3">Land:</ThemedText>
+        <ThemedTextInput value={profile.country || ""} />
       </View>
 
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Status:</Text>
-        <View style={styles.inputBox}>
-          <Text style={styles.inputText}>{profile.status}</Text>
-        </View>
+        <ThemedText variant="h3">Status:</ThemedText>
+        <ThemedTextInput value={profile.status || ""} />
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, paddingBottom: 10 },
-  inputBox: {
-    backgroundColor: "#fff",
-    borderColor: "#5f5f5fff",
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 45,
-    paddingHorizontal: 10,
-    justifyContent: "center",
-  },
-  inputText: {
-    fontSize: 16,
-    color: "#000",
-  },
+  container: { padding: 20, paddingVertical: 5 },
 });
