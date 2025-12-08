@@ -1,9 +1,9 @@
-import { Chip, ImageCarousel, ThemedButton, ThemedText } from '@components';
-import { IconButton } from '@components/IconButton';
+import { Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
+import { IconButton } from "@components/IconButton";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
-import { theme } from '@theme';
+import { theme } from "@theme";
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -74,60 +74,84 @@ export default function AnimalDetailScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-
       <View style={styles.imageContainer}>
         <ImageCarousel urls={imageUrls} />
-
       </View>
       <View style={styles.container}>
         <View style={styles.header}>
-        <ThemedText style={styles.name} variant="h1" color={theme.colors.brand.primary}>{animal.name}</ThemedText>
-          <ThemedText variant='bodySmall' color={theme.colors.brand.secondary}>{animal.origin}</ThemedText>
+          <ThemedText style={styles.name} variant="h1" color={theme.colors.brand.primary}>
+            {animal.name}
+          </ThemedText>
+          <ThemedText variant="bodySmall" color={theme.colors.brand.secondary}>
+            {animal.origin}
+          </ThemedText>
           <View style={styles.buttons}>
-          <IconButton size={30} iconName='favorite-border' iconSet='MaterialIcons' iconColor={theme.colors.brand.focus}/>
-          <IconButton size={30} iconName='edit' iconSet='AntDesign' onPress={() => router.push(`/Animal/${animal.id}/Edit`)} />
-          <IconButton
-          iconSet='Ionicons'
-            iconName='trash'
-            size={30}
-            onPress={() => {
-              Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
-                {
-                  text: "Abbrechen",
-                  style: "cancel",
-                },
-                {
-                  text: "Löschen",
-                  style: "destructive",
-                  onPress: async () => {
-                    await deleteAnimal(animalId as string);
-                    router.back();
+            <IconButton
+              size={30}
+              iconName="favorite-border"
+              iconSet="MaterialIcons"
+              iconColor={theme.colors.brand.focus}
+            />
+            <IconButton
+              size={30}
+              iconName="edit"
+              iconSet="AntDesign"
+              onPress={() => router.push(`/Animal/${animal.id}/Edit`)}
+            />
+            <IconButton
+              iconSet="Ionicons"
+              iconName="trash"
+              size={30}
+              onPress={() => {
+                Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
+                  {
+                    text: "Abbrechen",
+                    style: "cancel",
                   },
-                },
-              ]);
-            }}
-          />
+                  {
+                    text: "Löschen",
+                    style: "destructive",
+                    onPress: async () => {
+                      await deleteAnimal(animalId as string);
+                      router.back();
+                    },
+                  },
+                ]);
+              }}
+            />
           </View>
         </View>
 
         <View style={styles.row}>
-          <ThemedText variant='badge' color={theme.colors.brand.secondary}> Geschlecht </ThemedText>
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            {" "}
+            Geschlecht{" "}
+          </ThemedText>
           <ThemedText>{animal.sex}</ThemedText>
         </View>
         <View style={styles.row}>
-          <ThemedText variant='badge' color={theme.colors.brand.secondary}> Alter </ThemedText>
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            {" "}
+            Alter{" "}
+          </ThemedText>
           <Text>{animal.age || "Unbekannt"}</Text>
         </View>
         <View style={styles.row}>
-        <ThemedText variant='badge' color={theme.colors.brand.secondary}> Größe </ThemedText>
-        <Chip text={animal.size || "Unbekannt"} />
-      </View>
-      <View style={styles.row}>
-        <ThemedText variant='badge' color={theme.colors.brand.secondary}> Charakter </ThemedText>
-        <Chip text={animal.character || "Unbekannt"} />
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            {" "}
+            Größe{" "}
+          </ThemedText>
+          <Chip text={animal.size || "Unbekannt"} />
+        </View>
+        <View style={styles.row}>
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            {" "}
+            Charakter{" "}
+          </ThemedText>
+          <Chip text={animal.character || "Unbekannt"} />
         </View>
         <View style={styles.description}>
-          <ThemedText variant='body'> Hier kann ihr Text stehen!</ThemedText>
+          <ThemedText variant="body"> Hier kann ihr Text stehen!</ThemedText>
         </View>
 
         <ThemedButton>Jetzt Bewerben</ThemedButton>
@@ -146,14 +170,14 @@ const styles = StyleSheet.create({
   },
   root: { flex: 1 },
   imageContainer: { height: 250 },
-  header: {paddingBottom: 20},
+  header: { paddingBottom: 20 },
   container: { padding: 20, flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
   name: { fontSize: 28, fontWeight: "bold" },
   buttons: {
     position: "absolute",
     flexDirection: "column",
-    alignSelf: "flex-end"
+    alignSelf: "flex-end",
   },
   description: {
     margin: 2,
