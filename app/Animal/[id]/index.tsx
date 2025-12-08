@@ -1,7 +1,9 @@
-import { Chip, ImageCarousel } from "@components";
+import { Chip, ThemedText } from '@components';
+import { ImageCarousel } from "@components/ImageCarousel";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { theme } from '@theme';
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -72,17 +74,23 @@ export default function AnimalDetailScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <View style={{ height: 250 }}>
+      <View style={styles.imageContainer}>
         <ImageCarousel urls={imageUrls} />
       </View>
       <View style={styles.container}>
-        <Text style={styles.name}>{animal.name}</Text>
-        <View style={styles.row}>
-          <Text>Herkunft:</Text>
-          <Chip text={animal.origin || "Unbekannt"} />
+        <View style={styles.header}>
+        <ThemedText style={styles.name} variant="h1" color={theme.colors.brand.primary}>{animal.name}</ThemedText>
+        <ThemedText variant='bodySmall' color={theme.colors.brand.secondary}>{animal.origin}</ThemedText>
         </View>
-        <Text>Alter: {animal.age || "Unbekannt"}</Text>
-        <Text>Charakter: {animal.character}</Text>
+
+          <ThemedText variant='badge' color={theme.colors.brand.secondary}> Geschlecht </ThemedText><ThemedText>{animal.sex}</ThemedText>
+
+          <ThemedText variant='badge' color={theme.colors.brand.secondary}> Alter </ThemedText><Text>{animal.age || "Unbekannt"}</Text>
+
+
+          <ThemedText variant='badge' color={theme.colors.brand.secondary}> Größe </ThemedText> <Chip text={animal.size || "Unbekannt"} />
+        <ThemedText variant='badge' color={theme.colors.brand.secondary}> Charakter </ThemedText> <Chip text={animal.character|| "Unbekannt"}/>
+
         <View style={styles.button}>
           <Button
             title="Tier löschen"
@@ -120,8 +128,9 @@ const styles = StyleSheet.create({
   },
   root: { flex: 1 },
   imageContainer: { height: 250 },
+  header: {paddingBottom: 20},
   container: { padding: 20, flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  name: { fontSize: 28, fontWeight: "bold", marginBottom: 10 },
+  name: { fontSize: 28, fontWeight: "bold" },
   button: { marginVertical: 8, overflow: "hidden" },
 });
