@@ -1,32 +1,33 @@
 import { theme } from "@theme";
 import React from "react";
-import { StyleSheet, TextProps, View } from "react-native";
-import { RowView } from './RowView';
-import { ThemedText } from './ThemedText';
+import { StyleSheet, View } from "react-native";
+import { ThemedText } from "./ThemedText";
 
-
-interface ChipProps extends TextProps {
+interface ChipProps {
   color?: string;
+  text: string;
 }
 
-export const Chip: React.FC<ChipProps> = ({
-  color = theme.colors.brand.primary,
-  children,
-  ...props
-}) => {
+export const Chip: React.FC<ChipProps> = ({ color = theme.colors.brand.primary, text, ...props }) => {
   return (
-    <RowView>
-      <View style={[styles.chip, {backgroundColor: color}]}>
-        <ThemedText variant="buttonSecondary" color={theme.colors.text.inverted}> {children}</ThemedText>
-      </View>
-    </RowView>
+    <View style={[styles.chip, { backgroundColor: color }]}>
+      <ThemedText style={styles.text} variant="buttonSecondary" color={theme.colors.text.inverted}>
+        {" "}
+        {text}
+      </ThemedText>
+    </View>
   );
 };
 
 const styles = StyleSheet.create({
+  text: {
+    textAlign: "center",
+    padding: 2,
+  },
   chip: {
     borderRadius: 30,
-    margin: 1,
+    margin: 2,
     paddingHorizontal: 10,
+    paddingRight: 13,
   },
 });

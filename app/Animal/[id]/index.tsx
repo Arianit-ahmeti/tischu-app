@@ -1,4 +1,4 @@
-import { ImageCarousel } from "@components/ImageCarousel";
+import { Chip, ImageCarousel } from "@components";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
@@ -77,7 +77,10 @@ export default function AnimalDetailScreen() {
       </View>
       <View style={styles.container}>
         <Text style={styles.name}>{animal.name}</Text>
-        <Text>Herkunft: {animal.origin}</Text>
+        <View style={styles.row}>
+          <Text>Herkunft:</Text>
+          <Chip text={animal.origin || "Unbekannt"} />
+        </View>
         <Text>Alter: {animal.age || "Unbekannt"}</Text>
         <Text>Charakter: {animal.character}</Text>
         <View style={styles.button}>
@@ -110,6 +113,11 @@ export default function AnimalDetailScreen() {
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    justifyContent: "flex-start",
+    rowGap: 100,
+  },
   root: { flex: 1 },
   imageContainer: { height: 250 },
   container: { padding: 20, flex: 1 },
