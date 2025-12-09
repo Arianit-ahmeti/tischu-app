@@ -1,8 +1,10 @@
+import { ThemedButton, ThemedText } from "@components";
+import { ThemedTextInput } from "@components/ThemedTextInput";
 import { supabase } from "@lib/supabase";
 import { Organization } from "@types";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, Button, ScrollView, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, View } from "react-native";
 
 export async function saveOrganization(organization: Partial<Organization>) {
   const {
@@ -78,28 +80,17 @@ export default function OrganizationSignUp() {
   return (
     <ScrollView style={{ flex: 1 }}>
       <View style={styles.container}>
-        <Text style={{ fontWeight: "bold" }}>Name:</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setName(text)}
-          value={name}
-          placeholder="Name der Organization"
-        />
+        <ThemedText variant="h3">Vereinsname:</ThemedText>
+        <ThemedTextInput onChangeText={(text) => setName(text)} value={name} placeholder="Name der Organization" />
 
-        <Text style={{ fontWeight: "bold" }}>Straße:</Text>
-        <TextInput style={styles.input} onChangeText={(text) => setStreet(text)} value={street} placeholder="Straße" />
+        <ThemedText variant="h3">Straße:</ThemedText>
+        <ThemedTextInput onChangeText={(text) => setStreet(text)} value={street} placeholder="Straße" />
 
-        <Text style={{ fontWeight: "bold" }}>Hausnummer:</Text>
-        <TextInput
-          style={styles.input}
-          onChangeText={(text) => setHouseNumber(text)}
-          value={house_number}
-          placeholder="Hausnummer"
-        />
+        <ThemedText variant="h3">Hausnummer:</ThemedText>
+        <ThemedTextInput onChangeText={(text) => setHouseNumber(text)} value={house_number} placeholder="Hausnummer" />
 
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>PLZ:</Text>
-        <TextInput
-          style={styles.input}
+        <ThemedText variant="h3">PLZ:</ThemedText>
+        <ThemedTextInput
           onChangeText={(text) => {
             const numericText = text.replace(/[^0-9]/g, "");
             setPostalCode(numericText);
@@ -109,13 +100,16 @@ export default function OrganizationSignUp() {
           keyboardType="numeric"
         />
 
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Stadt:</Text>
-        <TextInput style={styles.input} onChangeText={(text) => setCity(text)} value={city} placeholder="Stadt" />
+        <ThemedText variant="h3">Stadt:</ThemedText>
+        <ThemedTextInput onChangeText={(text) => setCity(text)} value={city} placeholder="Stadt" />
 
-        <Text style={{ fontWeight: "bold", marginTop: 10 }}>Land:</Text>
-        <TextInput style={styles.input} onChangeText={(text) => setCountry(text)} value={country} placeholder="Land" />
+        <ThemedText variant="h3">Land:</ThemedText>
+        <ThemedTextInput onChangeText={(text) => setCountry(text)} value={country} placeholder="Land" />
 
-        <Button title="Registrieren" onPress={async () => handleOrganizationSignUp()} />
+        <ThemedButton onPress={async () => handleOrganizationSignUp()} style={styles.buttonSpacing}>
+          Registrieren
+        </ThemedButton>
+
         <View style={{ height: 20 }}></View>
       </View>
     </ScrollView>
@@ -123,31 +117,12 @@ export default function OrganizationSignUp() {
 }
 
 const styles = StyleSheet.create({
-  center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  name: { fontSize: 28, fontWeight: "bold", marginBottom: 30 },
   container: {
     padding: 20,
     paddingBottom: 40,
+    paddingVertical: 5,
   },
-  input: {
-    backgroundColor: "#fff",
-    borderColor: "#5f5f5fff",
-    borderWidth: 1,
-    borderRadius: 5,
-    height: 45,
-    paddingHorizontal: 10,
-    fontSize: 16,
-    color: "#000",
-    marginBottom: 10,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
+  buttonSpacing: {
     marginTop: 20,
   },
-  buttonContainer: { marginTop: 30, overflow: "hidden", width: "30%" },
-  button: { marginVertical: 8, overflow: "hidden" },
 });
