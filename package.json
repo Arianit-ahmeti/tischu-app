@@ -15,6 +15,10 @@
     "web": "expo start --web",
     "test": "jest",
     "test:watch": "jest --watch",
+    "test:lib": "jest --selectProjects lib_tests",
+    "test:lib:watch": "jest --selectProjects lib_tests --watch",
+    "test:components": "jest --selectProjects components_tests",
+    "test:components:watch": "jest --selectProjects components_tests --watch",
     "prettier:check": "prettier --check .",
     "prettier:write": "prettier --write ."
   },
