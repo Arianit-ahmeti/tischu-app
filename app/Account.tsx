@@ -1,29 +1,38 @@
 import { ThemedButton, ThemedText } from "@components";
 import { supabase } from "@lib/supabase";
+import { checkOrganizationAccess } from "@lib/userService";
 import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, TextInput, View } from "react-native";
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
+  const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
+  const [isOrganizationUser, setIsOrganizationUser] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
-    if (session) getProfile();
-  }, [session]);
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      if (session) {
+        getProfile(session);
+        checkOrganization(session);
+      }
+    });
+  }, []);
 
-  async function getProfile() {
+  async function getProfile(currentSession: Session) {
     try {
       setLoading(true);
-      if (!session?.user) throw new Error("No user on the session!");
+      if (!currentSession?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
         .from("profiles")
         .select(`username`)
-        .eq("id", session?.user.id)
+        .eq("id", currentSession.user.id)
         .single();
       if (error && status !== 406) {
         throw error;
@@ -47,7 +56,7 @@ export default function Account({ session }: { session: Session }) {
       if (!session?.user) throw new Error("No user on the session!");
 
       const updates = {
-        id: session?.user.id,
+        id: session.user.id,
         username,
         updated_at: new Date(),
       };
@@ -66,6 +75,15 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
+  async function checkOrganization(currentSession: Session) {
+    if (!currentSession?.user) {
+      setIsOrganizationUser(false);
+      return;
+    }
+    const isOrg = await checkOrganizationAccess(currentSession.user.id);
+    setIsOrganizationUser(isOrg);
+  }
+
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -74,36 +92,29 @@ export default function Account({ session }: { session: Session }) {
       </View>
       <View style={styles.verticallySpaced}>
         <ThemedText>Username</ThemedText>
-        <TextInput
-          value={username || ""}
-          onChangeText={(text) => setUsername(text)}
-        />
+        <TextInput value={username || ""} onChangeText={(text) => setUsername(text)} />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <ThemedButton
-          onPress={() => updateProfile({ username })}
-          disabled={loading}
-        >
+        <ThemedButton onPress={() => updateProfile({ username })} disabled={loading}>
           {loading ? "Loading ..." : "Update"}
         </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => supabase.auth.signOut()}>
-          Sign Out
-        </ThemedButton>
+        <ThemedButton onPress={() => supabase.auth.signOut()}>Sign Out</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("Animal/Add")}>
-          Add Animal
-        </ThemedButton>
+        <ThemedButton onPress={() => router.navigate("Animal/Add")}>Add Animal</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("AnimalList")}>
-          Show AnimalList
-        </ThemedButton>
+        <ThemedButton onPress={() => router.navigate("AnimalList")}>Show AnimalList</ThemedButton>
       </View>
+      {isOrganizationUser && (
+        <View style={styles.verticallySpaced}>
+          <ThemedButton onPress={() => router.navigate("/OrganizationProfile")}>Profile</ThemedButton>
+        </View>
+      )}
     </View>
   );
 }

@@ -1,20 +1,14 @@
 import FilterModal from "@components/FilterModal";
+import { IconButton } from "@components/IconButton";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
 import { FlashList } from "@shopify/flash-list";
 import type { Animal, AnimalFilters } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  Button,
-  Image,
-  Pressable,
-  StyleSheet,
-  Text,
-  useWindowDimensions,
-  View,
-} from "react-native";
+import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
+import { theme } from "../theme/theme";
 
 export default function AnimalList() {
   const router = useRouter();
@@ -36,10 +30,7 @@ export default function AnimalList() {
           previewMap[animal.id] = urls[0];
         }
       } catch (err) {
-        console.log(
-          `Could not load preview image for animal ${animal.id}:`,
-          err,
-        );
+        console.log(`Could not load preview image for animal ${animal.id}:`, err);
       }
     }
 
@@ -70,7 +61,7 @@ export default function AnimalList() {
   useFocusEffect(
     React.useCallback(() => {
       load();
-    }, []),
+    }, [])
   );
 
   useEffect(() => {
@@ -89,10 +80,13 @@ export default function AnimalList() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.view}>
         <View style={styles.container}>
-          <Button
-            title="Filter"
+          <IconButton
+            iconSet="Feather"
+            iconName="filter"
+            size={24}
+            iconColor={theme.colors.brand.primary}
             onPress={() => setModalVisibility(!modalVisibility)}
-          ></Button>
+          />
           <FilterModal
             isVisible={modalVisibility}
             changeVisibility={() => setModalVisibility(!modalVisibility)}
@@ -110,14 +104,7 @@ export default function AnimalList() {
             keyExtractor={(item) => item.id}
             renderItem={({ item }) => (
               <SafeAreaView>
-                <Pressable
-                  onPress={() =>
-                    router.navigate({
-                      pathname: "Animal/[id]",
-                      params: { id: item.id },
-                    })
-                  }
-                >
+                <Pressable onPress={() => router.navigate(`Animal/${item.id}`)}>
                   <View style={styles.card}>
                     {previewImage[item.id] && (
                       <Image

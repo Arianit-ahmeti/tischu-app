@@ -1,18 +1,11 @@
-import ImageCarousel from "@components/ImageCarousel";
+import { ImageCarousel } from "@components/ImageCarousel";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-  ActivityIndicator,
-  Alert,
-  Button,
-  StyleSheet,
-  Text,
-  View,
-} from "react-native";
+import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
 
 export default function AnimalDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -78,8 +71,8 @@ export default function AnimalDetailScreen() {
   }
 
   return (
-    <View style={styles.root}>
-      <View style={styles.imageContainer}>
+    <View style={{ flex: 1 }}>
+      <View style={{ height: 250 }}>
         <ImageCarousel urls={imageUrls} />
       </View>
       <View style={styles.container}>
@@ -91,32 +84,25 @@ export default function AnimalDetailScreen() {
           <Button
             title="Tier löschen"
             onPress={() => {
-              Alert.alert(
-                "Tier löschen",
-                `Möchten Sie ${animal.name} wirklich löschen?`,
-                [
-                  {
-                    text: "Abbrechen",
-                    style: "cancel",
+              Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
+                {
+                  text: "Abbrechen",
+                  style: "cancel",
+                },
+                {
+                  text: "Löschen",
+                  style: "destructive",
+                  onPress: async () => {
+                    await deleteAnimal(animalId as string);
+                    router.back();
                   },
-                  {
-                    text: "Löschen",
-                    style: "destructive",
-                    onPress: async () => {
-                      await deleteAnimal(animalId as string);
-                      router.back();
-                    },
-                  },
-                ],
-              );
+                },
+              ]);
             }}
           />
         </View>
         <View style={styles.button}>
-          <Button
-            title="Bearbeiten"
-            onPress={() => router.push(`/Animal/edit?id=${animal.id}`)}
-          />
+          <Button title="Bearbeiten" onPress={() => router.push(`/Animal/${animal.id}/Edit`)} />
         </View>
       </View>
     </View>

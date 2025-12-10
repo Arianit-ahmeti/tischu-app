@@ -1,7 +1,7 @@
-import { ThemedText } from "@components/ThemedText";
 import { theme } from "@theme";
 import React from "react";
 import { Pressable, PressableProps, StyleSheet } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 interface SelectableButtonProps extends PressableProps {
   backgroundColor?: string;
@@ -9,9 +9,7 @@ interface SelectableButtonProps extends PressableProps {
   isSelected: boolean;
 }
 
-export const SelectableButton: React.FC<
-  React.PropsWithChildren<SelectableButtonProps>
-> = ({
+export const SelectableButton: React.FC<React.PropsWithChildren<SelectableButtonProps>> = ({
   backgroundColor = theme.colors.brand.primary,
   borderColor = theme.colors.brand.primary,
   isSelected = false,
@@ -47,7 +45,7 @@ export const SelectableButton: React.FC<
 
 const styles = StyleSheet.create({
   container: {
-    paddingVertical: 14,
+    paddingVertical: 12,
     paddingHorizontal: 16,
     borderRadius: 32,
     margin: 4,
