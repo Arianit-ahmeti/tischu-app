@@ -1,9 +1,12 @@
 export const ERROR_MESSAGES = {
+  ERROR: "Fehler",
+  WARNING: "Warnung",
   ANIMAL_LOAD_FAILED: "Tier konnte nicht geladen werden.",
   ANIMAL_NOT_FOUND: "Tier nicht gefunden.",
   ANIMAL_UPDATE_FAILED: "Fehler, Aktualisierung fehlgeschlagen!",
   IMAGE_UPLOAD_FAILED: "Fehler beim Hochladen",
   IMAGE_DOWNLOAD_FAILED: "Fehler beim Herunterladen",
+  IMAGE_SELECTION_FAILED: "Fehler beim Auswählen der Bilder",
   ENUM_LOAD_FAILED: "Fehler beim Laden",
   ORG_PROFILE_LOAD_FAILED: "Vereinprofil konnte nicht geladen werden.",
   ORG_SESSION_FAILED: "Sitzung fehlgeschlagen.",
@@ -11,6 +14,7 @@ export const ERROR_MESSAGES = {
 } as const;
 
 export const SUCCESS_MESSAGES = {
+  SUCCESS: "Erfolg",
   ANIMAL_UPDATED: "Tier wurde aktualisiert!",
   ANIMAL_CREATED: "Tier wurde hinzugefügt!",
 } as const;

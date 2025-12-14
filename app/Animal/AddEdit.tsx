@@ -72,7 +72,7 @@ export default function AddEditAnimal() {
         setImageUrls([...imageUrls, ...newUris]);
       }
     } catch (error) {
-      Alert.alert("Fehler", "Fehler beim Auswählen der Bilder");
+      Alert.alert(ERROR_MESSAGES.ERROR, ERROR_MESSAGES.IMAGE_SELECTION_FAILED);
       console.error(error);
     }
   }
@@ -83,16 +83,14 @@ export default function AddEditAnimal() {
     const animalChanged = animal !== originalAnimal;
     const imagesChanged = JSON.stringify(imageUrls) !== JSON.stringify(originalImageUrls);
 
-    if (isEditMode && !animalChanged && !imagesChanged) {
-      router.back();
-      return;
-    }
-
     if (isEditMode) {
-      if (animalChanged) {
+      if (!animalChanged && !imagesChanged) {
+        router.back();
+        return;
+      } else if (animalChanged) {
         const updated = await updateAnimal(animal as Animal);
         if (!updated) {
-          Alert.alert("Fehler", ERROR_MESSAGES.ANIMAL_UPDATE_FAILED);
+          Alert.alert(ERROR_MESSAGES.ERROR, ERROR_MESSAGES.ANIMAL_UPDATE_FAILED);
           setSaving(false);
           return;
         }
@@ -110,7 +108,7 @@ export default function AddEditAnimal() {
       });
 
       if (!newAnimal || !newAnimal.id) {
-        Alert.alert("Fehler", ERROR_MESSAGES.ANIMAL_UPDATE_FAILED);
+        Alert.alert(ERROR_MESSAGES.ERROR, ERROR_MESSAGES.ANIMAL_UPDATE_FAILED);
         setSaving(false);
         return;
       }
@@ -124,7 +122,7 @@ export default function AddEditAnimal() {
         await uploadLocalImages(animalId, newImageUris);
       } catch (error) {
         console.error("Error uploading local images:", error);
-        Alert.alert("Warnung", "Einige Bilder konnten nicht hochgeladen werden");
+        Alert.alert(ERROR_MESSAGES.WARNING, ERROR_MESSAGES.IMAGE_UPLOAD_FAILED);
       }
     }
 
@@ -171,7 +169,7 @@ export default function AddEditAnimal() {
     <>
       <AlertDialog
         visible={alertVisible}
-        title="Erfolg"
+        title={SUCCESS_MESSAGES.SUCCESS}
         message={isEditMode ? SUCCESS_MESSAGES.ANIMAL_UPDATED : SUCCESS_MESSAGES.ANIMAL_CREATED}
         buttons={[
           {
