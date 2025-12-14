@@ -55,13 +55,28 @@ export default function RootLayout() {
       />
 
       <Tabs.Screen
-        name="Animal/AddEdit"
+        name="AddEdit/Add"
         options={{
           title: "Tier hinzufügen",
           tabBarLabel: "hinzufügen",
           tabBarIcon: ({ focused, color, size }) => (
             <Ionicons name={focused ? "add-circle-sharp" : "add-circle-outline"} size={size} color={color} />
           ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="AddEdit/Edit"
+        options={{
+          title: "Tier bearbeiten",
+          href: null,
+        }}
+      />
+
+      <Tabs.Screen
+        name="AddEdit/Base"
+        options={{
+          href: null,
         }}
       />
 

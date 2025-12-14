@@ -102,7 +102,7 @@ export default function AnimalDetailScreen() {
           />
         </View>
         <View style={styles.button}>
-          <Button title="Bearbeiten" onPress={() => router.push(`/Animal/AddEdit?id=${animal.id}`)} />
+          <Button title="Bearbeiten" onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)} />
         </View>
       </View>
     </View>

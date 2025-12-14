@@ -104,7 +104,7 @@ export default function Account() {
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("Animal/AddEdit")}>Add Animal</ThemedButton>
+        <ThemedButton onPress={() => router.navigate("AddEdit/Add")}>Add Animal</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
