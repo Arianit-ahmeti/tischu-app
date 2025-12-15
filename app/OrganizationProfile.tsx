@@ -1,6 +1,7 @@
 import { ThemedText } from "@components";
-import { ThemedTextInput } from "@components/ThemedTextInput";
+import { IconButton } from "@components/IconButton";
 import { getCurrentSession, getProfile } from "@lib/userService";
+import { theme } from "@theme";
 import { Organization } from "@types";
 import React, { useEffect, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
@@ -51,46 +52,125 @@ export default function OrganizationProfile() {
     }
   }
 
+  const streetPart = `${profile.street || ""} ${profile.house_number || ""}`;
+  const cityPart = `${profile.postal_code?.toString() || ""} ${profile.city || ""}`;
+  const fullAddress = `${streetPart.trim()},\n${cityPart.trim()}\n${profile.country || ""}`.trim();
+
   return (
-    <ScrollView style={{ flex: 1 }}>
-      <View style={styles.container}>
-        <ThemedText variant="h3">Vereinsname:</ThemedText>
-        <ThemedTextInput value={profile.name || ""} />
+    <ScrollView style={styles.scrollView}>
+      <View style={styles.nameHeaderContainer}>
+        <View style={styles.avatarPlaceholder}></View>
+        <View>
+          <ThemedText variant="h2" numberOfLines={2} ellipsizeMode="tail" style={styles.nameText}>
+            {profile.name || "-"}
+          </ThemedText>
+          <ThemedText variant="body" style={{ color: theme.colors.brand.secondary }}>
+            {profile.city || "-"}
+          </ThemedText>
+        </View>
       </View>
 
-      <View style={styles.container}>
-        <ThemedText variant="h3">Straße:</ThemedText>
-        <ThemedTextInput value={profile.street || ""} />
-      </View>
+      <View style={styles.cardContainer}>
+        <View style={styles.row}>
+          <IconButton
+            iconSet="Feather"
+            iconName="user"
+            size={22}
+            iconColor={theme.colors.brand.focus}
+            style={styles.iconButtonMargin}
+          />
+          <View style={styles.content}>
+            <ThemedText variant="body" style={styles.textLight}>
+              VEREINSNAME
+            </ThemedText>
+            <ThemedText variant="body" style={styles.textLight}>
+              {profile.name || "-"}
+            </ThemedText>
+          </View>
+        </View>
 
-      <View style={styles.container}>
-        <ThemedText variant="h3">Hausnummer:</ThemedText>
-        <ThemedTextInput value={profile.house_number || ""} />
-      </View>
+        <View style={styles.row}>
+          <IconButton
+            iconSet="Feather"
+            iconName="map-pin"
+            size={22}
+            iconColor={theme.colors.brand.focus}
+            style={styles.iconButtonMargin}
+          />
+          <View style={styles.content}>
+            <ThemedText variant="body" style={styles.textLight}>
+              ADRESSE
+            </ThemedText>
+            <ThemedText variant="body" style={styles.textLight}>
+              {fullAddress.trim() || "-"}
+            </ThemedText>
+          </View>
+        </View>
 
-      <View style={styles.container}>
-        <ThemedText variant="h3">Postleitzahl:</ThemedText>
-        <ThemedTextInput value={profile.postal_code?.toString() || ""} />
-      </View>
-
-      <View style={styles.container}>
-        <ThemedText variant="h3">Stadt:</ThemedText>
-        <ThemedTextInput value={profile.city || ""} />
-      </View>
-
-      <View style={styles.container}>
-        <ThemedText variant="h3">Land:</ThemedText>
-        <ThemedTextInput value={profile.country || ""} />
-      </View>
-
-      <View style={styles.container}>
-        <ThemedText variant="h3">Status:</ThemedText>
-        <ThemedTextInput value={profile.status || ""} />
+        <View style={styles.row}>
+          <IconButton
+            iconSet="Feather"
+            iconName="check-circle"
+            size={22}
+            iconColor={theme.colors.brand.focus}
+            style={styles.iconButtonMargin}
+          />
+          <View style={styles.content}>
+            <ThemedText variant="body" style={styles.textLight}>
+              STATUS
+            </ThemedText>
+            <ThemedText variant="body" style={styles.textLight}>
+              {profile.status || "UNBEKANNT"}
+            </ThemedText>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { padding: 20, paddingVertical: 5 },
+  scrollView: {
+    flex: 1,
+    backgroundColor: theme.colors.background.base,
+  },
+  nameHeaderContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    width: 287,
+    height: 100,
+    marginLeft: 24,
+    marginTop: 40,
+  },
+  avatarPlaceholder: {
+    width: 100,
+    height: 100,
+    borderRadius: 50,
+    backgroundColor: theme.colors.brand.secondary,
+    marginRight: 32,
+  },
+  cardContainer: {
+    width: 327,
+    marginLeft: 44,
+    marginTop: 40,
+  },
+  row: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 10,
+    marginBottom: 10,
+  },
+  iconButtonMargin: {
+    marginRight: 15,
+  },
+  content: {
+    flex: 1,
+  },
+  textLight: {
+    color: theme.colors.text.light,
+  },
+  nameText: {
+    color: theme.colors.brand.primary,
+    marginBottom: 5,
+  },
 });
