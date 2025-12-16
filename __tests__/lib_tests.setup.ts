@@ -1,4 +1,4 @@
-jest.mock("../lib/supabase", () => ({
+jest.mock("@lib/supabase", () => ({
   supabase: {
     from: jest.fn(() => ({
       insert: jest.fn(() => ({
