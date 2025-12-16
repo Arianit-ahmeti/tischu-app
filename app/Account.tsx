@@ -1,12 +1,13 @@
 import { ThemedButton, ThemedText } from "@components";
+import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { supabase } from "@lib/supabase";
 import { checkOrganizationAccess } from "@lib/userService";
-import { Session } from "@supabase/supabase-js";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, StyleSheet, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, TextInput, View } from "react-native";
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
+  const { session, isLoading: isSessionLoading } = useSupabaseSession();
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [isOrganizationUser, setIsOrganizationUser] = useState(false);
@@ -80,6 +81,27 @@ export default function Account({ session }: { session: Session }) {
     setIsOrganizationUser(isOrg);
   }
 
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    router.replace("/");
+  }
+
+  if (isSessionLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <View style={styles.center}>
+        <ThemedText>Please authenticate to view your account.</ThemedText>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -96,15 +118,15 @@ export default function Account({ session }: { session: Session }) {
         </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => supabase.auth.signOut()}>Sign Out</ThemedButton>
+        <ThemedButton onPress={handleSignOut}>Sign Out</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("Animal/Add")}>Add Animal</ThemedButton>
+        <ThemedButton onPress={() => router.navigate("/(tabs)/Add")}>Add Animal</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("AnimalList")}>Show AnimalList</ThemedButton>
+        <ThemedButton onPress={() => router.navigate("/(tabs)/AnimalList")}>Show AnimalList</ThemedButton>
       </View>
       {isOrganizationUser && (
         <View style={styles.verticallySpaced}>
@@ -127,5 +149,11 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
   },
 });

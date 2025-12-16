@@ -1,34 +1,22 @@
-import Account from "@app/Account";
 import Auth from "@app/Auth";
-import { supabase } from "@lib/supabase";
-import { Session } from "@supabase/supabase-js";
-import { useEffect, useState } from "react";
-import { View } from "react-native";
-import { BottomNavigation } from "@components";
+import { useSupabaseSession } from "@hooks/useSupabaseSession";
+import { Redirect } from "expo-router";
+import { ActivityIndicator, View } from "react-native";
 
 export default function App() {
-  const [session, setSession] = useState<Session | null>(null);
+  const { session, isLoading } = useSupabaseSession();
 
-  useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-    });
+  if (isLoading) {
+    return (
+      <View style={{ flex: 1, justifyContent: "center", alignItems: "center" }}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
 
-    supabase.auth.onAuthStateChange((_event, session) => {
-      setSession(session);
-    });
-  }, []);
+  if (session?.user) {
+    return <Redirect href="/(tabs)/AnimalList" />;
+  }
 
-  return (
-    <View style={{ flex: 1 }}>
-      {session && session.user ? (
-        <>
-          <Account key={session.user.id} session={session} />
-          <BottomNavigation />
-        </>
-      ) : (
-        <Auth />
-      )}
-    </View>
-  );
+  return <Auth />;
 }

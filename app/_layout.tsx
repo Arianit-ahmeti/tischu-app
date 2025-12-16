@@ -39,7 +39,8 @@ export default function RootLayout() {
         },
       })}
     >
-      <Stack.Screen name="index" options={{ title: "Account" }} />
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
       <Stack.Screen name="Animal/[id]/index" options={{ title: "Tierprofil" }} />
       <Stack.Screen name="Animal/[id]/Edit" options={{ title: "Tier bearbeiten" }} />
       <Stack.Screen name="Animal/Add" options={{ title: "Tier hinzufügen" }} />
