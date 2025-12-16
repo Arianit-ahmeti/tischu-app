@@ -6,8 +6,7 @@ import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import { Alert, StyleSheet, TextInput, View } from "react-native";
 
-export default function Account() {
-  const [session, setSession] = useState<Session | null>(null);
+export default function Account({ session }: { session: Session }) {
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
   const [isOrganizationUser, setIsOrganizationUser] = useState(false);
@@ -15,24 +14,21 @@ export default function Account() {
   const router = useRouter();
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
-      setSession(session);
-      if (session) {
-        getProfile(session);
-        checkOrganization(session);
-      }
-    });
-  }, []);
+    if (session) {
+      getProfile();
+      checkOrganization();
+    }
+  }, [session]);
 
-  async function getProfile(currentSession: Session) {
+  async function getProfile() {
     try {
       setLoading(true);
-      if (!currentSession?.user) throw new Error("No user on the session!");
+      if (!session?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
         .from("profiles")
         .select(`username`)
-        .eq("id", currentSession.user.id)
+        .eq("id", session?.user.id)
         .single();
       if (error && status !== 406) {
         throw error;
@@ -56,7 +52,7 @@ export default function Account() {
       if (!session?.user) throw new Error("No user on the session!");
 
       const updates = {
-        id: session.user.id,
+        id: session?.user.id,
         username,
         updated_at: new Date(),
       };
@@ -75,12 +71,12 @@ export default function Account() {
     }
   }
 
-  async function checkOrganization(currentSession: Session) {
-    if (!currentSession?.user) {
+  async function checkOrganization() {
+    if (!session?.user) {
       setIsOrganizationUser(false);
       return;
     }
-    const isOrg = await checkOrganizationAccess(currentSession.user.id);
+    const isOrg = await checkOrganizationAccess(session.user.id);
     setIsOrganizationUser(isOrg);
   }
 
