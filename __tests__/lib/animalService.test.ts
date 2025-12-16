@@ -1,5 +1,5 @@
-import { addAnimal, deleteAnimal, fetchAnimalDetails, fetchAnimalsForList, updateAnimal } from "../lib/animalService";
-import { supabase } from "../lib/supabase";
+import { addAnimal, deleteAnimal, fetchAnimalDetails, fetchAnimalsForList, updateAnimal } from "@lib/animalService";
+import { supabase } from "@lib/supabase";
 
 const mockedSupabase = jest.mocked(supabase);
 
