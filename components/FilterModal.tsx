@@ -1,4 +1,3 @@
-import { ThemedText } from '@components/ThemedText';
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { theme } from '@theme';
@@ -8,6 +7,7 @@ import { ActivityIndicator, Modal, ModalProps, ScrollView, StyleSheet, Text, Vie
 import { IconButton } from './IconButton';
 import { ThemedButton } from './ThemedButton';
 import { ThemedDropdown } from './ThemedDropdown';
+import { ThemedText } from './ThemedText';
 
 interface FilterModalProps extends ModalProps{
   closeModal: () => void;
@@ -46,7 +46,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({
   ) {
     return (
       <View>
-        <Text>{ERROR_MESSAGES.ENUM_LOAD_FAILED}</Text>
+        <ThemedText>{ERROR_MESSAGES.ENUM_LOAD_FAILED}</ThemedText>
       </View>
     );
   }
@@ -57,59 +57,56 @@ export const FilterModal: React.FC<FilterModalProps> = ({
       visible={true}
       onRequestClose={() => {
         props.closeModal();
-      }}
-    >
-      <View style={styles.centerModal}>
+    }}
+    style={styles.center}
+  >
+    <View style={styles.center}>
       <View style={styles.modal}>
         <View style={styles.headerRow}>
-        <ThemedText variant='h3' color={theme.colors.text.dark}> Suche filtern</ThemedText>
+          <ThemedText variant='h3' color={theme.colors.text.dark} style={styles.header}> Suche filtern</ThemedText>
           <IconButton
             iconSet="Feather"
             iconName="x"
             size={24}
+            backgroundColor={theme.colors.background.warm}
           iconColor={theme.colors.text.dark}
           style={styles.close}
             onPress={() => {
               props.closeModal();
             }}
           />
-          </View>
-          <View style={styles.buttonRow}>
-            <ThemedText> Art </ThemedText>
+        </View>
+        <ScrollView>
+
+          <ThemedText variant='badge' color={theme.colors.text.light} style={styles.text}> Art </ThemedText>
           <ThemedDropdown dropdownData={enums.animalTypes} button={true} currentVal={dropdownFilter.type}
             valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, type: itemValue })} />
-        </View>
-          <View style={styles.buttonRow}>
-            <ThemedText> Geschlecht </ThemedText>
+
+
+          <ThemedText variant='badge' color={theme.colors.text.light} style={styles.text}> Geschlecht </ThemedText>
           <ThemedDropdown dropdownData={enums.sexes} button={true} currentVal={dropdownFilter.sex}
             valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, sex: itemValue })} />
-        </View>
 
-          <View style={styles.buttonRow}>
-          <ThemedText> Größe </ThemedText>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
-            <ThemedDropdown dropdownData={enums.animalSizes} key="sizes" button={true} currentVal={dropdownFilter.size}
+
+
+          <ThemedText variant='badge' color={theme.colors.text.light} style={styles.text}> Größe </ThemedText>
+          <ThemedDropdown dropdownData={enums.animalSizes} key="sizes" button={true} currentVal={dropdownFilter.size}
             valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, size: itemValue })} />
-          </ScrollView>
-          </View>
-          <View style={styles.buttonRow}>
-          <ThemedText> Charakter </ThemedText>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+
+          <ThemedText variant='badge' color={theme.colors.text.light} style={styles.text}> Charakter </ThemedText>
           <ThemedDropdown dropdownData={enums.characterTypes} key="character" button={true} currentVal={dropdownFilter.character}
-            valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, character: itemValue })} />
-          </ScrollView>
-          </View>
-          <View style={styles.buttonRow}>
-          <ThemedText> Status </ThemedText>
-          <ScrollView horizontal={true} showsHorizontalScrollIndicator={false}>
+            valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, character: itemValue }) } />
+
+          <ThemedText variant='badge' color={theme.colors.text.light} style={styles.text}> Status </ThemedText>
           <ThemedDropdown dropdownData={enums.adoptionStatuses} key="status" button={true} currentVal={dropdownFilter.status}
-              valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, status: itemValue })} />
-            </ScrollView>
-          </View>
+            valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, status: itemValue })} />
+
+        </ScrollView>
         <View style={styles.bottom}>
           <ThemedButton
             onPress={() => {
               props.applyFilter(dropdownFilter);
+              props.closeModal();
             }}
           >Anwenden</ThemedButton>
           <ThemedButton
@@ -120,25 +117,19 @@ export const FilterModal: React.FC<FilterModalProps> = ({
             }}
         >Filter Löschen</ThemedButton>
         </View>
-        </View>
+      </View>
       </View>
     </Modal>
   );
 }
 
 const styles = StyleSheet.create({
-  centerModal: {
-    position: "relative",
-    top: 50,
-    alignItems: "stretch",
-    padding: 20,
-  },
-  headerRow: {
-    flexDirection: "row",
-    justifyContent: "space-between"
-  },
-  close: {
-    alignSelf: "flex-end"
+  center: {
+    flex: 1,
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: 'rgba(0,0,0,0.3)',
   },
   modal: {
     alignItems: "stretch",
@@ -152,10 +143,25 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
     shadowOpacity: 0.25,
     shadowOffset: { width: 1, height: 2 },
+    maxHeight: '80%',
+    maxWidth: '90%',
+
   },
-  buttonRow: {
+  headerRow: {
     flexDirection: "row",
-    margin: 5
+    justifyContent: "space-between",
+    textAlignVertical: "center",
+    verticalAlign: "top"
+  },
+  header: {
+    textAlignVertical: "center",
+    paddingVertical: 10
+  },
+  text: {
+    marginVertical: 10
+  },
+  close: {
+    alignSelf: "flex-end",
   },
   bottom: {
     padding:10

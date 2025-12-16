@@ -1,8 +1,5 @@
 
-import { ThemedText } from "@components";
-import { AnimalCard } from "@components/AnimalCard";
-import { FilterModal } from "@components/FilterModal";
-import { IconButton } from "@components/IconButton";
+import { AnimalCard, FilterModal, IconButton, RowView, ThemedText } from "@components";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
 import { FlashList } from "@shopify/flash-list";
@@ -94,21 +91,35 @@ export default function AnimalList() {
   return (
     <SafeAreaProvider>
       <SafeAreaView style={styles.view}>
-        <View style={styles.container}>
+        <RowView style={styles.headerArea}>
+          <ThemedText variant='h3' color={theme.colors.text.dark}>{headertext}</ThemedText>
+        <RowView style={styles.buttonArea}>
           <IconButton
             iconSet="Feather"
-            iconName="filter"
+            iconName="sliders"
             size={24}
-            iconColor={theme.colors.brand.primary}
-            onPress={() => setModalVisibility(!modalVisibility)}
-          />
+              iconColor={theme.colors.brand.primary}
+              backgroundColor={theme.colors.background.warm}
+              onPress={() => setModalVisibility(!modalVisibility)}
+              style={styles.button}
+        />
+        <IconButton
+          iconSet='Feather'
+          iconName='search'
+          size={24}
+          iconColor={theme.colors.text.inverted}
+          backgroundColor={theme.colors.brand.secondary}
+              onPress={() => { }}
+            style={styles.button}/>
+            </RowView>
+          </RowView>
           {modalVisibility && (<FilterModal
             closeModal={() => setModalVisibility(false)}
             applyFilter={(filter: AnimalFilters) => {
               setFilter(filter);
             }}
-            currentFilter={filter}
-          />)}
+          currentFilter={filter}
+        />)}
           <FlashList
             data={animals}
             masonry
@@ -128,7 +139,7 @@ export default function AnimalList() {
               </View>
             }
           />
-        </View>
+
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -138,14 +149,17 @@ const styles = StyleSheet.create({
   view: {
     flex: 1,
     justifyContent: "center",
+    padding: 5,
+    marginBottom: 2
   },
-  container: { flex: 1, padding: 5, marginBottom: 2 },
+  headerArea: {
+    justifyContent: "space-between",
+    margin: 10
+  },
   buttonArea: {
     flexDirection: "row-reverse",
   },
-  header: {
-    padding: 10,
-  },
+  button: { margin: 2},
   list: { justifyContent: "space-evenly" },
   meta: { marginTop: 4 },
   emptyComponent: { alignItems: "center", padding: 10 },
