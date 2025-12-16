@@ -77,20 +77,22 @@ export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Anim
 
     if (filters) {
       if (filters.type) {
-        query = (Array.isArray(filters.type))? query.in("type", filters.type) : query.eq("type", filters.type);
-        }
+        query = Array.isArray(filters.type) ? query.in("type", filters.type) : query.eq("type", filters.type);
+      }
 
       if (filters.sex) {
-        query = (Array.isArray(filters.sex))? query.in("sex", filters.sex) : query.eq("sex", filters.sex);
+        query = Array.isArray(filters.sex) ? query.in("sex", filters.sex) : query.eq("sex", filters.sex);
       }
       if (filters.size) {
-        query = (Array.isArray(filters.size))? query.in("size", filters.size) : query.eq("size", filters.size);
+        query = Array.isArray(filters.size) ? query.in("size", filters.size) : query.eq("size", filters.size);
       }
       if (filters.character) {
-        query = (Array.isArray(filters.character))? query.in("character", filters.character) : query.eq("character", filters.character);
+        query = Array.isArray(filters.character)
+          ? query.in("character", filters.character)
+          : query.eq("character", filters.character);
       }
       if (filters.status) {
-        query = (Array.isArray(filters.status))? query.in("status", filters.status) : query.eq("status", filters.status);
+        query = Array.isArray(filters.status) ? query.in("status", filters.status) : query.eq("status", filters.status);
       }
 
       if (filters.age_min) {

@@ -1,4 +1,3 @@
-
 import { AnimalCard, FilterModal, IconButton, RowView, ThemedText } from "@components";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
@@ -92,54 +91,54 @@ export default function AnimalList() {
     <SafeAreaProvider>
       <SafeAreaView style={styles.view}>
         <RowView style={styles.headerArea}>
-          <ThemedText variant='h3' color={theme.colors.text.dark}>{headertext}</ThemedText>
-        <RowView style={styles.buttonArea}>
-          <IconButton
-            iconSet="Feather"
-            iconName="sliders"
-            size={24}
+          <ThemedText variant="h3" color={theme.colors.text.dark}>
+            {headertext}
+          </ThemedText>
+          <RowView style={styles.buttonArea}>
+            <IconButton
+              iconSet="Feather"
+              iconName="sliders"
+              size={24}
               iconColor={theme.colors.brand.primary}
               backgroundColor={theme.colors.background.warm}
               onPress={() => setModalVisibility(!modalVisibility)}
               style={styles.button}
-        />
-        <IconButton
-          iconSet='Feather'
-          iconName='search'
-          size={24}
-          iconColor={theme.colors.text.inverted}
-          backgroundColor={theme.colors.brand.secondary}
-              onPress={() => { }}
-            style={styles.button}/>
-            </RowView>
+            />
+            <IconButton
+              iconSet="Feather"
+              iconName="search"
+              size={24}
+              iconColor={theme.colors.text.inverted}
+              backgroundColor={theme.colors.brand.secondary}
+              onPress={() => {}}
+              style={styles.button}
+            />
           </RowView>
-          {modalVisibility && (<FilterModal
+        </RowView>
+        {modalVisibility && (
+          <FilterModal
             closeModal={() => setModalVisibility(false)}
             applyFilter={(filter: AnimalFilters) => {
               setFilter(filter);
             }}
-          currentFilter={filter}
-        />)}
-          <FlashList
-            data={animals}
-            masonry
-            numColumns={numColumns}
-            style={styles.list}
-            keyExtractor={(item) => item.id}
-            renderItem={({ item }) => (
-              <AnimalCard
-                animal={item}
-                previewImage={previewImage[item.id]}
-                doneLoading={doneImgLoad}
-              />
-            )}
-            ListEmptyComponent={
-              <View style={styles.emptyComponent}>
-                <ThemedText variant="h2"> No animals yet</ThemedText>
-              </View>
-            }
+            currentFilter={filter}
           />
-
+        )}
+        <FlashList
+          data={animals}
+          masonry
+          numColumns={numColumns}
+          style={styles.list}
+          keyExtractor={(item) => item.id}
+          renderItem={({ item }) => (
+            <AnimalCard animal={item} previewImage={previewImage[item.id]} doneLoading={doneImgLoad} />
+          )}
+          ListEmptyComponent={
+            <View style={styles.emptyComponent}>
+              <ThemedText variant="h2"> No animals yet</ThemedText>
+            </View>
+          }
+        />
       </SafeAreaView>
     </SafeAreaProvider>
   );
@@ -150,16 +149,16 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
     padding: 5,
-    marginBottom: 2
+    marginBottom: 2,
   },
   headerArea: {
     justifyContent: "space-between",
-    margin: 10
+    margin: 10,
   },
   buttonArea: {
     flexDirection: "row-reverse",
   },
-  button: { margin: 2},
+  button: { margin: 2 },
   list: { justifyContent: "space-evenly" },
   meta: { marginTop: 4 },
   emptyComponent: { alignItems: "center", padding: 10 },
