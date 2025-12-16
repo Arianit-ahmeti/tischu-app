@@ -7,28 +7,20 @@ interface ChipProps {
   color?: string;
   text: string;
 }
+const colorMap = {
+  relaxed: theme.colors.characterChip.relaxed,
+  anxious: theme.colors.characterChip.anxious,
+  aggressive: theme.colors.characterChip.aggressive,
+  friendly: theme.colors.characterChip.friendly,
+  shy: theme.colors.characterChip.shy,
+  small: theme.colors.sizeChip.small,
+  medium: theme.colors.sizeChip.medium,
+  large: theme.colors.sizeChip.large,
+};
 
 export const Chip: React.FC<ChipProps> = ({ color = null, text }) => {
-  if (!color) {
-    color =
-      text == "relaxed"
-        ? theme.colors.characterChip.relaxed
-        : text == "anxious"
-          ? theme.colors.characterChip.anxious
-          : text == "aggressive"
-            ? theme.colors.characterChip.aggressive
-            : text == "friendly"
-              ? theme.colors.characterChip.friendly
-              : text == "shy"
-                ? theme.colors.characterChip.shy
-                : text == "small"
-                  ? theme.colors.sizeChip.small
-                  : text == "medium"
-                    ? theme.colors.sizeChip.medium
-                    : text == "large"
-                      ? theme.colors.sizeChip.large
-                      : theme.colors.brand.primary;
-  }
+  if (!color) color = colorMap[text as keyof typeof colorMap] || theme.colors.brand.primary;
+
   return (
     <View style={[styles.chip, { backgroundColor: color }]}>
       <ThemedText style={styles.text} variant="buttonSecondary" color={theme.colors.text.inverted}>

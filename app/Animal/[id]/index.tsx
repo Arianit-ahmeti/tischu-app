@@ -73,7 +73,7 @@ export default function AnimalDetailScreen() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
+    <View style={styles.root}>
       <View style={styles.imageContainer}>
         <ImageCarousel urls={imageUrls} />
       </View>
@@ -124,29 +124,25 @@ export default function AnimalDetailScreen() {
 
         <View style={styles.row}>
           <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            {" "}
-            Geschlecht{" "}
+            Geschlecht
           </ThemedText>
           <ThemedText>{animal.sex}</ThemedText>
         </View>
         <View style={styles.row}>
           <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            {" "}
-            Alter{" "}
+            Alter
           </ThemedText>
-          <Text>{animal.age || "Unbekannt"}</Text>
+          <ThemedText>{animal.age || "Unbekannt"}</ThemedText>
         </View>
         <View style={styles.row}>
           <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            {" "}
-            Größe{" "}
+            Größe
           </ThemedText>
           <Chip text={animal.size || "Unbekannt"} />
         </View>
         <View style={styles.row}>
           <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            {" "}
-            Charakter{" "}
+            Charakter
           </ThemedText>
           <Chip text={animal.character || "Unbekannt"} />
         </View>
