@@ -1,17 +1,64 @@
+import Auth from "@app/Auth";
 import { Ionicons } from "@expo/vector-icons";
+import { supabase } from "@lib/supabase";
+import { Session } from "@supabase/supabase-js";
 import { theme } from "@theme";
 import { useFonts } from "expo-font";
 import { Tabs } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect, useState } from "react";
+import { View } from "react-native";
 import { BackButton } from "../components";
 
+SplashScreen.preventAutoHideAsync();
+
 export default function RootLayout() {
+  const [session, setSession] = useState<Session | null>(null);
+  const [isAuthReady, setIsAuthReady] = useState(false);
+
   const [loaded, error] = useFonts({
     Inter: require("../assets/fonts/Inter/Inter-Variable.ttf"),
     PlusJakartaSans: require("../assets/fonts/PlusJakartaSans/PlusJakartaSans-Variable.ttf"),
   });
 
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+      setIsAuthReady(true);
+    });
+
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => {
+      subscription.unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    if ((loaded || error) && isAuthReady) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error, isAuthReady]);
+
   if (!loaded && !error) {
     return null;
+  }
+
+  if (!isAuthReady) {
+    //TODO Possibly add something like a 404 screen?
+    return null;
+  }
+
+  if (!session?.user) {
+    return (
+      <View style={{ flex: 1 }}>
+        <Auth />
+      </View>
+    );
   }
 
   return (
@@ -105,12 +152,6 @@ export default function RootLayout() {
       />
       <Tabs.Screen
         name="Auth"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="index"
         options={{
           href: null,
         }}
