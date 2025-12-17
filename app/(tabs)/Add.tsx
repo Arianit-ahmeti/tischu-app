@@ -1,1 +1,1 @@
-export { default } from "../Animal/Add";
+export { default } from "../AddEdit/Add";
