@@ -6,7 +6,7 @@ export async function getProfile(user_id: string): Promise<Organization | null> 
   try {
     const { data, error } = await supabase
       .from("organization")
-      .select(`name, street, house_number, postal_code, city, country, status`)
+      .select(`id, name, street, house_number, postal_code, city, country, status`)
       .eq("id", user_id)
       .single();
 
@@ -44,4 +44,55 @@ export async function getCurrentSession(): Promise<Session | null> {
     data: { session },
   } = await supabase.auth.getSession();
   return session;
+}
+
+export async function updateProfile(user_id: string, updates: Partial<Organization>) {
+  try {
+    const { data, error } = await supabase.from("organization").update(updates).eq("id", user_id).select();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return { data: null, error };
+  }
+}
+
+export async function saveOrganization(organization: Partial<Organization>) {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error("Authentication Error:", authError.message);
+    return null;
+  }
+
+  if (!user) {
+    console.error("Error: No user is currently logged in. Organization signup requires a logged-in user.");
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("organization")
+    .insert({
+      id: user.id,
+      name: organization.name,
+      street: organization.street,
+      house_number: organization.house_number,
+      postal_code: organization.postal_code,
+      city: organization.city,
+      country: organization.country,
+      status: "unverified",
+    })
+    .select();
+
+  if (error) {
+    console.log("Error saving organization:", error.message);
+    return { data: null, error };
+  } else {
+    console.log("Organization saved successfully:", data);
+    return { data, error: null };
+  }
 }
