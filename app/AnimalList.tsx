@@ -2,12 +2,12 @@ import { AnimalCard, FilterModal, IconButton, RowView, ThemedText } from "@compo
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
 import { FlashList } from "@shopify/flash-list";
+import { theme } from "@theme";
 import type { Animal, AnimalFilters } from "@types";
 import { useFocusEffect, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from "react-native";
 import { SafeAreaProvider, SafeAreaView } from "react-native-safe-area-context";
-import { theme } from "../theme/theme";
 
 export default function AnimalList() {
   const router = useRouter();

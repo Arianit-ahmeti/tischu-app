@@ -3,6 +3,7 @@ export { AnimalCard } from "components/AnimalCard";
 export { BackButton } from "components/BackButton";
 export { BottomNavigation } from "components/BottomNavigation";
 export { ColumnView } from "components/ColumnView";
+export { FilterModal } from "components/FilterModal";
 export { IconButton } from "components/IconButton";
 export { ImageCarousel } from "components/ImageCarousel";
 export { ListTile } from "components/ListTile";
