@@ -11,6 +11,7 @@ export const ERROR_MESSAGES = {
   ORG_PROFILE_LOAD_FAILED: "Vereinprofil konnte nicht geladen werden.",
   ORG_SESSION_FAILED: "Sitzung fehlgeschlagen.",
   ORG_SAVE_FAILED: "Fehler beim Speichern des Vereins.",
+  ORG_NOT_FOUND: "Verein nicht gefunden.",
 } as const;
 
 export const SUCCESS_MESSAGES = {
