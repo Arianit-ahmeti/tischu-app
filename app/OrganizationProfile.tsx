@@ -1,6 +1,8 @@
+import { ThemedButton, ThemedText } from "@components";
 import { getCurrentSession, getProfile } from "@lib/userService";
 import { Organization } from "@types";
-import React, { useEffect, useState } from "react";
+import { Stack, useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { ERROR_MESSAGES } from "../lib/constants/messages";
 
@@ -19,10 +21,14 @@ const initialProfileState: Organization = {
 export default function OrganizationProfile() {
   const [profile, setProfile] = useState<Organization>(initialProfileState);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
 
-  useEffect(() => {
-    loadProfileData();
-  }, []);
+  // Refresh data whenever a user returns to the profile-page
+  useFocusEffect(
+    useCallback(() => {
+      loadProfileData();
+    }, [])
+  );
 
   async function loadProfileData() {
     setLoading(true);
@@ -51,6 +57,15 @@ export default function OrganizationProfile() {
 
   return (
     <ScrollView style={{ flex: 1 }}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <ThemedButton onPress={() => router.push("/OrganizationEdit")} style={{ marginRight: 5 }}>
+              <ThemedText variant="body">BEARBEITEN</ThemedText>
+            </ThemedButton>
+          ),
+        }}
+      />
       <View style={styles.container}>
         <Text style={{ fontWeight: "bold" }}>Vereinsname:</Text>
         <View style={styles.inputBox}>
