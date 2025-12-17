@@ -3,8 +3,7 @@ import { supabase } from "@lib/supabase";
 import { theme } from "@theme";
 import React, { useEffect, useState } from "react";
 import { View, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
-import { ThemedText } from "../components/ThemedText";
-import { BackButton } from "../components/BackButton";
+import { ThemedText, BackButton } from "@components";
 
 interface UserProfile {
   id: string;
@@ -105,7 +104,7 @@ export default function ProfileScreen() {
         {/* Profilbild und Name */}
         <View style={styles.profileSection}>
           <View style={styles.profileImage} />
-          <View style={styles.profileInfo}>
+          <View style={styles.flexOne}>
             <ThemedText variant="h1" color={theme.colors.text.dark}>
               {profile.full_name || profile.username || "Unbekannt"}
             </ThemedText>
@@ -127,7 +126,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="person-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.infoTextContainer}>
+              <View style={styles.flexOne}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   NAME
                 </ThemedText>
@@ -142,7 +141,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="at-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.infoTextContainer}>
+              <View style={styles.flexOne}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   BENUTZERNAME
                 </ThemedText>
@@ -157,7 +156,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="mail-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.infoTextContainer}>
+              <View style={styles.flexOne}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   E-MAIL
                 </ThemedText>
@@ -174,7 +173,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="information-circle-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.infoTextContainer}>
+              <View style={styles.flexOne}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   WEITERE INFORMATIONEN
                 </ThemedText>
@@ -232,9 +231,6 @@ const styles = StyleSheet.create({
     backgroundColor: theme.colors.brand.secondary,
     marginRight: 24,
   },
-  profileInfo: {
-    flex: 1,
-  },
   profileLocation: {
     marginTop: 4,
   },
@@ -267,7 +263,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     marginRight: 12,
   },
-  infoTextContainer: {
+  flexOne: {
     flex: 1,
   },
   infoLabel: {
