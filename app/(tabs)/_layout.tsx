@@ -34,7 +34,7 @@ export default function TabsLayout() {
       <Tabs.Screen
         name="Add"
         options={{
-          tabBarLabel: "Hinzfügen",
+          tabBarLabel: "Hinzufügen",
           tabBarIcon: ({ color, size, focused }) => {
             return <Ionicons name={focused ? "add-circle-sharp" : "add-circle-outline"} size={size} color={color} />;
           },
