@@ -15,16 +15,26 @@ export function useSupabaseSession(): SupabaseSessionState {
     let isMounted = true;
 
     const syncSession = async () => {
-      const {
-        data: { session: sessionResult },
-      } = await supabase.auth.getSession();
+      try {
+        const {
+          data: { session: sessionResult },
+        } = await supabase.auth.getSession();
 
-      if (!isMounted) {
-        return;
+        if (!isMounted) {
+          return;
+        }
+
+        setSession(sessionResult);
+        setIsLoading(false);
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        console.error("Failed to sync session:", error);
+        setSession(null);
+        setIsLoading(false);
       }
-
-      setSession(sessionResult);
-      setIsLoading(false);
     };
 
     syncSession();
