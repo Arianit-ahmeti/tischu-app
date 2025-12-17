@@ -1,5 +1,4 @@
-import { ThemedText } from "@components";
-import { IconButton } from "@components/IconButton";
+import { IconButton, ThemedText } from "@components";
 import { getCurrentSession, getProfile } from "@lib/userService";
 import { theme } from "@theme";
 import { Organization } from "@types";
@@ -66,7 +65,7 @@ export default function OrganizationProfile() {
           <ThemedText variant="h2" numberOfLines={2} ellipsizeMode="tail" style={styles.nameText}>
             {profile.name || "-"}
           </ThemedText>
-          <ThemedText variant="body" style={{ color: theme.colors.brand.secondary }}>
+          <ThemedText variant="body" style={styles.cityText}>
             {profile.city || "-"}
           </ThemedText>
         </View>
@@ -192,5 +191,8 @@ const styles = StyleSheet.create({
   nameText: {
     color: theme.colors.brand.primary,
     marginBottom: 5,
+  },
+  cityText: {
+    color: theme.colors.brand.secondary,
   },
 });

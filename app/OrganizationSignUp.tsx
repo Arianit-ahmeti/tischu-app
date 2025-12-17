@@ -1,5 +1,4 @@
-import { ThemedButton, ThemedText } from "@components";
-import { ThemedTextInput } from "@components/ThemedTextInput";
+import { ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { saveOrganization } from "@lib/userService";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -38,7 +37,7 @@ export default function OrganizationSignUp() {
   }
 
   return (
-    <ScrollView style={{ flex: 1 }}>
+    <ScrollView style={styles.scrollview}>
       <View style={styles.container}>
         <ThemedText variant="h3">Vereinsname:</ThemedText>
         <ThemedTextInput onChangeText={(text) => setName(text)} value={name} placeholder="Name der Organization" />
@@ -83,5 +82,8 @@ const styles = StyleSheet.create({
   buttonSpacing: {
     alignSelf: "stretch",
     marginTop: 20,
+  },
+  scrollview: {
+    flex: 1,
   },
 });
