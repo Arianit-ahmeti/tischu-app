@@ -22,6 +22,7 @@ const initialProfileState: Organization = {
 export default function OrganizationProfile() {
   const [profile, setProfile] = useState<Organization>(initialProfileState);
   const [loading, setLoading] = useState(true);
+  const [email, setEmail] = useState<string>("");
 
   useEffect(() => {
     loadProfileData();
@@ -36,6 +37,7 @@ export default function OrganizationProfile() {
       setLoading(false);
       return;
     }
+    setEmail(session.user.email || "-");
     const user_id = session.user.id;
     try {
       const profileData = await getProfile(user_id);
@@ -85,6 +87,24 @@ export default function OrganizationProfile() {
             </ThemedText>
             <ThemedText variant="body" style={styles.textLight}>
               {profile.name || "-"}
+            </ThemedText>
+          </View>
+        </View>
+
+        <View style={styles.row}>
+          <IconButton
+            iconSet="Feather"
+            iconName="mail"
+            size={22}
+            iconColor={theme.colors.brand.focus}
+            style={styles.iconButtonMargin}
+          />
+          <View style={styles.content}>
+            <ThemedText variant="body" style={styles.textLight}>
+              E-MAIL
+            </ThemedText>
+            <ThemedText variant="body" style={styles.textLight}>
+              {email || "-"}
             </ThemedText>
           </View>
         </View>
