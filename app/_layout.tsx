@@ -1,8 +1,11 @@
-import { Ionicons } from "@expo/vector-icons";
 import { theme } from "@theme";
 import { useFonts } from "expo-font";
-import { Tabs } from "expo-router";
+import { Stack } from "expo-router";
+import * as SplashScreen from "expo-splash-screen";
+import { useEffect } from "react";
 import { BackButton } from "../components";
+
+SplashScreen.preventAutoHideAsync();
 
 export default function RootLayout() {
   const [loaded, error] = useFonts({
@@ -10,111 +13,39 @@ export default function RootLayout() {
     PlusJakartaSans: require("../assets/fonts/PlusJakartaSans/PlusJakartaSans-Variable.ttf"),
   });
 
+  useEffect(() => {
+    if (loaded || error) {
+      SplashScreen.hideAsync();
+    }
+  }, [loaded, error]);
+
   if (!loaded && !error) {
     return null;
   }
 
   return (
-    <Tabs
-      screenOptions={({ navigation, route }) => ({
+    <Stack
+      screenOptions={({ navigation }) => ({
+        headerTintColor: "#333",
         headerShadowVisible: false,
         headerTitleAlign: "center",
-        tabBarActiveTintColor: theme.colors.brand.primary,
-        tabBarInactiveTintColor: theme.colors.text.muted,
-        tabBarStyle: {
-          backgroundColor: theme.colors.background.base,
-        },
-        headerStyle: {
-          backgroundColor: theme.colors.background.base,
-        },
-        sceneStyle: {
-          backgroundColor: theme.colors.background.base,
-        },
+        contentStyle: { backgroundColor: theme.colors.background.base },
+
         headerLeft: () => {
-          const mainTabScreens = ["AnimalList", "Account", "Animal/Add"];
-          if (mainTabScreens.includes(route.name)) {
-            return null;
-          }
           if (navigation.canGoBack()) {
-            return <BackButton />;
+            return <BackButton style={{ marginLeft: -8 }} />;
           }
           return null;
         },
       })}
     >
-      <Tabs.Screen
-        name="AnimalList"
-        options={{
-          title: "TischuApp",
-          tabBarLabel: "Tiere",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? "paw-sharp" : "paw-outline"} size={size} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="Animal/Add"
-        options={{
-          title: "Tier hinzufügen",
-          tabBarLabel: "hinzufügen",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? "add-circle-sharp" : "add-circle-outline"} size={size} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="Account"
-        options={{
-          title: "Account",
-          tabBarLabel: "Account",
-          tabBarIcon: ({ focused, color, size }) => (
-            <Ionicons name={focused ? "person-sharp" : "person-outline"} size={size} color={color} />
-          ),
-        }}
-      />
-
-      <Tabs.Screen
-        name="Animal/[id]/index"
-        options={{
-          title: "Tierprofil",
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="Animal/[id]/Edit"
-        options={{
-          title: "Tier bearbeiten",
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="OrganizationProfile"
-        options={{
-          title: "Vereinsprofil",
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="OrganizationSignUp"
-        options={{
-          title: "Organisation Registrierung",
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="Auth"
-        options={{
-          href: null,
-        }}
-      />
-      <Tabs.Screen
-        name="index"
-        options={{
-          href: null,
-        }}
-      />
-    </Tabs>
+      <Stack.Screen name="index" options={{ headerShown: false }} />
+      <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
+      <Stack.Screen name="Animal/[id]/index" options={{ title: "Tierprofil" }} />
+      <Stack.Screen name="Animal/[id]/Edit" options={{ title: "Tier bearbeiten" }} />
+      <Stack.Screen name="Animal/Add" options={{ title: "Tier hinzufügen" }} />
+      <Stack.Screen name="OrganizationProfile" options={{ title: "Vereinsprofil" }} />
+      <Stack.Screen name="OrganizationSignUp" options={{ title: "Organisation Registrierung" }} />
+    </Stack>
   );
 }
