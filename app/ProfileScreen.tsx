@@ -1,41 +1,103 @@
 import { Ionicons } from "@expo/vector-icons";
-import React from "react";
-import { View, Text, StyleSheet, ScrollView, Pressable } from "react-native";
+import { supabase } from "@lib/supabase";
+import { theme } from "@theme";
+import React, { useEffect, useState } from "react";
+import { View, StyleSheet, ScrollView, Pressable, Alert } from "react-native";
+import { ThemedText } from "../components/ThemedText";
+import { BackButton } from "../components/BackButton";
 
-// Farb- und Schriftkonstanten basierend auf CI
-const COLORS = {
-  textDark: "#242424",
-  bgBase: "#FFF",
-  primary: "#2B1A47", // primary-violet
-  secondary: "#B96D7A", // secondary-violet für Icons
-  focusPeach: "#FF5E6C", // focus-peach
-  lightPink: "#FFF5F6", // Heller rosa Hintergrund für Info-Boxen
-  lightGrey: "#E5E0DE",
-};
-
-const FONT_STYLES = {
-  header: {
-    fontSize: 26,
-    fontWeight: "bold" as const,
-    color: COLORS.textDark,
-  },
-  bodyText: {
-    fontSize: 16,
-    color: COLORS.textDark,
-  },
-};
+interface UserProfile {
+  id: string;
+  username: string | null;
+  full_name: string | null;
+  email?: string;
+  city?: string | null;
+}
 
 export default function ProfileScreen() {
+  const [profile, setProfile] = useState<UserProfile | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    loadUserProfile();
+  }, []);
+
+  const loadUserProfile = async () => {
+    try {
+      setLoading(true);
+
+      // 1. Get current user from auth
+      const {
+        data: { user },
+        error: authError,
+      } = await supabase.auth.getUser();
+
+      if (authError || !user) {
+        throw new Error("User not authenticated");
+      }
+
+      // 2. Get profile data from profiles table
+      const { data: profileData, error: profileError } = await supabase
+        .from("profiles")
+        .select("id, username, full_name")
+        .eq("id", user.id)
+        .single();
+
+      if (profileError) {
+        throw profileError;
+      }
+
+      // 3. Combine with email from auth.users
+      setProfile({
+        ...profileData,
+        email: user.email,
+        city: null, // Wird später aus organization geladen
+      });
+    } catch (error) {
+      console.error("Error loading profile:", error);
+      Alert.alert("Fehler", "Profil konnte nicht geladen werden");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleEdit = () => {
+    // TODO: Navigation zu Edit Screen implementieren
+    console.log("Edit pressed");
+  };
+
+  if (loading) {
+    return (
+      <View style={styles.container}>
+        <ThemedText variant="body" style={styles.loadingText}>
+          Lade Profil...
+        </ThemedText>
+      </View>
+    );
+  }
+
+  if (!profile) {
+    return (
+      <View style={styles.container}>
+        <ThemedText variant="body" style={styles.loadingText}>
+          Profil nicht gefunden
+        </ThemedText>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
-      {/* Header mit Zurück-Button */}
+      {/* Header */}
       <View style={styles.header}>
-        <Pressable style={styles.backButton}>
-          <Ionicons name="chevron-back" size={24} color={COLORS.textDark} />
-        </Pressable>
-        <Text style={styles.headerTitle}>Meine Daten</Text>
-        <Pressable style={styles.editButton}>
-          <Text style={styles.editButtonText}>BEARBEITEN</Text>
+        <BackButton />
+        <ThemedText variant="h2" color={theme.colors.text.dark}>
+          Meine Daten
+        </ThemedText>
+        <Pressable style={styles.editButton} onPress={handleEdit}>
+          <ThemedText variant="badge" color={theme.colors.text.dark} style={styles.editButtonText}>
+            BEARBEITEN
+          </ThemedText>
         </Pressable>
       </View>
 
@@ -44,8 +106,15 @@ export default function ProfileScreen() {
         <View style={styles.profileSection}>
           <View style={styles.profileImage} />
           <View style={styles.profileInfo}>
-            <Text style={styles.profileName}>Johanna Richter</Text>
-            <Text style={styles.profileLocation}>Wiesbaden</Text>
+            <ThemedText variant="h1" color={theme.colors.text.dark}>
+              {profile.full_name || profile.username || "Unbekannt"}
+            </ThemedText>
+            {/* Standort wird nur angezeigt, wenn vorhanden */}
+            {profile.city && (
+              <ThemedText variant="body" color={theme.colors.brand.secondary} style={styles.profileLocation}>
+                {profile.city}
+              </ThemedText>
+            )}
           </View>
         </View>
 
@@ -56,93 +125,62 @@ export default function ProfileScreen() {
             {/* Name */}
             <View style={styles.infoRow}>
               <View style={styles.iconCircle}>
-                <Ionicons
-                  name="person-outline"
-                  size={18}
-                  color={COLORS.secondary}
-                />
+                <Ionicons name="person-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
               <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>NAME</Text>
-                <Text style={styles.infoValue}>Johanna Richter</Text>
+                <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
+                  NAME
+                </ThemedText>
+                <ThemedText variant="bodyLarge" color={theme.colors.text.dark}>
+                  {profile.full_name || "Nicht angegeben"}
+                </ThemedText>
+              </View>
+            </View>
+
+            {/* Username */}
+            <View style={styles.infoRow}>
+              <View style={styles.iconCircle}>
+                <Ionicons name="at-outline" size={18} color={theme.colors.brand.secondary} />
+              </View>
+              <View style={styles.infoTextContainer}>
+                <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
+                  BENUTZERNAME
+                </ThemedText>
+                <ThemedText variant="bodyLarge" color={theme.colors.text.dark}>
+                  {profile.username || "Nicht angegeben"}
+                </ThemedText>
               </View>
             </View>
 
             {/* E-Mail */}
-            <View style={styles.infoRow}>
-              <View style={styles.iconCircle}>
-                <Ionicons
-                  name="mail-outline"
-                  size={18}
-                  color={COLORS.secondary}
-                />
-              </View>
-              <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>E-MAIL</Text>
-                <Text style={styles.infoValue}>hello@johanna.de</Text>
-              </View>
-            </View>
-
-            {/* Telefon */}
             <View style={[styles.infoRow, styles.lastInfoRow]}>
               <View style={styles.iconCircle}>
-                <Ionicons
-                  name="call-outline"
-                  size={18}
-                  color={COLORS.secondary}
-                />
+                <Ionicons name="mail-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
               <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>TELEFON</Text>
-                <Text style={styles.infoValue}>408-841-0926</Text>
+                <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
+                  E-MAIL
+                </ThemedText>
+                <ThemedText variant="bodyLarge" color={theme.colors.text.dark}>
+                  {profile.email || "Nicht angegeben"}
+                </ThemedText>
               </View>
             </View>
           </View>
 
-          {/* Gruppe 2: Weitere Infos */}
+          {/* Gruppe 2: Weitere Infos - Platzhalter für zukünftige Felder */}
           <View style={styles.infoBox}>
-            {/* Tiere im Haushalt */}
             <View style={styles.infoRow}>
               <View style={styles.iconCircle}>
-                <Ionicons
-                  name="paw-outline"
-                  size={18}
-                  color={COLORS.secondary}
-                />
+                <Ionicons name="information-circle-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
               <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>TIERE IM HAUSHALT</Text>
-                <Text style={styles.infoValue}>Keine</Text>
-              </View>
-            </View>
-
-            {/* Vorerfahrung */}
-            <View style={styles.infoRow}>
-              <View style={styles.iconCircle}>
-                <Ionicons
-                  name="mail-outline"
-                  size={18}
-                  color={COLORS.secondary}
-                />
-              </View>
-              <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>VORERFAHRUNG</Text>
-                <Text style={styles.infoValue}>Erfahren</Text>
-              </View>
-            </View>
-
-            {/* Aktiv */}
-            <View style={[styles.infoRow, styles.lastInfoRow]}>
-              <View style={styles.iconCircle}>
-                <Ionicons
-                  name="checkmark-circle-outline"
-                  size={18}
-                  color={COLORS.secondary}
-                />
-              </View>
-              <View style={styles.infoTextContainer}>
-                <Text style={styles.infoLabel}>AKTIV</Text>
-                <Text style={styles.infoValue}>Ja</Text>
+                <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
+                  WEITERE INFORMATIONEN
+                </ThemedText>
+                <ThemedText variant="body" color={theme.colors.text.muted}>
+                  Werden in zukünftigen Updates hinzugefügt
+                </ThemedText>
               </View>
             </View>
           </View>
@@ -155,7 +193,12 @@ export default function ProfileScreen() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.bgBase,
+    backgroundColor: theme.colors.background.base,
+    marginTop: 40,
+  },
+  loadingText: {
+    textAlign: "center",
+    marginTop: 50,
   },
   header: {
     flexDirection: "row",
@@ -163,24 +206,14 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
     paddingHorizontal: 16,
     paddingVertical: 12,
-    backgroundColor: COLORS.bgBase,
+    backgroundColor: theme.colors.background.base,
     borderBottomWidth: 1,
-    borderBottomColor: COLORS.lightGrey,
-  },
-  backButton: {
-    padding: 8,
-  },
-  headerTitle: {
-    ...FONT_STYLES.header,
-    fontSize: 20,
+    borderBottomColor: theme.colors.border.light,
   },
   editButton: {
     padding: 8,
   },
   editButtonText: {
-    fontSize: 14,
-    fontWeight: "600",
-    color: COLORS.textDark,
     letterSpacing: 0.5,
   },
   scrollView: {
@@ -196,20 +229,14 @@ const styles = StyleSheet.create({
     width: 90,
     height: 90,
     borderRadius: 45,
-    backgroundColor: COLORS.secondary,
+    backgroundColor: theme.colors.brand.secondary,
     marginRight: 24,
   },
   profileInfo: {
     flex: 1,
   },
-  profileName: {
-    ...FONT_STYLES.header,
-    fontSize: 24,
-    marginBottom: 4,
-  },
   profileLocation: {
-    fontSize: 16,
-    color: COLORS.secondary,
+    marginTop: 4,
   },
   infoContainer: {
     paddingHorizontal: 20,
@@ -217,7 +244,7 @@ const styles = StyleSheet.create({
     gap: 16,
   },
   infoBox: {
-    backgroundColor: COLORS.lightPink,
+    backgroundColor: theme.colors.background.warm,
     borderRadius: 12,
     padding: 16,
   },
@@ -235,7 +262,7 @@ const styles = StyleSheet.create({
     width: 36,
     height: 36,
     borderRadius: 18,
-    backgroundColor: COLORS.bgBase,
+    backgroundColor: theme.colors.background.base,
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
@@ -244,14 +271,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   infoLabel: {
-    fontSize: 11,
-    fontWeight: "600",
-    color: COLORS.primary,
     marginBottom: 4,
     letterSpacing: 0.5,
-  },
-  infoValue: {
-    ...FONT_STYLES.bodyText,
-    fontSize: 15,
   },
 });
