@@ -57,3 +57,42 @@ export async function updateProfile(user_id: string, updates: Partial<Organizati
     return { data: null, error };
   }
 }
+
+export async function saveOrganization(organization: Partial<Organization>) {
+  const {
+    data: { user },
+    error: authError,
+  } = await supabase.auth.getUser();
+
+  if (authError) {
+    console.error("Authentication Error:", authError.message);
+    return null;
+  }
+
+  if (!user) {
+    console.error("Error: No user is currently logged in. Organization signup requires a logged-in user.");
+    return null;
+  }
+
+  const { data, error } = await supabase
+    .from("organization")
+    .insert({
+      id: user.id,
+      name: organization.name,
+      street: organization.street,
+      house_number: organization.house_number,
+      postal_code: organization.postal_code,
+      city: organization.city,
+      country: organization.country,
+      status: "unverified",
+    })
+    .select();
+
+  if (error) {
+    console.log("Error saving organization:", error.message);
+    return { data: null, error };
+  } else {
+    console.log("Organization saved successfully:", data);
+    return { data, error: null };
+  }
+}

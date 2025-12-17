@@ -91,7 +91,7 @@ export default function OrganizationEdit() {
         onDismiss={() => setAlertVisible(false)}
       />
 
-      <KeyboardAwareScrollView style={{ flex: 1, backgroundColor: theme.colors.background.base }}>
+      <KeyboardAwareScrollView style={styles.scrollView}>
         <View style={styles.container}>
           <ThemedText variant="h3" style={styles.label}>
             Vereinsname:
@@ -152,4 +152,8 @@ const styles = StyleSheet.create({
   center: { flex: 1, justifyContent: "center", alignItems: "center", backgroundColor: theme.colors.background.base },
   label: { marginTop: 16, marginBottom: 4 },
   buttonContainer: { marginTop: 32, marginBottom: 40 },
+  scrollView: {
+    flex: 1,
+    backgroundColor: theme.colors.background.base,
+  },
 });

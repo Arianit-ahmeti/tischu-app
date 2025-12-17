@@ -55,7 +55,7 @@ export default function Auth() {
 
     if (error) Alert.alert(error.message);
     else if (session) {
-      router.replace("/OrganizationSignUp");
+      router.replace("/Organization/SignUp");
     }
     setLoading(false);
   }
