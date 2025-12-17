@@ -130,7 +130,7 @@ export default function Account() {
       </View>
       {isOrganizationUser && (
         <View style={styles.verticallySpaced}>
-          <ThemedButton onPress={() => router.navigate("/OrganizationProfile")}>Profile</ThemedButton>
+          <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Profile</ThemedButton>
         </View>
       )}
     </View>

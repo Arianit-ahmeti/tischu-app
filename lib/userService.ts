@@ -6,7 +6,7 @@ export async function getProfile(user_id: string): Promise<Organization | null> 
   try {
     const { data, error } = await supabase
       .from("organization")
-      .select(`name, street, house_number, postal_code, city, country, status`)
+      .select(`id, name, street, house_number, postal_code, city, country, status`)
       .eq("id", user_id)
       .single();
 
@@ -44,6 +44,18 @@ export async function getCurrentSession(): Promise<Session | null> {
     data: { session },
   } = await supabase.auth.getSession();
   return session;
+}
+
+export async function updateProfile(user_id: string, updates: Partial<Organization>) {
+  try {
+    const { data, error } = await supabase.from("organization").update(updates).eq("id", user_id).select();
+
+    if (error) throw error;
+    return { data, error: null };
+  } catch (error) {
+    console.error("Error updating profile:", error);
+    return { data: null, error };
+  }
 }
 
 export async function saveOrganization(organization: Partial<Organization>) {

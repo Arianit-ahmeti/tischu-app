@@ -1,10 +1,11 @@
-import { IconButton, ThemedText } from "@components";
+import { IconButton, ThemedButton, ThemedText } from "@components";
+import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { getCurrentSession, getProfile } from "@lib/userService";
 import { theme } from "@theme";
 import { Organization } from "@types";
-import React, { useEffect, useState } from "react";
+import { Stack, useFocusEffect, useRouter } from "expo-router";
+import React, { useCallback, useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";
-import { ERROR_MESSAGES } from "../lib/constants/messages";
 
 const initialProfileState: Organization = {
   id: "",
@@ -21,11 +22,15 @@ const initialProfileState: Organization = {
 export default function OrganizationProfile() {
   const [profile, setProfile] = useState<Organization>(initialProfileState);
   const [loading, setLoading] = useState(true);
+  const router = useRouter();
   const [email, setEmail] = useState<string>("");
 
-  useEffect(() => {
-    loadProfileData();
-  }, []);
+  // Refresh data whenever a user returns to the profile-page
+  useFocusEffect(
+    useCallback(() => {
+      loadProfileData();
+    }, [])
+  );
 
   async function loadProfileData() {
     setLoading(true);
@@ -59,6 +64,15 @@ export default function OrganizationProfile() {
 
   return (
     <ScrollView style={styles.scrollView}>
+      <Stack.Screen
+        options={{
+          headerRight: () => (
+            <ThemedButton onPress={() => router.push("/Organization/Edit")} style={styles.editButton}>
+              <ThemedText variant="body">BEARBEITEN</ThemedText>
+            </ThemedButton>
+          ),
+        }}
+      />
       <View style={styles.nameHeaderContainer}>
         <View style={styles.avatarPlaceholder}></View>
         <View>
@@ -194,5 +208,8 @@ const styles = StyleSheet.create({
   },
   cityText: {
     color: theme.colors.brand.secondary,
+  },
+  editButton: {
+    marginRight: 5,
   },
 });
