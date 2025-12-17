@@ -104,7 +104,7 @@ export default function ProfileScreen() {
         {/* Profilbild und Name */}
         <View style={styles.profileSection}>
           <View style={styles.profileImage} />
-          <View style={styles.flexOne}>
+          <View style={{ flex: 1 }}>
             <ThemedText variant="h1" color={theme.colors.text.dark}>
               {profile.full_name || profile.username || "Unbekannt"}
             </ThemedText>
@@ -126,7 +126,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="person-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.flexOne}>
+              <View style={{ flex: 1 }}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   NAME
                 </ThemedText>
@@ -141,7 +141,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="at-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.flexOne}>
+              <View style={{ flex: 1 }}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   BENUTZERNAME
                 </ThemedText>
@@ -156,7 +156,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="mail-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.flexOne}>
+              <View style={{ flex: 1 }}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   E-MAIL
                 </ThemedText>
@@ -173,7 +173,7 @@ export default function ProfileScreen() {
               <View style={styles.iconCircle}>
                 <Ionicons name="information-circle-outline" size={18} color={theme.colors.brand.secondary} />
               </View>
-              <View style={styles.flexOne}>
+              <View style={{ flex: 1 }}>
                 <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.infoLabel}>
                   WEITERE INFORMATIONEN
                 </ThemedText>
@@ -262,9 +262,6 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 12,
-  },
-  flexOne: {
-    flex: 1,
   },
   infoLabel: {
     marginBottom: 4,
