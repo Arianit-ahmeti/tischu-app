@@ -1,12 +1,13 @@
 import { theme } from "@theme";
 import React from "react";
-import { Pressable, PressableProps, StyleSheet } from "react-native";
+import { Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
 import { ThemedText } from "./ThemedText";
 
 interface SelectableButtonProps extends PressableProps {
   backgroundColor?: string;
   borderColor?: string;
   isSelected: boolean;
+  style?: ViewStyle;
 }
 
 export const SelectableButton: React.FC<React.PropsWithChildren<SelectableButtonProps>> = ({
@@ -14,6 +15,7 @@ export const SelectableButton: React.FC<React.PropsWithChildren<SelectableButton
   borderColor = theme.colors.brand.primary,
   isSelected = false,
   children,
+  style,
   ...props
 }) => {
   let textColor = theme.colors.text.inverted;
@@ -33,6 +35,7 @@ export const SelectableButton: React.FC<React.PropsWithChildren<SelectableButton
           borderColor,
           borderWidth: 1,
         },
+        style,
       ]}
       {...props}
     >

@@ -14,14 +14,15 @@ export async function addAnimal(animal: Partial<Animal>) {
       character: animal.character,
       status: "open",
     })
-    .select();
+    .select()
+    .single();
 
   if (error) {
     console.log("Error adding animal:", error.message);
     return null;
   } else {
     console.log("Animal added successfully:", data);
-    return null;
+    return data as Animal;
   }
 }
 
