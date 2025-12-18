@@ -1,11 +1,11 @@
 import MaterialCommunityIcons from "@expo/vector-icons/build/MaterialCommunityIcons";
 import { EnumObject } from "@lib/supabaseEnumHandler";
 import { theme } from "@theme";
-import { SelectableButton } from "components/SelectableButton";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { RowView } from "./RowView";
+import { SelectableButton } from "./SelectableButton";
 
 // dropdownData: Array of strings or EnumObject<String> (zB animalTypes)
 // valueSetter: valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, size: itemValue.value })}

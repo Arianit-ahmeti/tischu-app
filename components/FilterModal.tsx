@@ -112,15 +112,17 @@ export const FilterModal: React.FC<FilterModalProps> = ({ ...props }) => {
                   setDropdownFilter({ ...dropdownFilter, age_min: input });
                 }}
               />
-              <ThemedText style={styles.ages}>bis</ThemedText>
+              <ThemedText variant="body" style={styles.textInline}>
+                bis
+              </ThemedText>
               <ThemedTextInput
                 keyboardType="numeric"
                 style={styles.ages}
                 placeholder="Max"
                 value={dropdownFilter.age_max?.toString()}
                 onChangeText={(text) => {
-                  let input = parseInt(text) || 0;
-                  setDropdownFilter({ ...dropdownFilter, age_max: input });
+                  let input = parseInt(text) || null;
+                  if (input) setDropdownFilter({ ...dropdownFilter, age_max: input });
                 }}
               />
             </RowView>
@@ -220,11 +222,17 @@ const styles = StyleSheet.create({
   text: {
     marginVertical: 10,
   },
+  textInline: {
+    padding: 4,
+  },
   row: { alignItems: "center" },
   ages: {
-    maxHeight: 40,
-    maxWidth: 80,
-    marginHorizontal: 5,
+    flex: 1,
+    height: 48,
+    maxWidth: 70,
+    margin: 4,
+    borderRadius: 32,
+    textAlign: "center",
   },
   close: {
     alignSelf: "flex-end",
