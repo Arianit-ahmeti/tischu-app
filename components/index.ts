@@ -2,6 +2,7 @@ export { AlertDialog } from "components/AlertDialog";
 export { AnimalCard } from "components/AnimalCard";
 export { BackButton } from "components/BackButton";
 export { BottomNavigation } from "components/BottomNavigation";
+export { Chip } from "components/Chip";
 export { ColumnView } from "components/ColumnView";
 export { FilterModal } from "components/FilterModal";
 export { IconButton } from "components/IconButton";

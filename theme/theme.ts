@@ -26,6 +26,18 @@ export const theme = {
     warning: "#FFC107",
     error: "#E82117",
     disabled: "#F2F2F2",
+    sizeChip: {
+      small: "#8D7FA6",
+      medium: "#B96D7A",
+      large: "#2B1A47",
+    },
+    characterChip: {
+      anxious: "#bd94ffff",
+      shy: "#b080ffff",
+      relaxed: "#8943FC",
+      friendly: "#4D288A",
+      aggressive: "#2B1A47",
+    },
   },
   typography: {
     fontFamily: {
