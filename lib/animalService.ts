@@ -77,44 +77,19 @@ export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Anim
     let query = supabase.from("animals").select("*");
 
     if (filters) {
-      if (filters.type) {
-        if (Array.isArray(filters.type)) {
-          query = query.in("type", filters.type);
-        } else {
-          query = query.eq("type", filters.type);
-        }
-      }
-      if (filters.sex) {
-        query = query.eq("sex", filters.sex);
-      }
-      if (filters.size) {
-        if (Array.isArray(filters.size)) {
-          query = query.in("size", filters.size);
-        } else {
-          query = query.eq("size", filters.size);
-        }
-      }
-      if (filters.character) {
-        if (Array.isArray(filters.character)) {
-          query = query.in("character", filters.character);
-        } else {
-          query = query.eq("character", filters.character);
-        }
-      }
-      if (filters.status) {
-        if (Array.isArray(filters.status)) {
-          query = query.in("status", filters.status);
-        } else {
-          query = query.eq("status", filters.status);
-        }
-      }
+      if (filters.type) query = query.in("type", filters.type);
 
-      if (filters.age_min) {
-        query = query.gte("age", filters.age_min);
-      }
-      if (filters.age_max) {
-        query = query.lte("age", filters.age_max);
-      }
+      if (filters.sex) query = query.in("sex", filters.sex);
+
+      if (filters.size) query = query.in("size", filters.size);
+
+      if (filters.character) query = query.in("character", filters.character);
+
+      if (filters.status) query = query.in("status", filters.status);
+
+      if (filters.age_min) query = query.gte("age", filters.age_min);
+
+      if (filters.age_max) query = query.lte("age", filters.age_max);
     }
 
     const { data: animals, error } = await query;

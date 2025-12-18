@@ -26,11 +26,11 @@ export interface FileResponse {
 }
 
 export interface AnimalFilters {
-  type?: string | string[];
-  sex?: string;
-  size?: string | string[];
-  character?: string | string[];
-  status?: string | string[];
+  type?: string[];
+  sex?: string[];
+  size?: string[];
+  character?: string[];
+  status?: string[];
   age_min?: number;
   age_max?: number;
 }
