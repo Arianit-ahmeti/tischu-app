@@ -127,7 +127,7 @@ export default function AnimalDetailScreen() {
             Geschlecht
           </ThemedText>
           <ThemedText>{animal.sex}</ThemedText>
-          </View>
+        </View>
         <View style={styles.row}>
           <ThemedText variant="badge" color={theme.colors.brand.secondary}>
             Alter
