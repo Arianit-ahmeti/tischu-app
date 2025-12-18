@@ -1,34 +1,56 @@
+import { theme } from "@theme";
 import React from "react";
-import { Pressable, StyleSheet, Text, View } from "react-native";
+import { Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
+import { ThemedText } from "./ThemedText";
 
-export default function SelectableButton({
-  isSelected,
-  title,
-  onPress,
-}: {
+interface SelectableButtonProps extends PressableProps {
+  backgroundColor?: string;
+  borderColor?: string;
   isSelected: boolean;
-  title: string;
-  onPress: () => void;
-}) {
-  return (
-    <Pressable onPress={onPress}>
-      <View style={[styles.button, isSelected ? styles.selectedButton : styles.deselectedButton]}>
-        <Text>{title}</Text>
-      </View>
-    </Pressable>
-  );
+  style?: ViewStyle;
 }
 
+export const SelectableButton: React.FC<React.PropsWithChildren<SelectableButtonProps>> = ({
+  backgroundColor = theme.colors.brand.primary,
+  borderColor = theme.colors.brand.primary,
+  isSelected = false,
+  children,
+  style,
+  ...props
+}) => {
+  let textColor = theme.colors.text.inverted;
+
+  if (!isSelected) {
+    textColor = theme.colors.text.dark;
+    backgroundColor = "transparent";
+    borderColor = theme.colors.brand.secondary;
+  }
+
+  return (
+    <Pressable
+      style={[
+        styles.container,
+        {
+          backgroundColor: backgroundColor,
+          borderColor,
+          borderWidth: 1,
+        },
+        style,
+      ]}
+      {...props}
+    >
+      <ThemedText color={textColor} variant="buttonSecondary" numberOfLines={1}>
+        {children}
+      </ThemedText>
+    </Pressable>
+  );
+};
+
 const styles = StyleSheet.create({
-  button: {
-    padding: 10,
-    borderRadius: 5,
-    margin: 5,
-  },
-  selectedButton: {
-    backgroundColor: "#007AFF",
-  },
-  deselectedButton: {
-    backgroundColor: "#DDDDDD",
+  container: {
+    paddingVertical: 12,
+    paddingHorizontal: 16,
+    borderRadius: 32,
+    margin: 4,
   },
 });

@@ -41,7 +41,7 @@ function createEnumObject<T extends string>(values: T[]): EnumObject<T> {
       acc[value as T] = value;
       return acc;
     },
-    {} as Record<T, T>,
+    {} as Record<T, T>
   );
 
   return Object.freeze({

@@ -1,17 +1,24 @@
+import { ThemedButton, ThemedText } from "@components";
+import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { supabase } from "@lib/supabase";
-import { Session } from "@supabase/supabase-js";
+import { checkOrganizationAccess } from "@lib/userService";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { Alert, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, TextInput, View } from "react-native";
 
-export default function Account({ session }: { session: Session }) {
+export default function Account() {
+  const { session, isLoading: isSessionLoading } = useSupabaseSession();
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
+  const [isOrganizationUser, setIsOrganizationUser] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
-    if (session) getProfile();
+    if (session) {
+      getProfile();
+      checkOrganization();
+    }
   }, [session]);
 
   async function getProfile() {
@@ -65,34 +72,69 @@ export default function Account({ session }: { session: Session }) {
     }
   }
 
+  async function checkOrganization() {
+    if (!session?.user) {
+      setIsOrganizationUser(false);
+      return;
+    }
+    const isOrg = await checkOrganizationAccess(session.user.id);
+    setIsOrganizationUser(isOrg);
+  }
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    router.replace("/");
+  }
+
+  if (isSessionLoading) {
+    return (
+      <View style={styles.center}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
+
+  if (!session?.user) {
+    return (
+      <View style={styles.center}>
+        <ThemedText>Please authenticate to view your account.</ThemedText>
+      </View>
+    );
+  }
+
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Text>Email</Text>
+        <ThemedText>Email</ThemedText>
         <TextInput value={session?.user?.email} />
       </View>
       <View style={styles.verticallySpaced}>
-        <Text>Username</Text>
+        <ThemedText>Username</ThemedText>
         <TextInput value={username || ""} onChangeText={(text) => setUsername(text)} />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button
-          title={loading ? "Loading ..." : "Update"}
-          onPress={() => updateProfile({ username })}
-          disabled={loading}
-        />
+        <ThemedButton onPress={() => updateProfile({ username })} disabled={loading}>
+          {loading ? "Loading ..." : "Update"}
+        </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign Out" onPress={() => supabase.auth.signOut()} />
+        <ThemedButton onPress={handleSignOut}>Sign Out</ThemedButton>
+      </View>
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("/(tabs)/Add")}>Add Animal</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <Button title="Add Animal" onPress={() => router.navigate("Animal/Add")} />
+        <ThemedButton onPress={() => router.navigate("/(tabs)/AnimalList")}>Show AnimalList</ThemedButton>
       </View>
-
       <View style={styles.verticallySpaced}>
-        <Button title="Show AnimalList" onPress={() => router.navigate("AnimalList")} />
+        <ThemedButton onPress={() => router.navigate("/ProfileScreen")}>Meine Daten anzeigen</ThemedButton>
       </View>
+      {isOrganizationUser && (
+        <View style={styles.verticallySpaced}>
+          <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Profile</ThemedButton>
+        </View>
+      )}
     </View>
   );
 }
@@ -109,5 +151,11 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
   },
 });

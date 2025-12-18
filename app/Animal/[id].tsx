@@ -1,14 +1,15 @@
-import ImageCarousel from "@components/ImageCarousel";
+import { Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
+import { IconButton } from "@components/IconButton";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
-import { useIsFocused } from "@react-navigation/native";
+import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { theme } from "@theme";
 import { Animal } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, Button, StyleSheet, Text, View } from "react-native";
+import { ActivityIndicator, Alert, StyleSheet, Text, View } from "react-native";
 
 export default function AnimalDetailScreen() {
-  const isFocused = useIsFocused();
   const { id } = useLocalSearchParams();
   const router = useRouter();
   const animalId = Array.isArray(id) ? id[0] : id;
@@ -19,30 +20,24 @@ export default function AnimalDetailScreen() {
 
   async function loadAnimal() {
     try {
-      setLoading(true);
       const data = await fetchAnimalDetails(animalId as string);
 
       if (data) {
         setAnimal(data);
       } else {
-        Alert.alert("Fehler", "Tier konnte nicht geladen werden.");
+        Alert.alert("Fehler", ERROR_MESSAGES.ANIMAL_NOT_FOUND);
       }
     } catch (error) {
       console.error("Error fetching animal images", error);
-    } finally {
-      setLoading(false);
     }
   }
 
   async function fetchImages() {
     try {
-      setLoading(true);
       const urls = await getAnimalMediaDownloadURls(animalId);
       setImageUrls(urls);
     } catch (error) {
       console.error("Error fetching animal images:", error);
-    } finally {
-      setLoading(false);
     }
   }
 
@@ -51,8 +46,14 @@ export default function AnimalDetailScreen() {
       setLoading(false);
       return;
     }
-    loadAnimal();
-    fetchImages();
+
+    const fetchData = async () => {
+      setLoading(true);
+      await Promise.all([loadAnimal(), fetchImages()]);
+      setLoading(false);
+    };
+
+    fetchData();
   }, [animalId]);
 
   if (loading) {
@@ -72,47 +73,112 @@ export default function AnimalDetailScreen() {
   }
 
   return (
-    <View style={{ flex: 1 }}>
-      <View style={{ height: 250 }}>
+    <View style={styles.root}>
+      <View style={styles.imageContainer}>
         <ImageCarousel urls={imageUrls} />
       </View>
       <View style={styles.container}>
-        <Text style={styles.name}>{animal?.name}</Text>
-        <Text>Herkunft: {animal.origin}</Text>
-        <Text>Alter: {animal.age || "Unbekannt"}</Text>
-        <Text>Charakter: {animal.character}</Text>
-        <View style={styles.button}>
-          <Button
-            title="Tier löschen"
-            onPress={() => {
-              Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
-                {
-                  text: "Abbrechen",
-                  style: "cancel",
-                },
-                {
-                  text: "Löschen",
-                  style: "destructive",
-                  onPress: async () => {
-                    await deleteAnimal(animalId as string);
-                    router.back();
+        <View style={styles.header}>
+          <ThemedText style={styles.name} variant="h1" color={theme.colors.brand.primary}>
+            {animal.name}
+          </ThemedText>
+          <ThemedText variant="bodySmall" color={theme.colors.brand.secondary}>
+            {animal.origin}
+          </ThemedText>
+          <View style={styles.buttons}>
+            <IconButton
+              size={30}
+              iconName="favorite-border"
+              iconSet="MaterialIcons"
+              iconColor={theme.colors.brand.focus}
+            />
+            <IconButton
+              size={30}
+              iconName="edit"
+              iconSet="AntDesign"
+              onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)}
+            />
+            <IconButton
+              iconSet="Ionicons"
+              iconName="trash"
+              size={30}
+              onPress={() => {
+                Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
+                  {
+                    text: "Abbrechen",
+                    style: "cancel",
                   },
-                },
-              ]);
-            }}
-          />
+                  {
+                    text: "Löschen",
+                    style: "destructive",
+                    onPress: async () => {
+                      await deleteAnimal(animalId as string);
+                      router.back();
+                    },
+                  },
+                ]);
+              }}
+            />
+          </View>
         </View>
-        <View style={styles.button}>
-          <Button title="Bearbeiten" onPress={() => router.push(`/Animal/edit?id=${animal.id}`)} />
+
+        <View style={styles.row}>
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            Geschlecht
+          </ThemedText>
+          <ThemedText>{animal.sex}</ThemedText>
         </View>
+        <View style={styles.row}>
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            Alter
+          </ThemedText>
+          <ThemedText>{animal.age || "Unbekannt"}</ThemedText>
+        </View>
+        <View style={styles.row}>
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            Größe
+          </ThemedText>
+          <Chip text={animal.size || "Unbekannt"} />
+        </View>
+        <View style={styles.row}>
+          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
+            Charakter
+          </ThemedText>
+          <Chip text={animal.character || "Unbekannt"} />
+        </View>
+        <View style={styles.description}>
+          <ThemedText variant="body"> Hier kann ihr Text stehen!</ThemedText>
+        </View>
+
+        <ThemedButton>Jetzt Bewerben</ThemedButton>
       </View>
     </View>
   );
 }
 
 const styles = StyleSheet.create({
+  row: {
+    flexDirection: "row",
+    verticalAlign: "middle",
+    justifyContent: "flex-start",
+    paddingBottom: 15,
+    alignItems: "center",
+  },
+  root: { flex: 1 },
+  imageContainer: { height: 250 },
+  header: { paddingBottom: 20 },
   container: { padding: 20, flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  name: { fontSize: 28, fontWeight: "bold", marginBottom: 10 },
-  button: { marginVertical: 8, overflow: "hidden" },
+  name: { fontSize: 28, fontWeight: "bold" },
+  buttons: {
+    position: "absolute",
+    flexDirection: "column",
+    alignSelf: "flex-end",
+  },
+  description: {
+    margin: 2,
+    padding: 5,
+    marginBottom: 10,
+    alignItems: "center",
+  },
 });

@@ -1,63 +1,128 @@
+import { AnimalCard, FilterModal, IconButton, RowView, ThemedText } from "@components";
 import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
-import { supabase } from "@lib/supabase";
+import { fetchAnimalsForList } from "@lib/animalService";
 import { FlashList } from "@shopify/flash-list";
-import type { Animal } from "@types";
-import { useFocusEffect, useRouter } from "expo-router";
-import React, { useState } from "react";
-import { Image, Pressable, StyleSheet, Text, useWindowDimensions, View } from "react-native";
-import { SafeAreaView } from "react-native-safe-area-context";
+import { theme } from "@theme";
+import type { Animal, AnimalFilters } from "@types";
+import { Stack, useFocusEffect } from "expo-router";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from "react-native";
+import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function AnimalList() {
-  const router = useRouter();
   const { width } = useWindowDimensions();
+  const insets = useSafeAreaInsets();
   const numColumns = Math.max(1, Math.floor(width / 200));
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [previewImage, setPreviewImage] = useState<Record<string, string>>({});
+  const [imageLoading, setImageLoading] = useState(true);
   const [loading, setLoading] = useState(true);
+  const [filter, setFilter] = useState<AnimalFilters>({});
+  const [modalVisibility, setModalVisibility] = useState(false);
 
-  async function loadAnimals() {
-    try {
-      const { data, error } = await supabase.from("animals").select("*");
+  async function fetchImages(data: Animal[] | []) {
+    const previewMap: Record<string, string> = {};
 
-      console.log("Loaded Animal data successfully");
-
-      setAnimals(data ?? []);
-
-      const previewMap: Record<string, string> = {};
-
-      for (const animal of data ?? []) {
-        try {
-          const urls = await getAnimalMediaDownloadURls(animal.id);
-          if (urls.length > 0) {
-            previewMap[animal.id] = urls[0];
-          }
-        } catch (err) {
-          console.log(`Could not load preview image for animal ${animal.id}:`, err);
+    for (const animal of data ?? []) {
+      setImageLoading(true);
+      try {
+        const urls = await getAnimalMediaDownloadURls(animal.id);
+        if (urls.length > 0) {
+          previewMap[animal.id] = urls[0];
         }
+      } catch (err) {
+        console.log(`Could not load preview image for animal ${animal.id}:`, err);
       }
+    }
 
-      setPreviewImage(previewMap);
-    } catch (error) {
-      error instanceof Error ? console.log("Error fetching Animal data: ", error.message) : "Unexpected Error ocurred";
+    setPreviewImage(previewMap);
+    setImageLoading(false);
+  }
+
+  async function load() {
+    setLoading(true);
+
+    try {
+      let data: Animal[] | null;
+
+      data = await fetchAnimalsForList(filter);
+
+      if (data == null) {
+        data = [];
+      }
+      setAnimals(data);
+      fetchImages(data);
+    } catch (err) {
+      console.log("Error loading animals", err);
+    } finally {
+      setLoading(false);
     }
   }
 
   useFocusEffect(
     React.useCallback(() => {
-      loadAnimals().finally(() => setLoading(false));
-    }, []),
+      load();
+    }, [])
   );
+
+  useEffect(() => {
+    load();
+  }, [filter]);
 
   if (loading) {
     return (
-      <View>
-        <Text>Daten werden geladen...</Text>
+      <View style={styles.emptyComponent}>
+        <ThemedText variant="h3">
+          Loading... <ActivityIndicator></ActivityIndicator>
+        </ThemedText>
       </View>
+    );
+  }
+  let headertext: string;
+  if (!filter.type) {
+    headertext = "All Animals";
+  } else {
+    headertext = "All " + filter.type + "s";
+  }
+  let insetTop = insets.top;
+
+  function listHeader() {
+    return (
+      <RowView style={[styles.buttonArea, { paddingTop: insetTop }]}>
+        <IconButton
+          iconSet="Feather"
+          iconName="sliders"
+          size={24}
+          iconColor={theme.colors.brand.primary}
+          backgroundColor={theme.colors.background.warm}
+          onPress={() => setModalVisibility(!modalVisibility)}
+          style={styles.button}
+        />
+        <IconButton
+          iconSet="Feather"
+          iconName="search"
+          size={24}
+          iconColor={theme.colors.text.inverted}
+          backgroundColor={theme.colors.brand.secondary}
+          onPress={() => {}}
+          style={styles.button}
+        />
+      </RowView>
     );
   }
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.view}>
+      <Stack.Screen options={{ headerRight: () => listHeader(), title: headertext, headerShown: true }} />
+      {modalVisibility && (
+        <FilterModal
+          closeModal={() => setModalVisibility(false)}
+          applyFilter={(filter: AnimalFilters) => {
+            setFilter(filter);
+          }}
+          currentFilter={filter}
+        />
+      )}
       <FlashList
         data={animals}
         masonry
@@ -65,53 +130,33 @@ export default function AnimalList() {
         style={styles.list}
         keyExtractor={(item) => item.id}
         renderItem={({ item }) => (
-          <SafeAreaView>
-            <Pressable
-              onPress={() =>
-                router.navigate({
-                  pathname: "Animal/[id]",
-                  params: { id: item.id },
-                })
-              }
-            >
-              <View style={styles.card}>
-                {previewImage[item.id] && (
-                  <Image
-                    source={{
-                      uri: previewImage[item.id],
-                      cache: "force-cache",
-                    }}
-                    style={styles.image}
-                  />
-                )}
-                <Text style={styles.title}>{item.name}</Text>
-              </View>
-            </Pressable>
-          </SafeAreaView>
+          <AnimalCard animal={item} previewImage={previewImage[item.id]} doneLoading={!imageLoading} />
         )}
         ListEmptyComponent={
           <View style={styles.emptyComponent}>
-            <Text>No animals yet</Text>
+            <ThemedText variant="h2"> No animals yet</ThemedText>
           </View>
         }
       />
-    </View>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, marginTop: 10, padding: 12 },
-  list: { justifyContent: "space-evenly" },
-  card: {
-    padding: 16,
-    borderRadius: 25,
-    backgroundColor: "lightblue",
-    flexWrap: "nowrap",
-    height: 160,
-    margin: 5,
+  view: {
+    flex: 1,
+    justifyContent: "center",
+    padding: 5,
+    marginBottom: 2,
   },
-  image: { width: "100%", height: 100, borderRadius: 12, marginBottom: 8 },
-  title: { fontSize: 18, textAlign: "center" },
+  headerArea: {
+    justifyContent: "space-between",
+  },
+  buttonArea: {
+    flexDirection: "row-reverse",
+  },
+  button: { margin: 2 },
+  list: { justifyContent: "space-evenly" },
   meta: { marginTop: 4 },
-  emptyComponent: { alignItems: "center" },
+  emptyComponent: { alignItems: "center", padding: 10 },
 });
