@@ -120,13 +120,15 @@ export default function Account() {
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={handleSignOut}>Sign Out</ThemedButton>
       </View>
-
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={() => router.navigate("/(tabs)/Add")}>Add Animal</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={() => router.navigate("/(tabs)/AnimalList")}>Show AnimalList</ThemedButton>
+      </View>
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("/ProfileScreen")}>Meine Daten anzeigen</ThemedButton>
       </View>
       {isOrganizationUser && (
         <View style={styles.verticallySpaced}>
