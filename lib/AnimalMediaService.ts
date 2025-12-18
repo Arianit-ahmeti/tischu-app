@@ -29,36 +29,45 @@ export async function getAnimalMediaDownloadURls(animalId: string): Promise<stri
   return downloadUrls;
 }
 
-export async function uploadAnimalMedia(animalId: string): Promise<string> {
+interface SelectImagesOptions {
+  allowMultiple?: boolean;
+  allowEditing?: boolean;
+}
+
+export async function selectImages(options: SelectImagesOptions = {}): Promise<string[]> {
+  const { allowMultiple = true, allowEditing = false } = options;
+
   const result = await ImagePicker.launchImageLibraryAsync({
     mediaTypes: ["images"],
-    allowsMultipleSelection: false,
-    allowsEditing: true,
+    allowsMultipleSelection: allowMultiple,
+    allowsEditing: allowEditing,
     quality: 1,
     exif: false,
   });
 
   if (result.canceled || !result.assets || result.assets.length === 0) {
-    throw new Error("User cancelled image picker.");
+    return [];
   }
 
-  const image = result.assets[0];
+  return result.assets.map((asset) => asset.uri);
+}
 
-  if (!image.uri) {
-    throw new Error("No image uri!");
+export async function uploadLocalImages(animalId: string, localImageUris: string[]): Promise<void> {
+  if (localImageUris.length === 0) return;
+
+  for (let index = 0; index < localImageUris.length; index++) {
+    const uri = localImageUris[index];
+    const arraybuffer = await fetch(uri).then((res) => res.arrayBuffer());
+    const fileExt = uri.split(".").pop()?.toLowerCase() ?? "jpeg";
+    const path = `${animalId}/${index}-${Date.now()}.${fileExt}`;
+
+    const { error } = await supabase.storage.from("animal-entry-media").upload(path, arraybuffer, {
+      contentType: `image/${fileExt}`,
+    });
+
+    if (error) {
+      console.error("Error uploading image:", error);
+      throw error;
+    }
   }
-
-  const arraybuffer = await fetch(image.uri).then((res) => res.arrayBuffer());
-
-  const fileExt = image.uri?.split(".").pop()?.toLowerCase() ?? "jpeg";
-  const path = `${animalId}/${Date.now()}.${fileExt}`;
-  const { data, error: uploadError } = await supabase.storage.from("animal-entry-media").upload(path, arraybuffer, {
-    contentType: image.mimeType ?? "image/jpeg",
-  });
-
-  if (uploadError) {
-    throw uploadError;
-  }
-
-  return data.path;
 }

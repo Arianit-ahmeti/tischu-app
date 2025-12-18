@@ -96,7 +96,7 @@ export default function AnimalDetailScreen() {
               size={30}
               iconName="edit"
               iconSet="AntDesign"
-              onPress={() => router.push(`/Animal/${animal.id}/Edit`)}
+              onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)}
             />
             <IconButton
               iconSet="Ionicons"
@@ -127,7 +127,7 @@ export default function AnimalDetailScreen() {
             Geschlecht
           </ThemedText>
           <ThemedText>{animal.sex}</ThemedText>
-        </View>
+          </View>
         <View style={styles.row}>
           <ThemedText variant="badge" color={theme.colors.brand.secondary}>
             Alter
