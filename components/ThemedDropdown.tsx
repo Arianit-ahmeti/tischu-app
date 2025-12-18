@@ -4,60 +4,94 @@ import { theme } from "@theme";
 import { useState } from "react";
 import { StyleSheet, View } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { DropdownProps } from "react-native-element-dropdown/lib/typescript/components/Dropdown/model";
+import { RowView } from "./RowView";
+import { SelectableButton } from "./SelectableButton";
 
 // dropdownData: Array of strings or EnumObject<String> (zB animalTypes)
 // valueSetter: valueSetter={(itemValue) => setDropdownFilter({ ...dropdownFilter, size: itemValue.value })}
 // currentVal (optional): Wert, der schon vorausgewählt sein soll
 // placeholder: String, der angezeigt wird, wenn Auswahl leer ist
 
-interface ThemedDropdownProps extends DropdownProps<any> {
+interface ThemedDropdownProps {
   dropdownData: EnumObject<string> | string[];
   valueSetter: (item: any) => void;
   currentVal?: string | string[];
   placeholder?: string;
+  button?: boolean;
 }
 
-export const ThemedDropdown: React.FC<ThemedDropdownProps> = ({ currentVal = null, placeholder = null, ...props }) => {
-  const [internalVal, setInternalVal] = useState<string>();
+export const ThemedDropdown: React.FC<ThemedDropdownProps> = ({
+  currentVal = null,
+  placeholder = null,
+  button = false,
+  ...props
+}) => {
   let data: any[];
-  const IconSize = 30;
-  const DropdownS = [styles.picker, styles.dropdownMargin];
-  const containerS = [styles.picker, styles.containerMargin];
 
-  const renderRightIcon = () => {
-    return <MaterialCommunityIcons name="menu-down" size={IconSize} color={theme.colors.brand.secondary} />;
-  };
-  const renderLeftIcon = () => {
-    return <View style={{ width: IconSize }} />;
-  };
+  if (!button) {
+    const IconSize = 30;
+    const DropdownS = [styles.picker, styles.dropdownMargin];
+    const containerS = [styles.picker, styles.containerMargin];
+    const [internalVal, setInternalVal] = useState<string>();
+    if (props.dropdownData instanceof Array) {
+      data = props.dropdownData;
+    } else {
+      data = props.dropdownData.values.map((val) => ({ value: val }));
+    }
 
-  if (props.dropdownData instanceof Array) {
-    data = props.dropdownData;
+    const renderRightIcon = () => {
+      return <MaterialCommunityIcons name="menu-down" size={IconSize} color={theme.colors.brand.secondary} />;
+    };
+    const renderLeftIcon = () => {
+      return <View style={{ width: IconSize }} />;
+    };
+
+    return (
+      <Dropdown
+        data={data}
+        valueField={"value"}
+        labelField={"value"}
+        value={internalVal ?? currentVal ?? null}
+        placeholder={placeholder ?? ""}
+        renderRightIcon={renderRightIcon}
+        renderLeftIcon={renderLeftIcon}
+        placeholderStyle={styles.placeholderText}
+        selectedTextStyle={styles.text}
+        containerStyle={containerS}
+        style={DropdownS}
+        itemTextStyle={styles.text}
+        itemContainerStyle={styles.picker}
+        onChange={(itemValue: string) => {
+          props.valueSetter(itemValue);
+          setInternalVal(itemValue);
+        }}
+      />
+    );
   } else {
-    data = props.dropdownData.values.map((val) => ({ value: val }));
+    data =
+      props.dropdownData instanceof Array ? props.dropdownData : (data = props.dropdownData.values.map((val) => val));
   }
+  const buttons: any[] = [];
 
+  const currentValArray: string[] = Array.isArray(currentVal) ? currentVal : currentVal ? [currentVal] : [];
+  const toggle = (value: string) => {
+    let selection: string[] = currentValArray.includes(value)
+      ? currentValArray.filter((item) => item !== value)
+      : [...currentValArray, value];
+    selection.length == 0 ? props.valueSetter(null) : props.valueSetter(selection);
+  };
   return (
-    <Dropdown
-      data={data}
-      valueField={"value"}
-      labelField={"value"}
-      value={internalVal ?? currentVal ?? null}
-      placeholder={placeholder ?? ""}
-      renderRightIcon={renderRightIcon}
-      renderLeftIcon={renderLeftIcon}
-      placeholderStyle={styles.placeholderText}
-      selectedTextStyle={styles.text}
-      containerStyle={containerS}
-      style={DropdownS}
-      itemTextStyle={styles.text}
-      itemContainerStyle={styles.picker}
-      onChange={(itemValue: string) => {
-        props.valueSetter(itemValue);
-        setInternalVal(itemValue);
-      }}
-    />
+    <RowView style={styles.wrap}>
+      {data.map((item) => {
+        const isSelected = currentValArray.includes(item);
+
+        return (
+          <SelectableButton key={item} isSelected={isSelected} onPress={() => toggle(item)}>
+            {item}
+          </SelectableButton>
+        );
+      })}
+    </RowView>
   );
 };
 
@@ -84,4 +118,5 @@ const styles = StyleSheet.create({
   },
   dropdownMargin: { marginVertical: 10 },
   containerMargin: { marginTop: 5 },
+  wrap: { flexWrap: "wrap" },
 });
