@@ -1,3 +1,4 @@
+import { ThemedButton } from "@components/ThemedButton";
 import { supabase } from "@lib/supabase";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -43,23 +44,6 @@ export default function Auth() {
     setLoading(false);
   }
 
-  async function signUpForOrganization() {
-    setLoading(true);
-    const {
-      data: { session },
-      error,
-    } = await supabase.auth.signUp({
-      email: email,
-      password: password,
-    });
-
-    if (error) Alert.alert(error.message);
-    else if (session) {
-      router.replace("/Organization/SignUp");
-    }
-    setLoading(false);
-  }
-
   return (
     <View style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
@@ -88,7 +72,9 @@ export default function Auth() {
         <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
       </View>
       <View style={[styles.verticallySpaced]}>
-        <Button title="Organization Sign up" disabled={loading} onPress={() => signUpForOrganization()} />
+        <ThemedButton disabled={loading} onPress={() => router.navigate("/Organization/SignUp")}>
+          Organization Sign up
+        </ThemedButton>
       </View>
     </View>
   );

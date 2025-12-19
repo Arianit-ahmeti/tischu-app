@@ -12,7 +12,7 @@
       "@app/*": ["app/*"],
       "@types": ["lib/types"],
       "@hooks/*": ["hooks/*"],
-      "@theme": ["theme/theme.ts"]
-    }
-  }
+      "@theme": ["theme/theme.ts"],
+    },
+  },
 }
