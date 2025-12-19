@@ -46,3 +46,8 @@ export interface Organization {
   country: string | null;
   status: string | null;
 }
+
+export enum SessionType {
+  user = "user",
+  organization = "organization",
+}

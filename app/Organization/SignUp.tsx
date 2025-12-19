@@ -1,4 +1,5 @@
 import { ThemedButton, ThemedText, ThemedTextInput } from "@components";
+import { supabase } from "@lib/supabase";
 import { saveOrganization } from "@lib/userService";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -8,6 +9,8 @@ export default function OrganizationSignUp() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [name, setName] = useState("");
   const [street, setStreet] = useState("");
   const [house_number, setHouseNumber] = useState("");
@@ -17,6 +20,22 @@ export default function OrganizationSignUp() {
 
   async function handleOrganizationSignUp() {
     setLoading(true);
+
+    if (!email || !password) {
+      return Alert.alert("You need an email or password");
+    }
+
+    const {
+      data: { session },
+      error,
+    } = await supabase.auth.signUp({
+      email: email,
+      password: password,
+    });
+
+    if (error) return Alert.alert(error.message);
+    if (!session) Alert.alert("Please check your inbox for email verification!");
+
     const postalCodeAsNumber = postal_code ? parseInt(postal_code) : undefined;
     const result = await saveOrganization({
       name,
@@ -39,16 +58,27 @@ export default function OrganizationSignUp() {
   return (
     <ScrollView style={styles.scrollview}>
       <View style={styles.container}>
-        <ThemedText variant="h3">Vereinsname:</ThemedText>
+        <ThemedText variant="h3">E-Mail Adresse</ThemedText>
+        <ThemedTextInput onChangeText={(text) => setEmail(text)} value={email} placeholder="E-Mail Adresse" />
+
+        <ThemedText variant="h3">Passwort</ThemedText>
+        <ThemedTextInput
+          onChangeText={(text) => setPassword(text)}
+          value={password}
+          placeholder="Passwort"
+          secureTextEntry
+        />
+
+        <ThemedText variant="h3">Vereinsname</ThemedText>
         <ThemedTextInput onChangeText={(text) => setName(text)} value={name} placeholder="Name der Organization" />
 
         <ThemedText variant="h3">Straße:</ThemedText>
         <ThemedTextInput onChangeText={(text) => setStreet(text)} value={street} placeholder="Straße" />
 
-        <ThemedText variant="h3">Hausnummer:</ThemedText>
+        <ThemedText variant="h3">Hausnummer</ThemedText>
         <ThemedTextInput onChangeText={(text) => setHouseNumber(text)} value={house_number} placeholder="Hausnummer" />
 
-        <ThemedText variant="h3">PLZ:</ThemedText>
+        <ThemedText variant="h3">PLZ</ThemedText>
         <ThemedTextInput
           onChangeText={(text) => {
             const numericText = text.replace(/[^0-9]/g, "");
@@ -59,10 +89,10 @@ export default function OrganizationSignUp() {
           keyboardType="numeric"
         />
 
-        <ThemedText variant="h3">Stadt:</ThemedText>
+        <ThemedText variant="h3">Stadt</ThemedText>
         <ThemedTextInput onChangeText={(text) => setCity(text)} value={city} placeholder="Stadt" />
 
-        <ThemedText variant="h3">Land:</ThemedText>
+        <ThemedText variant="h3">Land</ThemedText>
         <ThemedTextInput onChangeText={(text) => setCountry(text)} value={country} placeholder="Land" />
 
         <View style={styles.buttonSpacing}>
