@@ -1,6 +1,6 @@
 import { Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
-import { getAnimalMediaDownloadURls } from "@lib/animalMediaService";
+import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { theme } from "@theme";
@@ -34,7 +34,7 @@ export default function AnimalDetailScreen() {
 
   async function fetchImages() {
     try {
-      const urls = await getAnimalMediaDownloadURls(animalId);
+      const urls = await getAnimalMediaDownloadURLs(animalId);
       setImageUrls(urls);
     } catch (error) {
       console.error("Error fetching animal images:", error);

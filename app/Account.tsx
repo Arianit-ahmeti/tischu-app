@@ -121,6 +121,9 @@ export default function Account() {
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Profile</ThemedButton>
       </View>
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
+      </View>
     </ScrollView>
   );
 }

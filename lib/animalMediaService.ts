@@ -11,7 +11,7 @@ async function listAnimalMedia(animalId: string): Promise<FileResponse> {
   };
 }
 
-export async function getAnimalMediaDownloadURls(animalId: string): Promise<string[]> {
+export async function getAnimalMediaDownloadURLs(animalId: string): Promise<string[]> {
   const fileResponse = await listAnimalMedia(animalId);
   if (fileResponse.error) {
     throw new Error(fileResponse.error);
@@ -66,8 +66,7 @@ export async function uploadLocalImages(animalId: string, localImageUris: string
     });
 
     if (error) {
-      console.error("Error uploading image:", error);
-      throw error;
+      throw Error("Error uploading image:", error);
     }
   }
 }

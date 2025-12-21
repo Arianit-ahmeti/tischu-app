@@ -47,7 +47,8 @@ export default function RootLayout() {
       <Stack.Screen name="AddEdit/Add" options={{ title: "Tier hinzufügen" }} />
       <Stack.Screen name="Organization/Profile" options={{ title: "Vereinsprofil" }} />
       <Stack.Screen name="Organization/SignUp" options={{ title: "Organisation Registrierung" }} />
-      <Stack.Screen name="Organization/Edit" options={{ title: "Vereinsdaten bearbeiten" }} />
+      <Stack.Screen name="Organization/Edit" options={{ title: "Vereinsdaten bearbeiten" }} />{" "}
+      <Stack.Screen name="OrgAnimalList" options={{ title: "Vereinstiere" }} />
     </Stack>
   );
 }
