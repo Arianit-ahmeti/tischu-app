@@ -1,5 +1,5 @@
 import { AnimalCard, FilterModal, IconButton, RowView, ThemedText } from "@components";
-import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
+import { getAnimalMediaDownloadURls } from "@lib/animalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
 import { FlashList } from "@shopify/flash-list";
 import { theme } from "@theme";

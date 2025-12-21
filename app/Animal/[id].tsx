@@ -1,6 +1,6 @@
 import { Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
-import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
+import { getAnimalMediaDownloadURls } from "@lib/animalMediaService";
 import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { theme } from "@theme";
