@@ -64,10 +64,15 @@ export function useSupabaseSession(): SupabaseSessionState {
     };
 
     const syncSession = async () => {
-      const {
-        data: { session: sessionResult },
-      } = await supabase.auth.getSession();
-      await updateSessionState(sessionResult);
+      try {
+        const {
+          data: { session: sessionResult },
+        } = await supabase.auth.getSession();
+        await updateSessionState(sessionResult);
+      } catch (error) {
+        console.error("Failed to sync session:", error);
+        await updateSessionState(null);
+      }
     };
 
     syncSession();
