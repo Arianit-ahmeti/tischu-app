@@ -1,6 +1,7 @@
 import { AnimalCard, ThemedText } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { fetchAnimalPreviewImages, fetchOrganizationAnimals } from "@lib/animalService";
+import { fetchAnimalPreviewImages } from "@lib/animalMediaService";
+import { fetchOrganizationAnimals } from "@lib/animalService";
 import { globalStyles } from "@lib/constants/globalStyles";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { FlashList } from "@shopify/flash-list";

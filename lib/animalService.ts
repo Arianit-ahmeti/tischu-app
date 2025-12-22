@@ -1,4 +1,3 @@
-import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
 import { supabase } from "@lib/supabase";
 import { Animal, AnimalFilters } from "@types";
 
@@ -116,23 +115,6 @@ export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Anim
     console.error("Unexpected error in fetching filtered animals:", error);
     return null;
   }
-}
-
-export async function fetchAnimalPreviewImages(animals: Animal[]): Promise<Record<string, string>> {
-  const previewMap: Record<string, string> = {};
-
-  for (const animal of animals) {
-    try {
-      const urls = await getAnimalMediaDownloadURLs(animal.id);
-      if (urls.length > 0) {
-        previewMap[animal.id] = urls[0];
-      }
-    } catch (err) {
-      console.log(`Could not load preview image for animal ${animal.id}:`, err);
-    }
-  }
-
-  return previewMap;
 }
 
 export async function fetchOrganizationAnimals(organizationId: string): Promise<Animal[]> {

@@ -1,5 +1,5 @@
 import { supabase } from "@lib/supabase";
-import { FileResponse } from "@types";
+import { Animal, FileResponse } from "@types";
 import * as ImagePicker from "expo-image-picker";
 
 async function listAnimalMedia(animalId: string): Promise<FileResponse> {
@@ -66,7 +66,24 @@ export async function uploadLocalImages(animalId: string, localImageUris: string
     });
 
     if (error) {
-      throw Error("Error uploading image:", error);
+      throw Error("Error uploading image:" + error);
     }
   }
+}
+
+export async function fetchAnimalPreviewImages(animals: Animal[]): Promise<Record<string, string>> {
+  const previewMap: Record<string, string> = {};
+
+  for (const animal of animals) {
+    try {
+      const urls = await getAnimalMediaDownloadURLs(animal.id);
+      if (urls.length > 0) {
+        previewMap[animal.id] = urls[0];
+      }
+    } catch (err) {
+      console.log(`Could not load preview image for animal ${animal.id}:`, err);
+    }
+  }
+
+  return previewMap;
 }
