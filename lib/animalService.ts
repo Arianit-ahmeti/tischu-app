@@ -26,7 +26,7 @@ export async function addAnimal(animal: Partial<Animal>) {
   }
 }
 
-export async function fetchAnimalDetails(animalId: string) {
+export async function fetchAnimalDetails(animalId: string): Promise<Animal | null> {
   try {
     const { data: animal, error } = await supabase.from("animals").select("*").eq("id", animalId).single();
 
@@ -103,5 +103,33 @@ export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Anim
   } catch (error) {
     console.error("Unexpected error in fetching filtered animals:", error);
     return null;
+  }
+}
+
+export async function addFavorite(animalID: string, userID: string) {
+  const { error } = await supabase.from("favorites").insert({ user_id: userID, animal_id: animalID });
+
+  if (error) {
+    throw error;
+  }
+}
+
+export async function isFavorite(animalID: string, userID: string): Promise<boolean> {
+  const { data, error } = await supabase.from("favorites").select().eq("user_id", userID).eq("animal_id", animalID);
+
+  if (error) {
+    throw error;
+  }
+
+  if (data && data.length > 0) return true;
+
+  return false;
+}
+
+export async function removeFavorite(animalID: string, userID: string) {
+  const { error } = await supabase.from("favorites").delete().match({ user_id: userID, animal_id: animalID });
+
+  if (error) {
+    throw error;
   }
 }
