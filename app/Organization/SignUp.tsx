@@ -72,7 +72,7 @@ export default function OrganizationSignUp() {
         <ThemedText variant="h3">Vereinsname</ThemedText>
         <ThemedTextInput onChangeText={(text) => setName(text)} value={name} placeholder="Name der Organization" />
 
-        <ThemedText variant="h3">Straße:</ThemedText>
+        <ThemedText variant="h3">Straße</ThemedText>
         <ThemedTextInput onChangeText={(text) => setStreet(text)} value={street} placeholder="Straße" />
 
         <ThemedText variant="h3">Hausnummer</ThemedText>
