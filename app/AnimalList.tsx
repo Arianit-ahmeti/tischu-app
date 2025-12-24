@@ -113,7 +113,7 @@ export default function AnimalList() {
 
   return (
     <SafeAreaView style={styles.view}>
-      <Stack.Screen options={{ headerRight: () => listHeader(), title: headertext, headerShown: true }} />
+      <Stack.Screen options={{ headerRight: () => listHeader(), title: headertext }} />
       {modalVisibility && (
         <FilterModal
           closeModal={() => setModalVisibility(false)}
