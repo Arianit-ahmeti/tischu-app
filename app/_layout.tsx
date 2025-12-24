@@ -23,9 +23,7 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack
-      screenOptions={defaultScreenOptions}
-    >
+    <Stack screenOptions={defaultScreenOptions}>
       <Stack.Screen name="index" options={{ headerShown: false }} />
       <Stack.Screen name="View/User" options={{ headerShown: false }} />
       <Stack.Screen name="View/Organization" options={{ headerShown: false }} />
@@ -38,4 +36,3 @@ export default function RootLayout() {
     </Stack>
   );
 }
-
