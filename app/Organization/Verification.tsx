@@ -1,15 +1,11 @@
-import { AlertDialog, IconButton, ThemedText } from "@components";
+import { AlertDialog, IconButton, ThemedButton, ThemedText } from "@components";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import {
-  getCurrentUserId,
-  getFilesFromPicker,
-  SelectedFile,
-  uploadOrganizationFiles,
-} from "@lib/organizationFileService";
+import { getFilesFromPicker, SelectedFile, uploadOrganizationFiles } from "@lib/organizationFileService";
+import { getCurrentUserId } from "@lib/userService";
 import { theme } from "@theme";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function OrganizationVerification() {
   const [files, setFiles] = useState<SelectedFile[]>([]);
@@ -117,15 +113,11 @@ export default function OrganizationVerification() {
         </View>
         <View style={styles.flex} />
         {files.length > 0 && (
-          <TouchableOpacity onPress={triggerSave} style={styles.saveButton} disabled={saving}>
-            {saving ? (
-              <ActivityIndicator color={theme.colors.background.base} />
-            ) : (
-              <ThemedText variant="bodyLarge" style={styles.saveButtonText}>
-                Dokumente senden
-              </ThemedText>
-            )}
-          </TouchableOpacity>
+          <View style={styles.saveButton}>
+            <ThemedButton onPress={triggerSave} disabled={saving}>
+              {saving ? "Wird gesendet..." : "Dokumente senden"}
+            </ThemedButton>
+          </View>
         )}
       </ScrollView>
     </>
@@ -176,17 +168,8 @@ const styles = StyleSheet.create({
     color: theme.colors.brand.secondary,
   },
   saveButton: {
-    backgroundColor: theme.colors.brand.focus,
-    paddingVertical: 16,
-    paddingHorizontal: 20,
-    borderRadius: 12,
-    alignItems: "center",
-    justifyContent: "center",
     marginTop: "auto",
     marginBottom: 30,
-  },
-  saveButtonText: {
-    color: theme.colors.background.base,
   },
   flexGrow: {
     flexGrow: 1,

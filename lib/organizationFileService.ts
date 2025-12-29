@@ -96,20 +96,3 @@ export async function getFilesFromPicker(index: number): Promise<SelectedFile[]>
       return [];
   }
 }
-
-export async function getCurrentUserId(): Promise<string> {
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-  let userId = session?.user?.id;
-
-  if (!userId) {
-    const {
-      data: { user },
-    } = await supabase.auth.getUser();
-    userId = user?.id;
-  }
-
-  if (!userId) throw new Error("Keine aktive Sitzung gefunden.");
-  return userId;
-}
