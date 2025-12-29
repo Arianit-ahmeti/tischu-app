@@ -75,13 +75,6 @@ export function useSupabaseSession(): SupabaseSessionState {
       }
     };
 
-    const syncSession = async () => {
-      const {
-        data: { session: sessionResult },
-      } = await supabase.auth.getSession();
-      await updateSessionState(sessionResult);
-    };
-
     syncSession();
 
     const {
