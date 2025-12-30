@@ -97,3 +97,20 @@ export async function saveOrganization(organization: Partial<Organization>) {
     return { data, error: null };
   }
 }
+
+export async function getCurrentUserId(): Promise<string> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  let userId = session?.user?.id;
+
+  if (!userId) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    userId = user?.id;
+  }
+
+  if (!userId) throw new Error("Keine aktive Sitzung gefunden.");
+  return userId;
+}
