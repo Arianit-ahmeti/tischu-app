@@ -65,10 +65,10 @@ export async function uploadOrganizationFiles(userId: string, files: SelectedFil
 
     try {
       const arraybuffer = await fetch(file.uri).then((res) => res.arrayBuffer());
-      const fileName = file.name || file.uri.split("/").pop() || "file";
+      const fileName = file.name || file.uri.split("/").pop() || `file-${index}`;
       const fileExt = fileName.split(".").pop()?.toLowerCase() ?? "jpg";
 
-      const path = `${userId}/${Date.now()}-${index}.${fileExt}`;
+      const path = `${userId}/${fileName}`;
       const contentType = fileExt === "pdf" ? "application/pdf" : `image/${fileExt}`;
 
       const { error } = await supabase.storage.from("organization-verification").upload(path, arraybuffer, {
@@ -96,3 +96,43 @@ export async function getFilesFromPicker(index: number): Promise<SelectedFile[]>
       return [];
   }
 }
+
+export async function getOrganizationFiles(orgId: string) {
+  const { data, error } = await supabase.storage.from("organization-verification").list(orgId);
+  if (error) {
+    console.error("Error fetching files", error);
+    throw error;
+  }
+  return (data || []).filter((file) => file.name !== ".emptyFolderPlaceholder");
+}
+
+export const getFilePreviewUrl = (userId: string, fileName: string) => {
+  const { data } = supabase.storage.from("organization-verification").getPublicUrl(`${userId}/${fileName}`);
+
+  return data?.publicUrl ? encodeURI(data.publicUrl) : null;
+};
+
+export async function deleteOrganizationFile(userId: string, fileName: string) {
+  const { data, error } = await supabase.storage.from("organization-verification").remove([`${userId}/${fileName}`]);
+  if (error) throw error;
+  return data;
+}
+
+export async function renameOrganizationFile(userId: string, oldName: string, newName: string) {
+  const extension = oldName.substring(oldName.lastIndexOf("."));
+  const finalName = `${newName.trim()}${extension}`;
+
+  if (finalName === oldName) return oldName;
+
+  const { error } = await supabase.storage
+    .from("organization-verification")
+    .move(`${userId}/${oldName}`, `${userId}/${finalName}`);
+
+  if (error) throw error;
+  return finalName;
+}
+
+export const formatFileNameWithExtension = (oldName: string, newName: string): string => {
+  const extension = oldName.substring(oldName.lastIndexOf("."));
+  return `${newName.trim()}${extension}`;
+};
