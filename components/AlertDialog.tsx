@@ -79,9 +79,10 @@ const styles = StyleSheet.create({
     textAlign: "center",
   },
   buttonContainer: {
-    flexDirection: "column",
+    flexDirection: "row",
     justifyContent: "center",
     marginTop: 10,
+    gap: 10,
   },
   button: {
     flex: 1,
