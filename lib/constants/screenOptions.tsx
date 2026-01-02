@@ -2,7 +2,7 @@ import { BackButton } from "@components";
 import { theme } from "@theme";
 
 export const defaultScreenOptions = ({ navigation }: { navigation: any }) => ({
-  headerTintColor: "#333",
+  headerTintColor: theme.colors.text.dark,
   headerShadowVisible: false,
   headerTitleAlign: "center" as const,
   headerTitleStyle: theme.typography.h2,
