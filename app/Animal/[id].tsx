@@ -1,7 +1,7 @@
 import { Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { getAnimalMediaDownloadURls } from "@lib/animalMediaService";
+import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
 import { addFavorite, deleteAnimal, fetchAnimalDetails, isFavorite, removeFavorite } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { theme } from "@theme";
@@ -50,7 +50,7 @@ export default function AnimalDetailScreen() {
 
   async function fetchImages() {
     try {
-      const urls = await getAnimalMediaDownloadURls(animalId);
+      const urls = await getAnimalMediaDownloadURLs(animalId);
       setImageUrls(urls);
     } catch (error) {
       console.error("Error fetching animal images:", error);

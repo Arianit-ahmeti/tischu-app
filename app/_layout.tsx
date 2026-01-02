@@ -1,3 +1,4 @@
+import { ActionSheetProvider } from "@expo/react-native-action-sheet";
 import { defaultScreenOptions } from "@lib/constants/screenOptions";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
@@ -23,16 +24,20 @@ export default function RootLayout() {
   }
 
   return (
-    <Stack screenOptions={defaultScreenOptions}>
-      <Stack.Screen name="index" options={{ headerShown: false }} />
-      <Stack.Screen name="View/User" options={{ headerShown: false }} />
-      <Stack.Screen name="View/Organization" options={{ headerShown: false }} />
-      <Stack.Screen name="Animal/[id]" options={{ title: "Tierprofil" }} />
-      <Stack.Screen name="AddEdit/Edit" options={{ title: "Tier bearbeiten" }} />
-      <Stack.Screen name="AddEdit/Add" options={{ title: "Tier hinzufügen" }} />
-      <Stack.Screen name="Organization/Profile" options={{ title: "Vereinsprofil" }} />
-      <Stack.Screen name="Organization/SignUp" options={{ title: "Organisation Registrierung" }} />
-      <Stack.Screen name="Organization/Edit" options={{ title: "Vereinsdaten bearbeiten" }} />
-    </Stack>
+    <ActionSheetProvider>
+      <Stack screenOptions={defaultScreenOptions}>
+        <Stack.Screen name="index" options={{ headerShown: false }} />
+        <Stack.Screen name="View/User" options={{ headerShown: false }} />
+        <Stack.Screen name="View/Organization" options={{ headerShown: false }} />
+        <Stack.Screen name="Animal/[id]" options={{ title: "Tierprofil" }} />
+        <Stack.Screen name="AddEdit/Edit" options={{ title: "Tier bearbeiten" }} />
+        <Stack.Screen name="AddEdit/Add" options={{ title: "Tier hinzufügen" }} />
+        <Stack.Screen name="Organization/Profile" options={{ title: "Vereinsprofil" }} />
+        <Stack.Screen name="Organization/SignUp" options={{ title: "Organisation Registrierung" }} />
+        <Stack.Screen name="Organization/Edit" options={{ title: "Vereinsdaten bearbeiten" }} />
+        <Stack.Screen name="Organization/Verification" options={{ title: "Verein verifizieren" }} />
+        <Stack.Screen name="OrgAnimalList" options={{ title: "Vereinstiere" }} />
+      </Stack>
+    </ActionSheetProvider>
   );
 }
