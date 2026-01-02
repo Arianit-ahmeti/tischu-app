@@ -1,24 +1,25 @@
 import { Ionicons } from "@expo/vector-icons";
+import { defaultScreenOptions } from "@lib/constants/screenOptions";
 import { theme } from "@theme";
 import { Tabs } from "expo-router";
 
 export default function TabsLayout() {
   return (
     <Tabs
-      screenOptions={{
-        headerShadowVisible: false,
-        headerTitleAlign: "center",
-        tabBarActiveTintColor: theme.colors.brand.primary,
-        tabBarInactiveTintColor: theme.colors.text.muted,
-        tabBarStyle: {
-          backgroundColor: theme.colors.background.base,
-        },
-        headerStyle: {
-          backgroundColor: theme.colors.background.base,
-        },
-        sceneStyle: {
-          backgroundColor: theme.colors.background.base,
-        },
+      screenOptions={(props) => {
+        const defaults = defaultScreenOptions(props);
+        return {
+          ...defaults,
+          headerStyle: {
+            backgroundColor: theme.colors.background.base,
+          },
+          sceneStyle: defaults.contentStyle,
+          tabBarActiveTintColor: theme.colors.brand.primary,
+          tabBarInactiveTintColor: theme.colors.text.muted,
+          tabBarStyle: {
+            backgroundColor: theme.colors.background.base,
+          },
+        };
       }}
     >
       <Tabs.Screen
@@ -28,7 +29,6 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size, focused }) => {
             return <Ionicons name={focused ? "paw-sharp" : "paw-outline"} size={size} color={color} />;
           },
-          headerShown: false,
         }}
       />
       <Tabs.Screen

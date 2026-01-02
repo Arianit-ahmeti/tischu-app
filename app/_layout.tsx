@@ -1,10 +1,9 @@
 import { ActionSheetProvider } from "@expo/react-native-action-sheet";
-import { theme } from "@theme";
+import { defaultScreenOptions } from "@lib/constants/screenOptions";
 import { useFonts } from "expo-font";
 import { Stack } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
-import { BackButton } from "../components";
 
 SplashScreen.preventAutoHideAsync();
 
@@ -26,21 +25,7 @@ export default function RootLayout() {
 
   return (
     <ActionSheetProvider>
-      <Stack
-        screenOptions={({ navigation }) => ({
-          headerTintColor: "#333",
-          headerShadowVisible: false,
-          headerTitleAlign: "center",
-          contentStyle: { backgroundColor: theme.colors.background.base },
-
-          headerLeft: () => {
-            if (navigation.canGoBack()) {
-              return <BackButton style={{ marginLeft: -8 }} />;
-            }
-            return null;
-          },
-        })}
-      >
+      <Stack screenOptions={defaultScreenOptions}>
         <Stack.Screen name="index" options={{ headerShown: false }} />
         <Stack.Screen name="View/User" options={{ headerShown: false }} />
         <Stack.Screen name="View/Organization" options={{ headerShown: false }} />
