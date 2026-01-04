@@ -1,6 +1,7 @@
 import {
   deleteOrganizationFile,
   getFilesFromPicker,
+  getNextAvailableName,
   getOrganizationFiles,
   renameOrganizationFile,
   SelectedFile,
@@ -37,7 +38,13 @@ export const useOrganizationFiles = (onUploadSuccess: () => void) => {
 
   const handleSelection = async (index: number) => {
     const newFiles = await getFilesFromPicker(index);
-    setFiles((prev) => [...prev, ...newFiles]);
+
+    const processedFiles = newFiles.map((newFile) => {
+      const allNames = [...files.map((f) => f.name), ...uploadedFiles.map((f) => f.name)];
+      const finalName = getNextAvailableName(newFile.name, allNames);
+      return { ...newFile, name: finalName };
+    });
+    setFiles((prev) => [...prev, ...processedFiles]);
   };
 
   const handleUpload = async () => {
@@ -45,10 +52,10 @@ export const useOrganizationFiles = (onUploadSuccess: () => void) => {
     setSaving(true);
     try {
       const id = await getCurrentUserId();
-      await uploadOrganizationFiles(id, files);
+      await uploadOrganizationFiles(id, files, uploadedFiles);
+      onUploadSuccess?.();
       setFiles([]);
       await loadFiles();
-      onUploadSuccess();
     } catch (error: any) {
       Alert.alert("Fehler", error.message);
     } finally {
@@ -73,14 +80,21 @@ export const useOrganizationFiles = (onUploadSuccess: () => void) => {
     const localIndex = files.findIndex((f) => f.name === oldName);
     if (localIndex !== -1) {
       const extension = oldName.substring(oldName.lastIndexOf("."));
-      const finalName = `${newName.trim()}${extension}`;
+      const desiredName = `${newName.trim()}${extension}`;
+
+      const otherLocalNames = files.filter((_, i) => i !== localIndex).map((f) => f.name);
+      const remoteNames = uploadedFiles.map((f) => f.name);
+      const allNames = [...otherLocalNames, ...remoteNames];
+
+      const finalName = getNextAvailableName(desiredName, allNames);
+
       setFiles((prev) => prev.map((f, i) => (i === localIndex ? { ...f, name: finalName } : f)));
       return;
     }
 
     try {
       setLoadingFiles(true);
-      await renameOrganizationFile(userId!, oldName, newName);
+      await renameOrganizationFile(userId!, oldName, newName, uploadedFiles);
       await loadFiles();
     } catch (error) {
       Alert.alert("Fehler", "Umbenennen fehlgeschlagen.");
