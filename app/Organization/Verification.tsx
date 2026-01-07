@@ -1,48 +1,55 @@
-import { AlertDialog, IconButton, ThemedButton, ThemedText } from "@components";
+import { AlertDialog, FileItem, IconButton, PreviewModal, RenameModal, ThemedButton, ThemedText } from "@components";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { getFilesFromPicker, SelectedFile, uploadOrganizationFiles } from "@lib/organizationFileService";
-import { getCurrentUserId } from "@lib/userService";
+import { useOrganizationFiles } from "@hooks/useOrganizationFiles";
 import { theme } from "@theme";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function OrganizationVerification() {
-  const [files, setFiles] = useState<SelectedFile[]>([]);
   const router = useRouter();
-  const [saving, setSaving] = useState(false);
-  const [alertVisible, setAlertVisible] = useState(false);
   const { showActionSheetWithOptions } = useActionSheet();
+  const [alertVisible, setAlertVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [fileToDelete, setFileToDelete] = useState<string | null>(null);
+  const [previewFile, setPreviewFile] = useState<{ uri: string; name: string; type: string } | null>(null);
+  const [isRenameModalVisible, setIsRenameModalVisible] = useState(false);
+  const [selectedFileName, setSelectedFileName] = useState("");
 
-  async function handleFilesSelection() {
+  const { files, uploadedFiles, userId, loadingFiles, saving, actions } = useOrganizationFiles(() =>
+    setAlertVisible(true)
+  );
+
+  const onFilesSelection = () => {
     const options = ["Fotos", "Dateien", "Kamera", "Abbrechen"];
-
     showActionSheetWithOptions({ options, cancelButtonIndex: 3 }, async (index) => {
       if (index !== undefined && index !== 3) {
-        const newFiles = await getFilesFromPicker(index);
-        setFiles((prev) => [...prev, ...newFiles]);
+        await actions.handleSelection(index);
       }
     });
-  }
-
-  const triggerSave = () => {
-    if (files.length === 0) return;
-    setConfirmVisible(true);
   };
 
-  const handleSave = async () => {
-    setSaving(true);
-    try {
-      const userId = await getCurrentUserId();
-      await uploadOrganizationFiles(userId, files);
-      setAlertVisible(true);
-      setFiles([]);
-    } catch (error: any) {
-      Alert.alert("Fehler", error.message);
-    } finally {
-      setSaving(false);
+  const onConfirmDelete = async () => {
+    if (fileToDelete) {
+      setDeleteModalVisible(false);
+      await actions.handleDelete(fileToDelete);
+      setFileToDelete(null);
     }
+  };
+
+  const onConfirmRename = async (newName: string) => {
+    setIsRenameModalVisible(false);
+    await actions.handleRename(selectedFileName, newName);
+  };
+
+  const triggerSave = () => {
+    if (files.length > 0) setConfirmVisible(true);
+  };
+
+  const onFinalSave = async () => {
+    setConfirmVisible(false);
+    await actions.handleUpload();
   };
 
   return (
@@ -58,7 +65,7 @@ export default function OrganizationVerification() {
           },
           {
             text: "Senden",
-            onPress: handleSave,
+            onPress: onFinalSave,
           },
         ]}
         onDismiss={() => setConfirmVisible(false)}
@@ -77,13 +84,23 @@ export default function OrganizationVerification() {
         onDismiss={() => setAlertVisible(false)}
       />
 
+      <AlertDialog
+        visible={deleteModalVisible}
+        title="Datei löschen"
+        message={`Möchten Sie "${fileToDelete}" wirklich löschen?`}
+        buttons={[
+          { text: "Abbrechen", onPress: () => setDeleteModalVisible(false) },
+          { text: "Löschen", onPress: onConfirmDelete },
+        ]}
+        onDismiss={() => setDeleteModalVisible(false)}
+      />
       <ScrollView style={styles.container} contentContainerStyle={styles.flexGrow}>
-        <TouchableOpacity onPress={handleFilesSelection} style={styles.uploadContainer} activeOpacity={0.7}>
+        <TouchableOpacity onPress={onFilesSelection} style={styles.uploadContainer} activeOpacity={0.7}>
           <IconButton
             iconSet="FontAwesome5"
             iconName="upload"
             size={32}
-            onPress={handleFilesSelection}
+            onPress={onFilesSelection}
             iconColor={theme.colors.brand.primary}
           />
           <ThemedText variant="bodyLarge" style={styles.uploadTitle}>
@@ -95,22 +112,46 @@ export default function OrganizationVerification() {
           Unterstützte Formate: PDF und gängige Bildformate (JPG, PNG, HEIC, WebP u. v. m.)
         </ThemedText>
 
-        <View style={styles.fileList}>
+        <View>
           {files.map((file, index) => (
-            <View key={index} style={styles.fileRow}>
-              <IconButton
-                iconSet="FontAwesome5"
-                iconName={file.type?.includes("pdf") ? "file-pdf" : "file-image"}
-                size={20}
-                iconColor={theme.colors.brand.primary}
-                onPress={() => {}}
-              />
-              <ThemedText variant="body" style={styles.fileName} numberOfLines={1} ellipsizeMode="middle">
-                {file.name}
-              </ThemedText>
-            </View>
+            <FileItem
+              key={`new-${index}`}
+              name={file.name}
+              uri={file.uri}
+              type={file.type}
+              isUploaded={false}
+              onDelete={() => actions.removeLocalFile(index)}
+              onRename={(name) => {
+                setSelectedFileName(name);
+                setIsRenameModalVisible(true);
+              }}
+              onPreview={(uri, name, type) => setPreviewFile({ uri, name, type })}
+            />
           ))}
         </View>
+        {loadingFiles ? (
+          <ActivityIndicator color={theme.colors.brand.primary} />
+        ) : (
+          <View>
+            {uploadedFiles.map((file) => (
+              <FileItem
+                key={file.id}
+                name={file.name}
+                userId={userId!}
+                isUploaded={true}
+                onDelete={() => {
+                  setFileToDelete(file.name);
+                  setDeleteModalVisible(true);
+                }}
+                onRename={(name) => {
+                  setSelectedFileName(name);
+                  setIsRenameModalVisible(true);
+                }}
+                onPreview={(uri, name, type) => setPreviewFile({ uri, name, type })}
+              />
+            ))}
+          </View>
+        )}
         <View style={styles.flex} />
         {files.length > 0 && (
           <View style={styles.saveButton}>
@@ -120,6 +161,21 @@ export default function OrganizationVerification() {
           </View>
         )}
       </ScrollView>
+
+      <PreviewModal
+        isVisible={!!previewFile}
+        uri={previewFile?.uri}
+        name={previewFile?.name}
+        type={previewFile?.type}
+        onClose={() => setPreviewFile(null)}
+      />
+
+      <RenameModal
+        isVisible={isRenameModalVisible}
+        currentName={selectedFileName}
+        onClose={() => setIsRenameModalVisible(false)}
+        onConfirm={onConfirmRename}
+      />
     </>
   );
 }
@@ -150,22 +206,6 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: theme.colors.text.light,
     marginBottom: 20,
-  },
-  fileList: {
-    marginTop: 10,
-  },
-  fileRow: {
-    flexDirection: "row",
-    alignItems: "center",
-    padding: 12,
-    backgroundColor: theme.colors.background.base,
-    borderRadius: 8,
-    marginBottom: 8,
-  },
-  fileName: {
-    flex: 1,
-    marginLeft: 10,
-    color: theme.colors.brand.secondary,
   },
   saveButton: {
     marginTop: "auto",
