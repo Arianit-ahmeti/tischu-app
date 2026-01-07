@@ -15,7 +15,7 @@ export default function App() {
     );
   }
 
-  if (session?.user) {
+
     switch (type) {
       case SessionType.user:
         return <Redirect href="/View/User/AnimalList" />;
@@ -24,7 +24,7 @@ export default function App() {
       default:
         return <Redirect href="/View/User/AnimalList" />;
     }
-  }
+
 
   return <Auth />;
 }

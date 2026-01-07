@@ -1,4 +1,4 @@
-import { Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
+import { AlertDialog, Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
@@ -21,6 +21,7 @@ export default function AnimalDetailScreen() {
   const [isFavoriteAnimal, setIsFavorite] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [alertVisible, setAlertVisible] = useState(false);
 
   async function loadAnimal() {
     try {
@@ -57,6 +58,7 @@ export default function AnimalDetailScreen() {
     }
   }
 
+
   useEffect(() => {
     if (!animalId) {
       setLoading(false);
@@ -86,7 +88,7 @@ export default function AnimalDetailScreen() {
     );
   }
 
-  if (!animal || !session?.user.id) {
+  if (!animal) {
     return (
       <View style={styles.center}>
         <Text>Tier nicht gefunden.</Text>
@@ -94,7 +96,7 @@ export default function AnimalDetailScreen() {
     );
   }
 
-  const userID = session.user.id;
+  const userID = session?.user.id || null;
 
   return (
     <View style={styles.root}>
@@ -115,12 +117,14 @@ export default function AnimalDetailScreen() {
               iconName={isFavoriteAnimal ? "favorite" : "favorite-border"}
               iconSet="MaterialIcons"
               iconColor={theme.colors.brand.focus}
-              onPress={() => {
+              disabled={userID==null}
+              onPress={() => {if (userID!=null)
                 isFavoriteAnimal
                   ? removeFavorite(animalId, userID).then(() => setIsFavorite(false))
                   : addFavorite(animalId, userID).then(() => setIsFavorite(true));
               }}
             />
+
             <IconButton
               size={30}
               iconName="edit"
@@ -179,11 +183,32 @@ export default function AnimalDetailScreen() {
           <ThemedText variant="body"> Hier kann ihr Text stehen!</ThemedText>
         </View>
 
-            <ThemedButton onPress={() =>
-        router.navigate({
-          pathname: "AdoptionForm/UserContact",
-          params: { animalId: animalId, animalType: animal.type },
-        })}>Jetzt Bewerben</ThemedButton>
+            <AlertDialog
+                      visible={alertVisible}
+                      title={ERROR_MESSAGES.WARNING}
+                      message={ERROR_MESSAGES.NOT_LOGGED_IN}
+                      buttons={[
+                        {
+                          text: "Zurück",
+                          onPress: () => router.back()
+                        },
+                        {
+                          text: "Log In",
+                          onPress: () => router.navigate({pathname: "Auth"})
+                        }
+                      ]}
+                      onDismiss={() => setAlertVisible(false)}
+                    />
+
+        <ThemedButton disabled = { sessionLoading } onPress={() => {
+          if (session?.user) {
+            router.navigate({
+              pathname: "AdoptionForm/UserContact",
+              params: { animalId: animalId, animalType: animal.type },
+            });
+          }
+          else {setAlertVisible(true)}
+        }}>Jetzt Bewerben</ThemedButton>
       </View>
     </View>
   );
