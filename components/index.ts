@@ -10,7 +10,9 @@ export { ImageCarousel } from "components/ImageCarousel";
 export { ListTile } from "components/ListTile";
 export { RowView } from "components/RowView";
 export { SelectableButton } from "components/SelectableButton";
+export { ThemedArrayInput } from "components/ThemedArrayInput";
 export { ThemedButton } from "components/ThemedButton";
 export { ThemedDropdown } from "components/ThemedDropdown";
 export { ThemedText } from "components/ThemedText";
 export { ThemedTextInput } from "components/ThemedTextInput";
+

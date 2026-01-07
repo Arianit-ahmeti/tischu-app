@@ -26,6 +26,7 @@
     "@expo/react-native-action-sheet": "^4.1.1",
     "@expo/vector-icons": "^15.0.3",
     "@react-native-async-storage/async-storage": "^2.2.0",
+    "@react-native-community/datetimepicker": "^8.6.0",
     "@shopify/flash-list": "2.0.2",
     "@supabase/supabase-js": "^2.86.2",
     "aes-js": "^3.1.2",

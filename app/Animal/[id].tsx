@@ -179,7 +179,11 @@ export default function AnimalDetailScreen() {
           <ThemedText variant="body"> Hier kann ihr Text stehen!</ThemedText>
         </View>
 
-        <ThemedButton>Jetzt Bewerben</ThemedButton>
+            <ThemedButton onPress={() =>
+        router.navigate({
+          pathname: "AdoptionForm/UserContact",
+          params: { animalId: animalId, animalType: animal.type },
+        })}>Jetzt Bewerben</ThemedButton>
       </View>
     </View>
   );
