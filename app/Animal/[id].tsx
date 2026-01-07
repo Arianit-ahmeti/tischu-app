@@ -58,7 +58,6 @@ export default function AnimalDetailScreen() {
     }
   }
 
-
   useEffect(() => {
     if (!animalId) {
       setLoading(false);
@@ -117,11 +116,12 @@ export default function AnimalDetailScreen() {
               iconName={isFavoriteAnimal ? "favorite" : "favorite-border"}
               iconSet="MaterialIcons"
               iconColor={theme.colors.brand.focus}
-              disabled={userID==null}
-              onPress={() => {if (userID!=null)
-                isFavoriteAnimal
-                  ? removeFavorite(animalId, userID).then(() => setIsFavorite(false))
-                  : addFavorite(animalId, userID).then(() => setIsFavorite(true));
+              disabled={userID == null}
+              onPress={() => {
+                if (userID != null)
+                  isFavoriteAnimal
+                    ? removeFavorite(animalId, userID).then(() => setIsFavorite(false))
+                    : addFavorite(animalId, userID).then(() => setIsFavorite(true));
               }}
             />
 
@@ -183,32 +183,38 @@ export default function AnimalDetailScreen() {
           <ThemedText variant="body"> Hier kann ihr Text stehen!</ThemedText>
         </View>
 
-            <AlertDialog
-                      visible={alertVisible}
-                      title={ERROR_MESSAGES.WARNING}
-                      message={ERROR_MESSAGES.NOT_LOGGED_IN}
-                      buttons={[
-                        {
-                          text: "Zurück",
-                          onPress: () => router.back()
-                        },
-                        {
-                          text: "Log In",
-                          onPress: () => router.navigate({pathname: "Auth"})
-                        }
-                      ]}
-                      onDismiss={() => setAlertVisible(false)}
-                    />
+        <AlertDialog
+          visible={alertVisible}
+          title={ERROR_MESSAGES.WARNING}
+          message={ERROR_MESSAGES.NOT_LOGGED_IN}
+          buttons={[
+            {
+              text: "Zurück",
+              onPress: () => router.back(),
+            },
+            {
+              text: "Log In",
+              onPress: () => router.navigate({ pathname: "Auth" }),
+            },
+          ]}
+          onDismiss={() => setAlertVisible(false)}
+        />
 
-        <ThemedButton disabled = { sessionLoading } onPress={() => {
-          if (session?.user) {
-            router.navigate({
-              pathname: "AdoptionForm/UserContact",
-              params: { animalId: animalId, animalType: animal.type },
-            });
-          }
-          else {setAlertVisible(true)}
-        }}>Jetzt Bewerben</ThemedButton>
+        <ThemedButton
+          disabled={sessionLoading}
+          onPress={() => {
+            if (session?.user) {
+              router.navigate({
+                pathname: "AdoptionForm/UserContact",
+                params: { animalId: animalId, animalType: animal.type },
+              });
+            } else {
+              setAlertVisible(true);
+            }
+          }}
+        >
+          Jetzt Bewerben
+        </ThemedButton>
       </View>
     </View>
   );

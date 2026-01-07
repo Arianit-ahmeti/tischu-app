@@ -15,16 +15,14 @@ export default function App() {
     );
   }
 
-
-    switch (type) {
-      case SessionType.user:
-        return <Redirect href="/View/User/AnimalList" />;
-      case SessionType.organization:
-        return <Redirect href="/View/Organization/AnimalList" />;
-      default:
-        return <Redirect href="/View/User/AnimalList" />;
-    }
-
+  switch (type) {
+    case SessionType.user:
+      return <Redirect href="/View/User/AnimalList" />;
+    case SessionType.organization:
+      return <Redirect href="/View/Organization/AnimalList" />;
+    default:
+      return <Redirect href="/View/User/AnimalList" />;
+  }
 
   return <Auth />;
 }

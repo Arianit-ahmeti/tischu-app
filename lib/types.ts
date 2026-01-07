@@ -52,7 +52,6 @@ export enum SessionType {
   organization = "organization",
 }
 
-
 export interface UserContact {
   user_id: string | null;
   full_name: string | null;
@@ -65,7 +64,6 @@ export interface UserContact {
   mail: string | null;
   phone: number | null;
 }
-
 
 export interface UserSituation {
   form_id: string;

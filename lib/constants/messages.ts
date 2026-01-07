@@ -19,7 +19,7 @@ export const ERROR_MESSAGES = {
   ADOPTION_CONTACT_SAVE_FAILED: "Adoptionsanfrage konnte nicht gespeichert werden",
   NO_USER_ON_SESSION: "Es ist kein Nutzer eingeloggt",
   NOT_LOGGED_IN: "Kontaktanfrage ist nur für eingeloggte Nutzer möglich!",
-  USER_NOT_FOUND: "Nutzer konnte nicht in Datenbank gefunden werden"
+  USER_NOT_FOUND: "Nutzer konnte nicht in Datenbank gefunden werden",
 } as const;
 
 export const SUCCESS_MESSAGES = {
