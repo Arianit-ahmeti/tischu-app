@@ -55,7 +55,6 @@ export enum SessionType {
 export interface UserContact {
   user_id: string | null;
   full_name: string | null;
-  birth_date: string | null;
   street: string | null;
   house_nr: number | null;
   postal_code: number | null;

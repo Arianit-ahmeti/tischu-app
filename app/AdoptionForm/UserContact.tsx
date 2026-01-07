@@ -21,7 +21,6 @@ export default function AdoptionFormUserContact() {
   const [contacts, setContacts] = useState<UserContact>({
     user_id: null,
     full_name: null,
-    birth_date: null,
     street: null,
     house_nr: null,
     postal_code: null,
@@ -59,7 +58,6 @@ export default function AdoptionFormUserContact() {
   async function check() {
     try {
       const pastForm = await checkForForm(userId, animalId);
-      console.log(pastForm);
       if (pastForm) {
         Alert.alert("You already have an existing contact request for this animal!");
         router.back();
@@ -146,8 +144,6 @@ export default function AdoptionFormUserContact() {
               onChangeText={(text) => setContacts({ ...contacts, full_name: text })}
               placeholder="Vollständiger Name"
             />
-
-            <ThemedText variant="h3">Geburtsdatum</ThemedText>
 
             <ThemedText variant="h2">Kontaktinformationen</ThemedText>
             <RowView>
