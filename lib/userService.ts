@@ -76,7 +76,7 @@ export async function saveOrganization(organization: Partial<Organization>) {
 
   const { data, error } = await supabase
     //TODO replace with "organization" once supabase tables have been updated
-    .from("org")
+    .from("organization")
     .insert({
       id: user.id,
       name: organization.name,
