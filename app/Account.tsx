@@ -1,23 +1,20 @@
 import { ThemedButton, ThemedText } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { supabase } from "@lib/supabase";
-import { checkOrganizationAccess } from "@lib/userService";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, StyleSheet, TextInput, View } from "react-native";
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 export default function Account() {
   const { session, isLoading: isSessionLoading } = useSupabaseSession();
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
-  const [isOrganizationUser, setIsOrganizationUser] = useState(false);
 
   const router = useRouter();
 
   useEffect(() => {
     if (session) {
       getProfile();
-      checkOrganization();
     }
   }, [session]);
 
@@ -72,15 +69,6 @@ export default function Account() {
     }
   }
 
-  async function checkOrganization() {
-    if (!session?.user) {
-      setIsOrganizationUser(false);
-      return;
-    }
-    const isOrg = await checkOrganizationAccess(session.user.id);
-    setIsOrganizationUser(isOrg);
-  }
-
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.replace("/");
@@ -103,7 +91,7 @@ export default function Account() {
   }
 
   return (
-    <View style={styles.container}>
+    <ScrollView style={styles.container}>
       <View style={[styles.verticallySpaced, styles.mt20]}>
         <ThemedText>Email</ThemedText>
         <TextInput value={session?.user?.email} />
@@ -121,21 +109,25 @@ export default function Account() {
         <ThemedButton onPress={handleSignOut}>Sign Out</ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/(tabs)/Add")}>Add Animal</ThemedButton>
+        <ThemedButton onPress={() => router.navigate("/AddEdit/Add")}>Add Animal</ThemedButton>
       </View>
 
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/(tabs)/AnimalList")}>Show AnimalList</ThemedButton>
+        <ThemedButton onPress={() => router.navigate("/AnimalList")}>Show AnimalList</ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={() => router.navigate("/ProfileScreen")}>Meine Daten anzeigen</ThemedButton>
       </View>
-      {isOrganizationUser && (
-        <View style={styles.verticallySpaced}>
-          <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Profile</ThemedButton>
-        </View>
-      )}
-    </View>
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Profile</ThemedButton>
+      </View>
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
+      </View>
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>Jetzt verifizieren</ThemedButton>
+      </View>
+    </ScrollView>
   );
 }
 

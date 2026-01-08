@@ -25,20 +25,6 @@ export async function getProfile(user_id: string): Promise<Organization | null> 
   }
 }
 
-export async function checkOrganizationAccess(userId: string): Promise<boolean> {
-  try {
-    const { data, error } = await supabase.from("organization").select("id").eq("id", userId);
-    if (error) {
-      console.error("Error checking organization status:", error.message);
-      return false;
-    }
-    return data !== null && data.length > 0;
-  } catch (error) {
-    console.error("Unexpected error in checkOrganizationAccess:", error);
-    return false;
-  }
-}
-
 export async function getCurrentSession(): Promise<Session | null> {
   const {
     data: { session },
@@ -74,7 +60,22 @@ export async function saveOrganization(organization: Partial<Organization>) {
     return null;
   }
 
+  const { data: profileData, error: profileError } = await supabase
+    .from("profiles")
+    .update({
+      type: "organization",
+    })
+    .eq("id", user.id);
+
+  if (profileError) {
+    console.error("Error updating profile type:", profileError.message);
+    return { data: null, error: profileError };
+  }
+
+  console.log("Profile type updated successfully:", profileData);
+
   const { data, error } = await supabase
+    //TODO replace with "organization" once supabase tables have been updated
     .from("organization")
     .insert({
       id: user.id,
@@ -95,4 +96,21 @@ export async function saveOrganization(organization: Partial<Organization>) {
     console.log("Organization saved successfully:", data);
     return { data, error: null };
   }
+}
+
+export async function getCurrentUserId(): Promise<string> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  let userId = session?.user?.id;
+
+  if (!userId) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    userId = user?.id;
+  }
+
+  if (!userId) throw new Error("Keine aktive Sitzung gefunden.");
+  return userId;
 }

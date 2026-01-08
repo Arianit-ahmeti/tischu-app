@@ -1,5 +1,5 @@
 import { AnimalCard, FilterModal, IconButton, RowView, ThemedText } from "@components";
-import { getAnimalMediaDownloadURls } from "@lib/AnimalMediaService";
+import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
 import { fetchAnimalsForList } from "@lib/animalService";
 import { FlashList } from "@shopify/flash-list";
 import { theme } from "@theme";
@@ -12,7 +12,7 @@ import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context"
 export default function AnimalList() {
   const { width } = useWindowDimensions();
   const insets = useSafeAreaInsets();
-  const numColumns = Math.max(1, Math.floor(width / 200));
+  const numColumns = Math.max(1, Math.floor(width / 180));
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [previewImage, setPreviewImage] = useState<Record<string, string>>({});
   const [imageLoading, setImageLoading] = useState(true);
@@ -26,7 +26,7 @@ export default function AnimalList() {
     for (const animal of data ?? []) {
       setImageLoading(true);
       try {
-        const urls = await getAnimalMediaDownloadURls(animal.id);
+        const urls = await getAnimalMediaDownloadURLs(animal.id);
         if (urls.length > 0) {
           previewMap[animal.id] = urls[0];
         }
@@ -113,7 +113,7 @@ export default function AnimalList() {
 
   return (
     <SafeAreaView style={styles.view}>
-      <Stack.Screen options={{ headerRight: () => listHeader(), title: headertext, headerShown: true }} />
+      <Stack.Screen options={{ headerRight: () => listHeader(), title: headertext }} />
       {modalVisibility && (
         <FilterModal
           closeModal={() => setModalVisibility(false)}

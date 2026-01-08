@@ -2,7 +2,7 @@ import { AlertDialog, SelectableButton, ThemedButton, ThemedText } from "@compon
 import { ImageCarousel } from "@components/ImageCarousel";
 import { ThemedTextInput } from "@components/ThemedTextInput";
 import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
-import { getAnimalMediaDownloadURls, selectImages, uploadLocalImages } from "@lib/AnimalMediaService";
+import { getAnimalMediaDownloadURLs, selectImages, uploadLocalImages } from "@lib/animalMediaService";
 import { addAnimal, fetchAnimalDetails, updateAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
 import { Animal } from "@lib/types";
@@ -57,7 +57,7 @@ export default function AddEditAnimal() {
 
   async function fetchImages() {
     try {
-      const urls = await getAnimalMediaDownloadURls(animalId);
+      const urls = await getAnimalMediaDownloadURLs(animalId);
       setImageUrls(urls);
       setOriginalImageUrls(urls);
     } catch (error) {
@@ -88,32 +88,33 @@ export default function AddEditAnimal() {
         router.back();
         return;
       } else if (animalChanged) {
-        const updated = await updateAnimal(animal as Animal);
-        if (!updated) {
+        try {
+          await updateAnimal(animal);
+        } catch (error) {
           Alert.alert(ERROR_MESSAGES.ERROR, ERROR_MESSAGES.ANIMAL_UPDATE_FAILED);
           setSaving(false);
           return;
         }
       }
     } else {
-      const newAnimal = await addAnimal({
-        name: animal.name || "",
-        age: animal.age,
-        origin: animal.origin || "",
-        type: animal.type,
-        size: animal.size,
-        sex: animal.sex,
-        character: animal.character,
-        status: "open",
-      });
+      try {
+        const newAnimal = await addAnimal({
+          name: animal.name || "",
+          age: animal.age,
+          origin: animal.origin || "",
+          type: animal.type,
+          size: animal.size,
+          sex: animal.sex,
+          character: animal.character,
+          status: "open",
+        });
 
-      if (!newAnimal || !newAnimal.id) {
+        animalId = newAnimal.id;
+      } catch (error) {
         Alert.alert(ERROR_MESSAGES.ERROR, ERROR_MESSAGES.ANIMAL_UPDATE_FAILED);
         setSaving(false);
         return;
       }
-
-      animalId = newAnimal.id;
     }
 
     const newImageUris = imageUrls.filter((uri) => !originalImageUrls.includes(uri));

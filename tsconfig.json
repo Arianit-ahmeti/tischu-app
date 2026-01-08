@@ -8,7 +8,6 @@
       "@lib/*": ["lib/*"],
       "@components/*": ["components/*"],
       "@components": ["components"],
-      "@constants": ["constants"],
       "@app/*": ["app/*"],
       "@types": ["lib/types"],
       "@hooks/*": ["hooks/*"],
