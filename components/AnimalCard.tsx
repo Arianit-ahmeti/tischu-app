@@ -54,13 +54,13 @@ export const AnimalCard: React.FC<AnimalCardProps> = (props) => {
       <View style={styles.card}>
         <CardImg />
         <View style={styles.itemBox}>
-          <ThemedText variant="h4" color={theme.colors.text.light}>
+          <ThemedText variant="h4" color={theme.colors.text.light} style={styles.name}>
             {props.animal.name}
           </ThemedText>
-          <ThemedText variant="bodySmall" color={theme.colors.brand.secondary}>
+          <ThemedText variant="bodySmall" color={theme.colors.brand.secondary} style={styles.origin}>
             {props.animal.origin}
           </ThemedText>
-          <ThemedText variant="bodySmall" color={theme.colors.text.light}>
+          <ThemedText variant="h4" color={theme.colors.text.light} style={styles.age}>
             {props.animal.age} Jahre
           </ThemedText>
         </View>
@@ -99,5 +99,17 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingBottom: 5,
     justifyContent: "center",
+  },
+  name: {
+    marginBottom: 2,
+    fontWeight: 700,
+  },
+  origin: {
+    fontSize: 13,
+    marginBottom: 5,
+  },
+  age: {
+    fontSize: 13,
+    fontWeight: 600,
   },
 });

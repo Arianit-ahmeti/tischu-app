@@ -106,7 +106,7 @@ export default function AnimalDetailScreen() {
           <ThemedText style={styles.name} variant="h1" color={theme.colors.brand.primary}>
             {animal.name}
           </ThemedText>
-          <ThemedText variant="bodySmall" color={theme.colors.brand.secondary}>
+          <ThemedText style={styles.gap} variant="body" color={theme.colors.brand.secondary}>
             {animal.origin}
           </ThemedText>
           <View style={styles.buttons}>
@@ -152,33 +152,32 @@ export default function AnimalDetailScreen() {
         </View>
 
         <View style={styles.row}>
-          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            Geschlecht
+          <ThemedText variant="body" color={theme.colors.brand.secondary} style={styles.label}>
+            GESCHLECHT
           </ThemedText>
           <ThemedText>{animal.sex}</ThemedText>
         </View>
         <View style={styles.row}>
-          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            Alter
+          <ThemedText variant="body" color={theme.colors.brand.secondary} style={styles.label}>
+            ALTER
           </ThemedText>
           <ThemedText>{animal.age || "Unbekannt"}</ThemedText>
         </View>
         <View style={styles.row}>
-          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            Größe
+          <ThemedText variant="body" color={theme.colors.brand.secondary} style={styles.label}>
+            GRÖSSE
           </ThemedText>
           <Chip text={animal.size || "Unbekannt"} />
         </View>
         <View style={styles.row}>
-          <ThemedText variant="badge" color={theme.colors.brand.secondary}>
-            Charakter
+          <ThemedText variant="body" color={theme.colors.brand.secondary} style={styles.label}>
+            CHARAKTER
           </ThemedText>
           <Chip text={animal.character || "Unbekannt"} />
         </View>
         <View style={styles.description}>
           <ThemedText variant="body"> Hier kann ihr Text stehen!</ThemedText>
         </View>
-
         <ThemedButton>Jetzt Bewerben</ThemedButton>
       </View>
     </View>
@@ -193,12 +192,15 @@ const styles = StyleSheet.create({
     paddingBottom: 15,
     alignItems: "center",
   },
+  label: {
+    width: 120,
+  },
   root: { flex: 1 },
   imageContainer: { height: 250 },
   header: { paddingBottom: 20 },
   container: { padding: 20, flex: 1 },
   center: { flex: 1, justifyContent: "center", alignItems: "center" },
-  name: { fontSize: 28, fontWeight: "bold" },
+  name: { marginBottom: 5 },
   buttons: {
     position: "absolute",
     flexDirection: "column",
@@ -209,5 +211,8 @@ const styles = StyleSheet.create({
     padding: 5,
     marginBottom: 10,
     alignItems: "center",
+  },
+  gap: {
+    marginBottom: 8,
   },
 });
