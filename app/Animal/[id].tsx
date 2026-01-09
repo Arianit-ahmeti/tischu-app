@@ -1,8 +1,9 @@
 import { Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
+import { useFavorite } from "@hooks/useFavorite";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
-import { addFavorite, deleteAnimal, fetchAnimalDetails, isFavorite, removeFavorite } from "@lib/animalService";
+import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { theme } from "@theme";
 import { Animal } from "@types";
@@ -18,9 +19,10 @@ export default function AnimalDetailScreen() {
   const { session, isLoading: sessionLoading } = useSupabaseSession();
 
   const [animal, setAnimal] = useState<Animal | null>(null);
-  const [isFavoriteAnimal, setIsFavorite] = useState(false);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+
+  const { isFavoriteAnimal, changeIcon } = useFavorite(animalId);
 
   async function loadAnimal() {
     try {
@@ -33,18 +35,6 @@ export default function AnimalDetailScreen() {
       }
     } catch (error) {
       console.error("Error fetching animal images", error);
-    }
-  }
-
-  async function loadFavoriteStatus() {
-    if (session?.user.id) {
-      try {
-        await isFavorite(animalId, session.user.id)
-          .then(setIsFavorite)
-          .catch((e) => Alert.alert("Error fetching favorite details"));
-      } catch (error) {
-        console.error("Error fetching favorite status", error);
-      }
     }
   }
 
@@ -71,12 +61,6 @@ export default function AnimalDetailScreen() {
 
     fetchData();
   }, [animalId]);
-
-  useEffect(() => {
-    if (!sessionLoading && session?.user.id && animalId) {
-      loadFavoriteStatus();
-    }
-  }, [sessionLoading, session?.user.id, animalId]);
 
   if (loading || sessionLoading) {
     return (
@@ -116,9 +100,7 @@ export default function AnimalDetailScreen() {
               iconSet="MaterialIcons"
               iconColor={theme.colors.brand.focus}
               onPress={() => {
-                isFavoriteAnimal
-                  ? removeFavorite(animalId, userID).then(() => setIsFavorite(false))
-                  : addFavorite(animalId, userID).then(() => setIsFavorite(true));
+                changeIcon();
               }}
             />
             <IconButton
