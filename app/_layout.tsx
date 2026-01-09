@@ -32,7 +32,7 @@ export default function RootLayout() {
         <Stack.Screen name="Animal/[id]" options={{ title: "Tierprofil" }} />
         <Stack.Screen name="AddEdit/Edit" options={{ title: "Tier bearbeiten" }} />
         <Stack.Screen name="AddEdit/Add" options={{ title: "Tier hinzufügen" }} />
-        <Stack.Screen name="Organization/Profile" options={{ title: "Vereinsprofil" }} />
+        <Stack.Screen name="Organization/Profile" options={{ title: "Mein Profil" }} />
         <Stack.Screen name="Organization/SignUp" options={{ title: "Organisation Registrierung" }} />
         <Stack.Screen name="Organization/Edit" options={{ title: "Vereinsdaten bearbeiten" }} />
         <Stack.Screen name="Organization/Verification" options={{ title: "Verein verifizieren" }} />

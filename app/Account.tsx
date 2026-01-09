@@ -119,7 +119,7 @@ export default function Account() {
         <ThemedButton onPress={() => router.navigate("/ProfileScreen")}>Meine Daten anzeigen</ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Profile</ThemedButton>
+        <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Mein Profil</ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
