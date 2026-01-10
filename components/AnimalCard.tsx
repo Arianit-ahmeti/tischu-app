@@ -11,11 +11,19 @@ interface AnimalCardProps {
   animal: Animal;
   previewImage?: string;
   doneLoading: boolean;
+  onFavoriteChange?: () => void;
 }
 
 export const AnimalCard: React.FC<AnimalCardProps> = (props) => {
   const router = useRouter();
   const { isFavoriteAnimal, changeIcon } = useFavorite(props.animal.id);
+
+  const handleFavoritePress = async () => {
+    await changeIcon();
+    if (props.onFavoriteChange) {
+      props.onFavoriteChange();
+    }
+  };
 
   function CardImg() {
     if (props.previewImage) {
@@ -73,7 +81,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = (props) => {
               iconSet="MaterialIcons"
               iconColor={theme.colors.brand.focus}
               onPress={() => {
-                changeIcon();
+                handleFavoritePress();
               }}
             />
           </View>
