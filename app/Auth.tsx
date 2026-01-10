@@ -2,7 +2,8 @@ import { ThemedButton } from "@components/ThemedButton";
 import { supabase } from "@lib/supabase";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, AppState, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, AppState, Image, ScrollView, StyleSheet, View } from "react-native";
+import { ThemedText, ThemedTextInput } from "../components";
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
@@ -45,38 +46,43 @@ export default function Auth() {
   }
 
   return (
-    <View style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Text>Email</Text>
-        <TextInput
+    <ScrollView style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image source={require("../assets/tischu-logo.png")} style={styles.logo} resizeMode="contain" />
+      </View>
+      <View style={[styles.center]}>
+        <ThemedText variant="h3">E-Mail-Adresse</ThemedText>
+        <ThemedTextInput
           onChangeText={(text) => setEmail(text)}
           value={email}
-          placeholder="email@address.com"
+          placeholder="E-Mail Adresse eingeben"
           autoCapitalize={"none"}
         />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Text>Password</Text>
-        <TextInput
+        <ThemedText variant="h3">Passwort</ThemedText>
+        <ThemedTextInput
           onChangeText={(text) => setPassword(text)}
           value={password}
           secureTextEntry={true}
-          placeholder="Password"
+          placeholder="Passwort eingeben"
           autoCapitalize={"none"}
         />
       </View>
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
+        <ThemedButton disabled={loading} onPress={() => signInWithEmail()}>
+          EINLOGGEN
+        </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
+        <ThemedButton disabled={loading} onPress={() => signUpWithEmail()}>
+          ALS NUTZER REGISTRIEREN
+        </ThemedButton>
       </View>
       <View style={[styles.verticallySpaced]}>
         <ThemedButton disabled={loading} onPress={() => router.navigate("/Organization/SignUp")}>
-          Organization Sign up
+          ALS ORGANISATION REGISTRIEREN
         </ThemedButton>
       </View>
-    </View>
+    </ScrollView>
   );
 }
 
@@ -85,6 +91,15 @@ const styles = StyleSheet.create({
     marginTop: 40,
     padding: 12,
   },
+  logoContainer: {
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 30,
+  },
+  logo: {
+    width: 200,
+    height: 100,
+  },
   verticallySpaced: {
     paddingTop: 4,
     paddingBottom: 4,
@@ -92,5 +107,11 @@ const styles = StyleSheet.create({
   },
   mt20: {
     marginTop: 20,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
   },
 });
