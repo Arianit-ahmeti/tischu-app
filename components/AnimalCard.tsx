@@ -1,3 +1,5 @@
+import { IconButton } from "@components/IconButton";
+import { useFavorite } from "@hooks/useFavorite";
 import { Animal } from "@lib/types";
 import { theme } from "@theme";
 import { useRouter } from "expo-router";
@@ -13,6 +15,7 @@ interface AnimalCardProps {
 
 export const AnimalCard: React.FC<AnimalCardProps> = (props) => {
   const router = useRouter();
+  const { isFavoriteAnimal, changeIcon } = useFavorite(props.animal.id);
 
   function CardImg() {
     if (props.previewImage) {
@@ -63,6 +66,17 @@ export const AnimalCard: React.FC<AnimalCardProps> = (props) => {
           <ThemedText variant="bodySmall" color={theme.colors.text.light}>
             {props.animal.age} Jahre
           </ThemedText>
+          <View style={styles.buttons}>
+            <IconButton
+              size={26}
+              iconName={isFavoriteAnimal ? "favorite" : "favorite-border"}
+              iconSet="MaterialIcons"
+              iconColor={theme.colors.brand.focus}
+              onPress={() => {
+                changeIcon();
+              }}
+            />
+          </View>
         </View>
       </View>
     </Pressable>
@@ -99,5 +113,11 @@ const styles = StyleSheet.create({
     paddingHorizontal: 15,
     paddingBottom: 5,
     justifyContent: "center",
+  },
+  buttons: {
+    position: "absolute",
+    flexDirection: "column",
+    alignSelf: "flex-end",
+    marginTop: 40,
   },
 });

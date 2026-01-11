@@ -91,7 +91,7 @@ export default function ProfileScreen() {
       <View style={styles.header}>
         <BackButton />
         <ThemedText variant="h2" color={theme.colors.text.dark}>
-          Meine Daten
+          Accountdaten
         </ThemedText>
         <Pressable style={styles.editButton} onPress={handleEdit}>
           <ThemedText variant="badge" color={theme.colors.text.dark} style={styles.editButtonText}>
