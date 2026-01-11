@@ -6,7 +6,7 @@ import { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, View } from "react-native";
 
 export default function Account() {
-  const { session, isLoading: isSessionLoading } = useSupabaseSession();
+  const { session, type, isLoading: isSessionLoading } = useSupabaseSession();
   const [loading, setLoading] = useState(true);
   const [username, setUsername] = useState("");
 
@@ -108,25 +108,26 @@ export default function Account() {
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={handleSignOut}>Sign Out</ThemedButton>
       </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/AddEdit/Add")}>Add Animal</ThemedButton>
-      </View>
 
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/AnimalList")}>Show AnimalList</ThemedButton>
-      </View>
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={() => router.navigate("/ProfileScreen")}>Accountdaten</ThemedButton>
       </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Mein Profil</ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>Jetzt verifizieren</ThemedButton>
-      </View>
+
+      {type == "organization" && (
+        <>
+          <View style={styles.verticallySpaced}>
+            <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Mein Profil</ThemedButton>
+          </View>
+          <View style={styles.verticallySpaced}>
+            <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
+          </View>
+          <View style={styles.verticallySpaced}>
+            <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>
+              Jetzt verifizieren
+            </ThemedButton>
+          </View>
+        </>
+      )}
     </ScrollView>
   );
 }
