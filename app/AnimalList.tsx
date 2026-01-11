@@ -7,11 +7,10 @@ import type { Animal, AnimalFilters } from "@types";
 import { Stack, useFocusEffect } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, useWindowDimensions, View } from "react-native";
-import { SafeAreaView, useSafeAreaInsets } from "react-native-safe-area-context";
+import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AnimalList() {
   const { width } = useWindowDimensions();
-  const insets = useSafeAreaInsets();
   const numColumns = Math.max(1, Math.floor(width / 180));
   const [animals, setAnimals] = useState<Animal[]>([]);
   const [previewImage, setPreviewImage] = useState<Record<string, string>>({});
@@ -84,15 +83,14 @@ export default function AnimalList() {
   } else {
     headertext = "All " + filter.type + "s";
   }
-  let insetTop = insets.top;
 
   function listHeader() {
     return (
-      <RowView style={[styles.buttonArea, { paddingTop: insetTop }]}>
+      <RowView style={[styles.buttonArea, { paddingHorizontal: 8 }]}>
         <IconButton
           iconSet="Feather"
           iconName="sliders"
-          size={24}
+          size={20}
           iconColor={theme.colors.brand.primary}
           backgroundColor={theme.colors.background.warm}
           onPress={() => setModalVisibility(!modalVisibility)}
@@ -101,7 +99,7 @@ export default function AnimalList() {
         <IconButton
           iconSet="Feather"
           iconName="search"
-          size={24}
+          size={20}
           iconColor={theme.colors.text.inverted}
           backgroundColor={theme.colors.brand.secondary}
           onPress={() => {}}
@@ -113,7 +111,7 @@ export default function AnimalList() {
 
   return (
     <SafeAreaView style={styles.view}>
-      <Stack.Screen options={{ headerRight: () => listHeader(), title: headertext }} />
+      <Stack.Screen options={{ headerRight: listHeader, title: headertext, headerShown: true }} />
       {modalVisibility && (
         <FilterModal
           closeModal={() => setModalVisibility(false)}
