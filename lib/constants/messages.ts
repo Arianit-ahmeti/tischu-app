@@ -27,7 +27,7 @@ export const SUCCESS_MESSAGES = {
   ANIMAL_UPDATED: "Tier wurde aktualisiert!",
   ANIMAL_CREATED: "Tier wurde hinzugefügt!",
   USER_CONTACT_SAVED: "Kontaktdaten des Nutzers wurde gespeichert!",
-  USER_CONTACT_UPDATED: "Kontaktdatendes Nutzers wurden aktualisiert!",
+  USER_CONTACT_UPDATED: "Kontaktdaten des Nutzers wurden aktualisiert!",
   USER_SITUATION_SAVED: "Adoptionsformular des Nutzers wurde gespeichert!",
   ADOPTION_CONTACT_SAVED: "Adoptionsanfrage wurde gesendet!",
 } as const;

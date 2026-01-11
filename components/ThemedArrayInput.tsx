@@ -5,39 +5,44 @@ import { RowView } from "./RowView";
 import { ThemedTextInput } from "./ThemedTextInput";
 
 interface ThemedArrayInputProps {
-  data: any[] | null | undefined;
+  data: any[];
   labels: string;
   keyboardType?: KeyboardType;
   onChange: (text: any[]) => void;
   singleRow?: boolean;
 }
-export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = false, ...props }) => {
+export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = false, data = [""], ...props }) => {
   let label = props.labels;
-  const data =
-    props.data instanceof Array
-      ? props.data
-      : props.keyboardType == "numeric" || props.keyboardType == "number-pad"
-        ? []
-        : [""];
-  if (data != props.data) props.onChange(data);
+  if (data.length == 0) props.onChange([""]);
 
-  function InputFields() {
+  function changeAt(index: number, newText: any) {
+    const newData = data.map((old, i) => {
+      if (i === index) {
+        return newText;
+      } else {
+        return old;
+      }
+    });
+    props.onChange(newData);
+  }
+
+  const render = () => {
     if (singleRow.valueOf() == false) {
       return (
         <View>
-          {data.map((text, index) => {
+          {data.map((val, index) => {
             let count = index + 1;
-            let value = text instanceof String ? text : text.toString();
+            let text = val instanceof String ? val : val.toString();
             return (
               <RowView key={"r" + index} style={styles.row}>
                 <ColumnView style={styles.flex}>
                   <ThemedTextInput
-                    value={value}
+                    value={text}
                     key={"Input" + index}
                     onChangeText={(text) => {
-                      data[index] = text;
-                      props.onChange(data);
+                      changeAt(index, text);
                     }}
+                    keyboardType={props.keyboardType}
                     placeholder={label + " " + count}
                   />
                 </ColumnView>
@@ -61,18 +66,19 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
     } else
       return (
         <ScrollView key={"row"} contentContainerStyle={styles.row} horizontal={true}>
-          {data.map((text, index) => {
+          {data.map((val, index) => {
             let count = index + 1;
-            let value = text instanceof String ? text : text.toString();
+            let text = val instanceof String ? val : val.toString();
+
             return (
               <ColumnView key={"col" + index} style={styles.flex && styles.rowField}>
                 <ThemedTextInput
-                  value={value}
+                  value={text}
                   key={"Input" + index}
                   onChangeText={(text) => {
-                    data[index] = text;
-                    props.onChange(data);
+                    changeAt(index, text);
                   }}
+                  keyboardType={props.keyboardType}
                   placeholder={label + " " + count}
                 />
               </ColumnView>
@@ -92,19 +98,18 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
           </ColumnView>
         </ScrollView>
       );
-  }
+  };
 
   return (
     <View>
-      <InputFields />
+      {render()}
       <RowView>
         <IconButton
           key="Add"
           iconName="plus-circle"
           iconSet="Feather"
           onPress={() => {
-            data.push("");
-            props.onChange(data);
+            props.onChange([...data, ""]);
           }}
         />
       </RowView>
@@ -115,5 +120,5 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
 const styles = StyleSheet.create({
   flex: { flex: 1 },
   row: { flexDirection: "row", justifyContent: "space-between" },
-  rowField: { marginHorizontal: 5 },
+  rowField: { marginHorizontal: 5, minWidth: 30 },
 });

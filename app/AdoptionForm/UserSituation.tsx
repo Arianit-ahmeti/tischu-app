@@ -34,14 +34,14 @@ export default function AdoptionFormUserSituation() {
     household_size: null,
     children: null,
     children_ages: null,
-    current_animals: null,
+    current_animals: [""],
     moving_plans: null,
     elevator: null,
     time_alone: null,
     financial_situation: null,
     living_rented: null,
     living_house: null,
-    past_animals: null,
+    past_animals: [""],
     garden_size: null,
     garden_fenced: null,
     landlord_approval: null,
@@ -91,10 +91,12 @@ export default function AdoptionFormUserSituation() {
 
   async function handleSave() {
     setSaving(true);
+    situation.children_ages?.map((text) => Number(text));
     let form;
     try {
       let savedData = await saveUserSituation(situation);
-      form = await saveAdoptionContact(userId, savedData.form_id, animalId);
+      if (savedData) form = await saveAdoptionContact(userId, savedData.form_id, animalId);
+      else throw new Error(ERROR_MESSAGES.USER_SITUATION_SAVE_FAILED);
     } catch (error) {
       console.error(error);
     }
@@ -183,7 +185,7 @@ export default function AdoptionFormUserSituation() {
                 )}
                 {situation.experience != "one" && (
                   <ThemedArrayInput
-                    data={situation.past_animals}
+                    data={situation.past_animals as string[]}
                     labels="Tier"
                     onChange={(text) => setSituation({ ...situation, past_animals: text })}
                   />
@@ -225,8 +227,9 @@ export default function AdoptionFormUserSituation() {
                   <View>
                     <ThemedText variant="h3">Wie alt sind die Kinder?</ThemedText>
                     <ThemedArrayInput
-                      data={situation.children_ages}
+                      data={situation.children_ages || []}
                       labels="Kind"
+                      keyboardType="numeric"
                       onChange={(text) => setSituation({ ...situation, children_ages: text })}
                       singleRow={true}
                     />
@@ -263,7 +266,7 @@ export default function AdoptionFormUserSituation() {
                   Ihnen? Weitere Informationen?
                 </ThemedText>
                 <ThemedArrayInput
-                  data={situation.current_animals}
+                  data={situation.current_animals as string[]}
                   labels="Tier"
                   onChange={(text) => setSituation({ ...situation, current_animals: text })}
                 />

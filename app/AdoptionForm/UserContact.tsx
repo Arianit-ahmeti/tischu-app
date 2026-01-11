@@ -1,13 +1,13 @@
 import { AlertDialog, ColumnView, RowView, ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { checkForForm, loadUserContacts, saveUserContacts, updateUserContacts } from "@lib/adoptionService";
-import { supabase } from "@lib/supabase";
 import { UserContact } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../lib/constants/messages";
+import { getCurrentUserId } from "../../lib/userService";
 
 export default function AdoptionFormUserContact() {
   const router = useRouter();
@@ -40,9 +40,9 @@ export default function AdoptionFormUserContact() {
       try {
         if (!session?.user) throw new Error(ERROR_MESSAGES.NO_USER_ON_SESSION);
 
-        const userData = await supabase.auth.getUser();
-        if (userData.data.user) {
-          setUserId(userData.data.user.id);
+        const data = await getCurrentUserId();
+        if (data) {
+          setUserId(data);
         } else {
           throw new Error(ERROR_MESSAGES.USER_NOT_FOUND);
         }
