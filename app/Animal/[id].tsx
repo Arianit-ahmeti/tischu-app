@@ -102,8 +102,7 @@ export default function AnimalDetailScreen() {
               iconColor={theme.colors.brand.focus}
               disabled={userID == null}
               onPress={() => {
-                if (userID != null)
-                   changeIcon();
+                if (userID != null) changeIcon();
               }}
             />
 
