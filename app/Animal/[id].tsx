@@ -16,7 +16,7 @@ export default function AnimalDetailScreen() {
   const router = useRouter();
   const animalId = Array.isArray(id) ? id[0] : id;
 
-  const { session, isLoading: sessionLoading } = useSupabaseSession();
+  const { session, type, isLoading: sessionLoading } = useSupabaseSession();
 
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -103,33 +103,37 @@ export default function AnimalDetailScreen() {
                 changeIcon();
               }}
             />
-            <IconButton
-              size={30}
-              iconName="edit"
-              iconSet="AntDesign"
-              onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)}
-            />
-            <IconButton
-              iconSet="Ionicons"
-              iconName="trash"
-              size={30}
-              onPress={() => {
-                Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
-                  {
-                    text: "Abbrechen",
-                    style: "cancel",
-                  },
-                  {
-                    text: "Löschen",
-                    style: "destructive",
-                    onPress: async () => {
-                      await deleteAnimal(animalId as string);
-                      router.back();
-                    },
-                  },
-                ]);
-              }}
-            />
+            {type == "organization" && (
+              <>
+                <IconButton
+                  size={30}
+                  iconName="edit"
+                  iconSet="AntDesign"
+                  onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)}
+                />
+                <IconButton
+                  iconSet="Ionicons"
+                  iconName="trash"
+                  size={30}
+                  onPress={() => {
+                    Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
+                      {
+                        text: "Abbrechen",
+                        style: "cancel",
+                      },
+                      {
+                        text: "Löschen",
+                        style: "destructive",
+                        onPress: async () => {
+                          await deleteAnimal(animalId as string);
+                          router.back();
+                        },
+                      },
+                    ]);
+                  }}
+                />
+              </>
+            )}
           </View>
         </View>
 
