@@ -1,6 +1,6 @@
 import { theme } from "@theme";
 import React from "react";
-import { Pressable, PressableProps, StyleSheet } from "react-native";
+import { Pressable, PressableProps, StyleSheet, TextStyle } from "react-native";
 import { ThemedText } from "./ThemedText";
 
 interface ButtonProps extends PressableProps {
@@ -9,6 +9,7 @@ interface ButtonProps extends PressableProps {
   backgroundColor?: string;
   textColor?: string;
   disabledTextColor?: string;
+  textStyle?: TextStyle;
 }
 
 export const ThemedButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
@@ -19,6 +20,7 @@ export const ThemedButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
   disabledTextColor = theme.colors.text.muted,
   children,
   disabled,
+  textStyle,
   ...props
 }) => {
   let finalBackgroundColor = backgroundColor;
@@ -39,7 +41,7 @@ export const ThemedButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 
   const content =
     typeof children === "string" ? (
-      <ThemedText variant="buttonPrimary" color={finalTextColor}>
+      <ThemedText variant="buttonPrimary" style={textStyle} color={finalTextColor}>
         {children}
       </ThemedText>
     ) : (
