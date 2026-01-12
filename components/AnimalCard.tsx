@@ -12,10 +12,12 @@ type AnimalCardType = "grid" | "list";
 
 interface AnimalCardProps {
   animal: Animal;
+  previewImage?: string;
+  onFavoriteChange?: () => void;
   variant?: AnimalCardType;
 }
 
-export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid" }) => {
+export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid", ...props }) => {
   const router = useRouter();
   const { isFavoriteAnimal, changeIcon } = useFavorite(animal.id);
 
@@ -44,6 +46,13 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
     };
   }, [animal.id]);
 
+  const handleFavoritePress = async () => {
+    await changeIcon();
+    if (props.onFavoriteChange) {
+      props.onFavoriteChange();
+    }
+  };
+
   function CardImg() {
     if (imagesLoading) {
       return (
@@ -69,8 +78,8 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
 
     return (
       <View style={[styles.noImage, variant === "list" && styles.listNoImage]}>
-        <ThemedText variant="h4" color={theme.colors.text.muted}>
-          No Image
+        <ThemedText style={styles.text} variant="h4" color={theme.colors.text.muted}>
+          Kein Bild verfügbar
         </ThemedText>
       </View>
     );
@@ -90,13 +99,13 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
       <View style={[styles.card, isList ? styles.listCard : styles.gridCard]}>
         <CardImg />
         <View style={[styles.itemBox, isList && styles.listItemBox]}>
-          <ThemedText variant="h4" color={theme.colors.text.light}>
+          <ThemedText variant="h4" color={theme.colors.text.light} style={styles.name}>
             {animal.name}
           </ThemedText>
-          <ThemedText variant="body" color={theme.colors.brand.secondary}>
+          <ThemedText variant="bodySmall" color={theme.colors.brand.secondary} style={styles.origin}>
             {animal.origin}
           </ThemedText>
-          <ThemedText variant="body" color={theme.colors.text.light}>
+          <ThemedText variant="h4" color={theme.colors.text.light} style={styles.age}>
             {animal.age} Jahre
           </ThemedText>
           <View style={styles.buttons}>
@@ -106,7 +115,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
               iconSet="MaterialIcons"
               iconColor={theme.colors.brand.focus}
               onPress={() => {
-                changeIcon();
+                handleFavoritePress();
               }}
             />
           </View>
@@ -157,6 +166,9 @@ const styles = StyleSheet.create({
     height: 140,
     width: 140,
   },
+  text: {
+    textAlign: "center",
+  },
   itemBox: {
     flex: 1,
     paddingHorizontal: 15,
@@ -169,6 +181,19 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 0,
     paddingBottom: 0,
+  },
+  name: {
+    marginBottom: 2,
+    fontWeight: "semibold",
+    fontFamily: "Inter",
+  },
+  origin: {
+    fontSize: 13,
+    marginBottom: 5,
+  },
+  age: {
+    fontSize: 13,
+    fontWeight: "600",
   },
   buttons: {
     position: "absolute",

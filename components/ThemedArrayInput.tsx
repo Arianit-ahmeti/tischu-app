@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { KeyboardType, ScrollView, StyleSheet, View } from "react-native";
 import { ColumnView } from "./ColumnView";
 import { IconButton } from "./IconButton";
@@ -13,7 +14,16 @@ interface ThemedArrayInputProps {
 }
 export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = false, data = [""], ...props }) => {
   let label = props.labels;
-  if (data.length == 0) props.onChange([""]);
+  useEffect(() => {
+    if (!data || data.length === 0) {
+      props.onChange([""]);
+    }
+  }, [data?.length]);
+
+  function deleteAt(index: number) {
+    let newData = data.filter((_, i) => i !== index);
+    props.onChange(newData);
+  }
 
   function changeAt(index: number, newText: any) {
     const newData = data.map((old, i) => {
@@ -32,7 +42,7 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
         <View>
           {data.map((val, index) => {
             let count = index + 1;
-            let text = val instanceof String ? val : val.toString();
+            const text = val?.toString() ?? "";
             return (
               <RowView key={"r" + index} style={styles.row}>
                 <ColumnView style={styles.flex}>
@@ -53,8 +63,7 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
                     iconName="minus-circle"
                     iconSet="Feather"
                     onPress={() => {
-                      data.splice(index, 1);
-                      props.onChange(data);
+                      deleteAt(index);
                     }}
                   />
                 </ColumnView>
@@ -68,7 +77,7 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
         <ScrollView key={"row"} contentContainerStyle={styles.row} horizontal={true}>
           {data.map((val, index) => {
             let count = index + 1;
-            let text = val instanceof String ? val : val.toString();
+            const text = val?.toString() ?? "";
 
             return (
               <ColumnView key={"col" + index} style={styles.flex && styles.rowField}>
@@ -91,8 +100,7 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
               iconName="minus-circle"
               iconSet="Feather"
               onPress={() => {
-                data.pop();
-                props.onChange(data);
+                deleteAt(data.length - 1);
               }}
             />
           </ColumnView>
