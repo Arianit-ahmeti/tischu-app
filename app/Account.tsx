@@ -132,7 +132,9 @@ export default function Account() {
             </>
           )}
           <View style={styles.button}>
-            <ThemedButton onPress={handleSignOut}>Abmelden</ThemedButton>
+            <ThemedButton variant="text" onPress={handleSignOut}>
+              Abmelden
+            </ThemedButton>
           </View>
         </View>
       </View>
