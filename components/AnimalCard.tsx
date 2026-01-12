@@ -13,12 +13,11 @@ type AnimalCardType = "grid" | "list";
 interface AnimalCardProps {
   animal: Animal;
   previewImage?: string;
-  doneLoading: boolean;
   onFavoriteChange?: () => void;
   variant?: AnimalCardType;
 }
 
-export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid" }) => {
+export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid", onFavoriteChange }) => {
   const router = useRouter();
   const { isFavoriteAnimal, changeIcon } = useFavorite(animal.id);
 
@@ -49,8 +48,8 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
 
   const handleFavoritePress = async () => {
     await changeIcon();
-    if (props.onFavoriteChange) {
-      props.onFavoriteChange();
+    if (onFavoriteChange) {
+      onFavoriteChange();
     }
   };
 
@@ -100,13 +99,13 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
       <View style={[styles.card, isList ? styles.listCard : styles.gridCard]}>
         <CardImg />
         <View style={[styles.itemBox, isList && styles.listItemBox]}>
-          <ThemedText variant="h4" color={theme.colors.text.light}>
+          <ThemedText variant="h4" color={theme.colors.text.light} style={styles.name}>
             {animal.name}
           </ThemedText>
-          <ThemedText variant="body" color={theme.colors.brand.secondary}>
+          <ThemedText variant="bodySmall" color={theme.colors.brand.secondary} style={styles.origin}>
             {animal.origin}
           </ThemedText>
-          <ThemedText variant="body" color={theme.colors.text.light}>
+          <ThemedText variant="h4" color={theme.colors.text.light} style={styles.age}>
             {animal.age} Jahre
           </ThemedText>
           <View style={styles.buttons}>
@@ -179,6 +178,19 @@ const styles = StyleSheet.create({
     gap: 4,
     paddingHorizontal: 0,
     paddingBottom: 0,
+  },
+  name: {
+    marginBottom: 2,
+    fontWeight: "semibold",
+    fontFamily: "Inter",
+  },
+  origin: {
+    fontSize: 13,
+    marginBottom: 5,
+  },
+  age: {
+    fontSize: 13,
+    fontWeight: "600",
   },
   buttons: {
     position: "absolute",
