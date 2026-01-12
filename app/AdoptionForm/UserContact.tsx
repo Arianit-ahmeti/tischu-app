@@ -1,4 +1,4 @@
-import { AlertDialog, ColumnView, RowView, ThemedButton, ThemedText, ThemedTextInput } from "@components";
+import { ColumnView, RowView, ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { checkForForm, loadUserContacts, saveUserContacts, updateUserContacts } from "@lib/adoptionService";
 import { UserContact } from "@types";
@@ -6,7 +6,7 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "../../lib/constants/messages";
+import { ERROR_MESSAGES } from "../../lib/constants/messages";
 import { getCurrentUserId } from "../../lib/userService";
 
 export default function AdoptionFormUserContact() {
@@ -15,7 +15,6 @@ export default function AdoptionFormUserContact() {
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(String);
   const [animalId, setAnimalId] = useState(String);
-  const [alertVisible, setAlertVisible] = useState(false);
   const [saving, setSaving] = useState(false);
   const [prefilledContact, setPrefilledContact] = useState(false);
   const [contacts, setContacts] = useState<UserContact>({
@@ -98,7 +97,6 @@ export default function AdoptionFormUserContact() {
       console.error(error);
     }
 
-    setAlertVisible(true);
     setSaving(false);
   }
 
@@ -125,18 +123,6 @@ export default function AdoptionFormUserContact() {
     return (
       <>
         <SafeAreaView style={styles.baseFlex}>
-          <AlertDialog
-            visible={alertVisible}
-            title={SUCCESS_MESSAGES.SUCCESS}
-            message={SUCCESS_MESSAGES.USER_CONTACT_SAVED}
-            buttons={[
-              {
-                text: "OK",
-              },
-            ]}
-            onDismiss={() => setAlertVisible(false)}
-          />
-
           <ScrollView>
             <ThemedText variant="h3">Name</ThemedText>
             <ThemedTextInput
@@ -145,9 +131,8 @@ export default function AdoptionFormUserContact() {
               placeholder="Vollständiger Name"
             />
 
-            <ThemedText variant="h2">Kontaktinformationen</ThemedText>
             <RowView>
-              <ColumnView style={styles.column}>
+              <ColumnView style={[styles.column, { width: "50%" }]}>
                 <ThemedText variant="h3">E-Mail-Adresse</ThemedText>
                 <ThemedTextInput
                   value={contacts.mail || ""}
@@ -155,20 +140,19 @@ export default function AdoptionFormUserContact() {
                   placeholder="Mail"
                 />
               </ColumnView>
-              <ColumnView style={styles.column}>
+              <ColumnView style={[styles.column, { width: "50%" }]}>
                 <ThemedText variant="h3">Telefonnummer</ThemedText>
                 <ThemedTextInput
                   value={contacts.phone?.toString() || ""}
-                  keyboardType="numeric"
+                  keyboardType="phone-pad"
                   onChangeText={(text) => setContacts({ ...contacts, phone: Number(text) || null })}
                   placeholder="Telefon"
                 />
               </ColumnView>
             </RowView>
 
-            <ThemedText variant="h2">Adresse</ThemedText>
             <RowView>
-              <ColumnView style={styles.column}>
+              <ColumnView style={[styles.column, { width: "50%" }]}>
                 <ThemedText variant="h3">Straße</ThemedText>
                 <ThemedTextInput
                   value={contacts.street || ""}
@@ -176,19 +160,19 @@ export default function AdoptionFormUserContact() {
                   placeholder="Straße"
                 />
               </ColumnView>
-              <ColumnView style={styles.column}>
-                <ThemedText variant="h3">Hausnr.</ThemedText>
+              <ColumnView style={[styles.column, { width: "50%" }]}>
+                <ThemedText variant="h3">Hausnummer</ThemedText>
                 <ThemedTextInput
                   value={contacts.house_nr?.toString() || ""}
                   keyboardType="numeric"
                   onChangeText={(text) => setContacts({ ...contacts, house_nr: parseInt(text) || null })}
-                  placeholder="Hausnr."
+                  placeholder="Hausnummer"
                 />
               </ColumnView>
             </RowView>
 
             <RowView>
-              <ColumnView style={styles.column}>
+              <ColumnView style={[styles.column, { width: "50%" }]}>
                 <ThemedText variant="h3">Postleitzahl</ThemedText>
                 <ThemedTextInput
                   value={contacts.postal_code?.toString() || ""}
@@ -198,7 +182,7 @@ export default function AdoptionFormUserContact() {
                 />
               </ColumnView>
 
-              <ColumnView style={styles.column}>
+              <ColumnView style={[styles.column, { width: "50%" }]}>
                 <ThemedText variant="h3">Stadt</ThemedText>
                 <ThemedTextInput
                   value={contacts.city || ""}
@@ -218,9 +202,9 @@ export default function AdoptionFormUserContact() {
 
           <View style={styles.buttonContainer}>
             <ThemedButton
-              onPress={() => {
+              onPress={async () => {
                 setContacts({ ...contacts, user_id: userId });
-                handleSave();
+                await handleSave();
                 router.navigate({
                   pathname: "AdoptionForm/UserSituation",
                   params: { animalId: animalId, animalType: paramType },
@@ -228,7 +212,7 @@ export default function AdoptionFormUserContact() {
               }}
               disabled={saving}
             >
-              Daten speichern und Weiter
+              WEITER
             </ThemedButton>
           </View>
         </SafeAreaView>
