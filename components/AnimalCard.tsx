@@ -12,6 +12,9 @@ type AnimalCardType = "grid" | "list";
 
 interface AnimalCardProps {
   animal: Animal;
+  previewImage?: string;
+  doneLoading: boolean;
+  onFavoriteChange?: () => void;
   variant?: AnimalCardType;
 }
 
@@ -43,6 +46,13 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
       mounted = false;
     };
   }, [animal.id]);
+
+  const handleFavoritePress = async () => {
+    await changeIcon();
+    if (props.onFavoriteChange) {
+      props.onFavoriteChange();
+    }
+  };
 
   function CardImg() {
     if (imagesLoading) {
@@ -106,7 +116,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
               iconSet="MaterialIcons"
               iconColor={theme.colors.brand.focus}
               onPress={() => {
-                changeIcon();
+                handleFavoritePress();
               }}
             />
           </View>
