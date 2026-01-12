@@ -89,4 +89,6 @@ export interface AdoptionContact {
   user_id: string;
   animal_id: string;
   form_id: string;
+  created_at: string;
+  read_at: string | null;
 }

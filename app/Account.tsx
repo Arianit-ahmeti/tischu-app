@@ -127,6 +127,9 @@ export default function Account() {
       <View style={styles.verticallySpaced}>
         <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>Jetzt verifizieren</ThemedButton>
       </View>
+      <View style={styles.verticallySpaced}>
+        <ThemedButton onPress={() => router.navigate("/AdoptionForm/List")}>Kontaktanfragen</ThemedButton>
+      </View>
     </ScrollView>
   );
 }

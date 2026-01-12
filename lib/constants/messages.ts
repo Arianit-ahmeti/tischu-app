@@ -16,10 +16,15 @@ export const ERROR_MESSAGES = {
   USER_CONTACT_LOAD_FAILED: "Kontaktdaten des Nutzers konnten nicht geladen werden",
   USER_CONTACT_UPDATE_FAILED: "Kontaktdaten des Nutzers konnten nicht aktualisiert wereden",
   USER_SITUATION_SAVE_FAILED: "Adoptionsformular des Nutzers konnte nicht gespeichert werden",
+  USER_SITUATION_LOAD_FAILED: "Adoptionsformular des Nutzers konnte nicht geladen werden",
   ADOPTION_CONTACT_SAVE_FAILED: "Adoptionsanfrage konnte nicht gespeichert werden",
+  ADOPTION_CONTACT_LOAD_ALL_FAILED: "Adoptionsanfragen konnte nicht geladen werden",
+  ADOPTION_CONTACT_SET_READ_FAILED: "Adoptionsanfrage konnte nicht als gelesen markiert werden",
+  ADOPTION_CONTACT_DELETE_FAILED: "Adoptionsanfrage konnte nicht gelöscht werden",
   NO_USER_ON_SESSION: "Es ist kein Nutzer eingeloggt",
   NOT_LOGGED_IN: "Kontaktanfrage ist nur für eingeloggte Nutzer möglich!",
   USER_NOT_FOUND: "Nutzer konnte nicht in Datenbank gefunden werden",
+  USER_NAME_LOAD_FAILED: "Nutzername konnte nicht geladen werden"
 } as const;
 
 export const SUCCESS_MESSAGES = {
