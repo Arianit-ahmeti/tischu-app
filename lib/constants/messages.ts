@@ -24,7 +24,7 @@ export const ERROR_MESSAGES = {
   NO_USER_ON_SESSION: "Es ist kein Nutzer eingeloggt",
   NOT_LOGGED_IN: "Kontaktanfrage ist nur für eingeloggte Nutzer möglich!",
   USER_NOT_FOUND: "Nutzer konnte nicht in Datenbank gefunden werden",
-  USER_NAME_LOAD_FAILED: "Nutzername konnte nicht geladen werden"
+  USER_NAME_LOAD_FAILED: "Nutzername konnte nicht geladen werden",
 } as const;
 
 export const SUCCESS_MESSAGES = {

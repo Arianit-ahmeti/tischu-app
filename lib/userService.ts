@@ -1,6 +1,6 @@
 import { Session } from "@supabase/supabase-js";
 import { Organization } from "@types";
-import { ERROR_MESSAGES } from './constants/messages';
+import { ERROR_MESSAGES } from "./constants/messages";
 import { supabase } from "./supabase";
 
 export async function getProfile(user_id: string): Promise<Organization | null> {
@@ -116,19 +116,15 @@ export async function getCurrentUserId(): Promise<string> {
   return userId;
 }
 
-export async function getUserName(id: string): Promise<string|null> {
+export async function getUserName(id: string): Promise<string | null> {
   try {
-    const { data, error } = await supabase.from("profiles")
-      .select("username")
-      .eq("id", id)
-      .single();
+    const { data, error } = await supabase.from("profiles").select("username").eq("id", id).single();
     if (error) {
       console.error(ERROR_MESSAGES.USER_NAME_LOAD_FAILED, error.message);
       return null;
     }
     return data.username;
-  }
-  catch (error) {
+  } catch (error) {
     console.error(ERROR_MESSAGES.USER_NAME_LOAD_FAILED, error);
     return null;
   }

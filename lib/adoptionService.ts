@@ -136,7 +136,6 @@ export async function saveAdoptionContact(userId: string, formId: string, animal
 
 export async function fetchAdoptionContactsForList(): Promise<AdoptionContact[] | null> {
   try {
-
     let query = supabase.from("adoption_contact").select();
 
     const { data: adoptionContacts, error } = await query;
@@ -146,7 +145,6 @@ export async function fetchAdoptionContactsForList(): Promise<AdoptionContact[] 
       return null;
     }
     return adoptionContacts as AdoptionContact[];
-
   } catch (error) {
     console.error(ERROR_MESSAGES.ADOPTION_CONTACT_LOAD_ALL_FAILED, error);
     return null;
@@ -159,15 +157,15 @@ export async function adoptionRead(userId: string, animalId: string) {
     const { error } = await supabase
       .from("adoption_contact")
       .update({
-        read_at:
-          date.toDateString()
+        read_at: date.toDateString(),
       })
       .eq("user_id", userId)
-      .eq("animal_id", animalId).single()
-    if (error) throw Error(ERROR_MESSAGES.ADOPTION_CONTACT_SET_READ_FAILED)
+      .eq("animal_id", animalId)
+      .single();
+    if (error) throw Error(ERROR_MESSAGES.ADOPTION_CONTACT_SET_READ_FAILED);
     return true;
   } catch (error) {
-    console.error(ERROR_MESSAGES.ADOPTION_CONTACT_SET_READ_FAILED, error)
+    console.error(ERROR_MESSAGES.ADOPTION_CONTACT_SET_READ_FAILED, error);
     return false;
   }
 }
@@ -183,7 +181,7 @@ export async function deleteAdoptionContact(userId: string, animalId: string) {
 
     return true;
   } catch (error) {
-    console.error(ERROR_MESSAGES.ADOPTION_CONTACT_DELETE_FAILED, error)
+    console.error(ERROR_MESSAGES.ADOPTION_CONTACT_DELETE_FAILED, error);
     return false;
   }
 }
