@@ -76,7 +76,7 @@ export async function saveOrganization(organization: Partial<Organization>) {
 
   const { data, error } = await supabase
     //TODO replace with "organization" once supabase tables have been updated
-    .from("org")
+    .from("organization")
     .insert({
       id: user.id,
       name: organization.name,
@@ -96,4 +96,21 @@ export async function saveOrganization(organization: Partial<Organization>) {
     console.log("Organization saved successfully:", data);
     return { data, error: null };
   }
+}
+
+export async function getCurrentUserId(): Promise<string> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  let userId = session?.user?.id;
+
+  if (!userId) {
+    const {
+      data: { user },
+    } = await supabase.auth.getUser();
+    userId = user?.id;
+  }
+
+  if (!userId) throw new Error("Keine aktive Sitzung gefunden.");
+  return userId;
 }

@@ -1,8 +1,14 @@
 import { supabase } from "@lib/supabase";
 import { Animal, AnimalFilters } from "@types";
 
-export async function addAnimal(animal: Partial<Animal>) {
-  const { data, error } = await supabase
+export async function addAnimal(animal: Partial<Animal>): Promise<Animal> {
+  const { data: sessionData, error: sessionError } = await supabase.auth.getSession();
+
+  if (sessionError || !sessionData.session?.user) {
+    throw new Error(`Authentication error: ${sessionError?.message || "No active session"}`);
+  }
+
+  const { data: animalData, error: animalError } = await supabase
     .from("animals")
     .insert({
       name: animal.name,
@@ -15,15 +21,26 @@ export async function addAnimal(animal: Partial<Animal>) {
       status: "open",
     })
     .select()
-    .single();
+    .single<Animal>();
 
-  if (error) {
-    console.log("Error adding animal:", error.message);
-    return null;
-  } else {
-    console.log("Animal added successfully:", data);
-    return data as Animal;
+  if (animalError) {
+    throw animalError;
   }
+
+  if (!animalData) {
+    throw new Error("No animal data returned after insert");
+  }
+
+  const { error: joinError } = await supabase.from("organization_animals").insert({
+    organization_id: sessionData.session.user.id,
+    animal_id: animalData.id,
+  });
+
+  if (joinError) {
+    throw joinError;
+  }
+
+  return animalData;
 }
 
 export async function fetchAnimalDetails(animalId: string): Promise<Animal | null> {
@@ -51,27 +68,21 @@ export async function deleteAnimal(animalId: string) {
   const { error } = await supabase.from("animals").delete().eq("id", animalId);
 
   if (error) {
-    console.error("Fehler beim Löschen des Tiers:", error.message);
+    console.error("Error deleting animal:", error.message);
     return false;
   }
 
   return true;
 }
 
-export async function updateAnimal(animal: Animal) {
-  try {
-    const { error } = await supabase.from("animals").update(animal).select().eq("id", animal.id).single();
+export async function updateAnimal(animal: Partial<Animal>) {
+  const { error } = await supabase.from("animals").update(animal).select().eq("id", animal.id).single();
 
-    if (error) {
-      console.error("Supabase Error on updating animal data:", error.message);
-      return null;
-    }
-    return true;
-  } catch (err) {
-    console.error("Unexpected error in updateAnimal:", err);
-    return null;
+  if (error) {
+    throw error;
   }
 }
+
 export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Animal[] | null> {
   try {
     let query = supabase.from("animals").select("*");
@@ -106,6 +117,35 @@ export async function fetchAnimalsForList(filters?: AnimalFilters): Promise<Anim
   }
 }
 
+export async function fetchOrganizationAnimals(organizationId: string): Promise<Animal[]> {
+  const { data: organizationAnimals, error: joinError } = await supabase
+    .from("organization_animals")
+    .select("animal_id")
+    .eq("organization_id", organizationId);
+
+  if (joinError) {
+    throw joinError;
+  }
+
+  if (!organizationAnimals || organizationAnimals.length === 0) {
+    return [];
+  }
+
+  const animalIds = organizationAnimals.map((oa) => oa.animal_id);
+
+  const { data: animalsData, error: animalError } = await supabase
+    .from("animals")
+    .select("*")
+    .in("id", animalIds)
+    .overrideTypes<Animal[]>();
+
+  if (animalError) {
+    throw animalError;
+  }
+
+  return animalsData;
+}
+
 export async function addFavorite(animalID: string, userID: string) {
   const { error } = await supabase.from("favorites").insert({ user_id: userID, animal_id: animalID });
 
@@ -132,4 +172,11 @@ export async function removeFavorite(animalID: string, userID: string) {
   if (error) {
     throw error;
   }
+}
+
+export async function fetchUserFavorites(userID: string): Promise<Animal[]> {
+  const { data, error } = await supabase.from("favorites").select("animals(*)").eq("user_id", userID);
+
+  if (error) throw error;
+  return data?.map((f: any) => f.animals).filter(Boolean) || [];
 }
