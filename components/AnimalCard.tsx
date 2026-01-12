@@ -13,7 +13,6 @@ type AnimalCardType = "grid" | "list";
 interface AnimalCardProps {
   animal: Animal;
   previewImage?: string;
-  doneLoading: boolean;
   onFavoriteChange?: () => void;
   variant?: AnimalCardType;
 }
