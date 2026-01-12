@@ -3,7 +3,7 @@ import { IconButton } from "@components/IconButton";
 import { useFavorite } from "@hooks/useFavorite";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
-import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
+import { deleteAnimal, fetchAnimalDetails, isOrganizationAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { theme } from "@theme";
 import { Animal } from "@types";
@@ -17,11 +17,12 @@ export default function AnimalDetailScreen() {
   const router = useRouter();
   const animalId = Array.isArray(id) ? id[0] : id;
 
-  const { session, isLoading: sessionLoading } = useSupabaseSession();
+  const { session, type, isLoading: sessionLoading } = useSupabaseSession();
 
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isOrgAnimal, setIsOrgAnimal] = useState(false);
 
   const { isFavoriteAnimal, changeIcon } = useFavorite(animalId);
   const [alertVisible, setAlertVisible] = useState(false);
@@ -63,6 +64,19 @@ export default function AnimalDetailScreen() {
 
     fetchData();
   }, [animalId]);
+
+  useEffect(() => {
+    const checkIsOrganizationAnimal = async () => {
+      if (animal && session?.user.id && type === "organization") {
+        const result = await isOrganizationAnimal(animal.id, session.user.id);
+        setIsOrgAnimal(result);
+      } else {
+        setIsOrgAnimal(false);
+      }
+    };
+
+    checkIsOrganizationAnimal();
+  }, [animal, session?.user.id, type]);
 
   if (loading || sessionLoading) {
     return (
@@ -115,35 +129,39 @@ export default function AnimalDetailScreen() {
                 {animal.origin}
               </ThemedText>
             </View>
-            <View style={styles.actions}>
-              <IconButton
-                size={24}
-                iconName="edit-2"
-                iconSet="Feather"
-                onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)}
-              />
-              <IconButton
-                iconSet="Feather"
-                iconName="trash-2"
-                size={24}
-                onPress={() => {
-                  Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
-                    {
-                      text: "Abbrechen",
-                      style: "cancel",
-                    },
-                    {
-                      text: "Löschen",
-                      style: "destructive",
-                      onPress: async () => {
-                        await deleteAnimal(animalId as string);
-                        router.back();
-                      },
-                    },
-                  ]);
-                }}
-              />
-            </View>
+            {isOrgAnimal && (
+              <>
+                <View style={styles.actions}>
+                  <IconButton
+                    size={24}
+                    iconName="edit-2"
+                    iconSet="Feather"
+                    onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)}
+                  />
+                  <IconButton
+                    iconSet="Feather"
+                    iconName="trash-2"
+                    size={24}
+                    onPress={() => {
+                      Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
+                        {
+                          text: "Abbrechen",
+                          style: "cancel",
+                        },
+                        {
+                          text: "Löschen",
+                          style: "destructive",
+                          onPress: async () => {
+                            await deleteAnimal(animalId as string);
+                            router.back();
+                          },
+                        },
+                      ]);
+                    }}
+                  />
+                </View>
+              </>
+            )}
           </View>
 
           <View style={styles.infoSection}>
@@ -202,6 +220,7 @@ export default function AnimalDetailScreen() {
 
           <ThemedButton
             disabled={sessionLoading}
+            textStyle={{ fontWeight: "bold" }}
             onPress={() => {
               if (session?.user) {
                 router.navigate({
@@ -213,7 +232,7 @@ export default function AnimalDetailScreen() {
               }
             }}
           >
-            Jetzt Bewerben
+            JETZT BEWERBEN
           </ThemedButton>
         </View>
       </ScrollView>
