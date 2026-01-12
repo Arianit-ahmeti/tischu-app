@@ -20,10 +20,12 @@ interface ImageCarouselProps {
   emptyStateComponent?: ReactNode;
   imageStyle?: ImageStyle;
   urls: string[];
+  height?: number;
 }
 
 export const ImageCarousel: React.FC<ImageCarouselProps> = (props) => {
   const [activeIndex, setActiveIndex] = useState(0);
+  const height = props.height ?? 250;
   let child: ReactNode;
 
   const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
@@ -89,7 +91,7 @@ export const ImageCarousel: React.FC<ImageCarouselProps> = (props) => {
       <View
         style={{
           width,
-          height: 250,
+          height,
           justifyContent: "center",
           alignItems: "center",
           position: "relative",
