@@ -36,8 +36,6 @@ export default function RootLayout() {
         <Stack.Screen name="Organization/SignUp" options={{ title: "Organisation Registrierung" }} />
         <Stack.Screen name="Organization/Edit" options={{ title: "Vereinsdaten bearbeiten" }} />
         <Stack.Screen name="Organization/Verification" options={{ title: "Verein verifizieren" }} />
-        <Stack.Screen name="OrgAnimalList" options={{ title: "Vereinstiere" }} />
-        <Stack.Screen name="ProfileScreen" options={{ headerShown: false }} />
       </Stack>
     </ActionSheetProvider>
   );
