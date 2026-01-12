@@ -147,19 +147,19 @@ export default function AnimalDetailScreen() {
           <View style={styles.infoSection}>
             <View style={styles.row}>
               <ThemedText variant="body" style={styles.label} color={theme.colors.brand.secondary}>
-                Geschlecht
+                GESCHLECHT
               </ThemedText>
               <ThemedText style={styles.value}>{animal.sex}</ThemedText>
             </View>
             <View style={styles.row}>
               <ThemedText variant="body" style={styles.label} color={theme.colors.brand.secondary}>
-                Alter
+                ALTER
               </ThemedText>
               <ThemedText style={styles.value}>{animal.age || "Unbekannt"}</ThemedText>
             </View>
             <View style={styles.row}>
               <ThemedText variant="body" style={styles.label} color={theme.colors.brand.secondary}>
-                Größe
+                GRÖSSE
               </ThemedText>
               <View style={styles.chipContainer}>
                 <Chip text={animal.size || "Unbekannt"} />
@@ -167,7 +167,7 @@ export default function AnimalDetailScreen() {
             </View>
             <View style={styles.row}>
               <ThemedText variant="body" style={styles.label} color={theme.colors.brand.secondary}>
-                Charakter
+                CHARAKTER
               </ThemedText>
               <View style={styles.chipContainer}>
                 <Chip text={animal.character || "Unbekannt"} />
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
   name: {
     fontSize: 28,
     fontWeight: "bold",
-    marginBottom: 4,
+    marginBottom: 5,
   },
   actions: {
     flexDirection: "row",
@@ -260,7 +260,6 @@ const styles = StyleSheet.create({
   },
   label: {
     width: 120,
-    fontWeight: "600",
   },
   value: {
     fontSize: 16,
@@ -281,5 +280,8 @@ const styles = StyleSheet.create({
   },
   applyButton: {
     marginTop: "auto",
+  },
+  gap: {
+    marginBottom: 8,
   },
 });
