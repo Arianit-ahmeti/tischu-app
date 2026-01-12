@@ -41,7 +41,7 @@ export const ThemedButton: React.FC<React.PropsWithChildren<ButtonProps>> = ({
 
   const content =
     typeof children === "string" ? (
-      <ThemedText variant="buttonPrimary" style={textStyle} color={finalTextColor}>
+      <ThemedText variant="buttonPrimary" style={textStyle} color={finalTextColor} numberOfLines={1}>
         {children}
       </ThemedText>
     ) : (
