@@ -80,12 +80,14 @@ export default function AdoptionFormUserContact() {
 
   async function handleSave() {
     setSaving(true);
+    let final = contacts;
+    final.user_id = userId;
     let contacted;
     try {
       if (prefilledContact) {
-        contacted = await updateUserContacts(contacts);
+        contacted = await updateUserContacts(final);
       } else {
-        contacted = await saveUserContacts(contacts);
+        contacted = await saveUserContacts(final);
       }
 
       if (!contacted || contacted.user_id != userId) {
@@ -203,7 +205,6 @@ export default function AdoptionFormUserContact() {
           <View style={styles.buttonContainer}>
             <ThemedButton
               onPress={async () => {
-                setContacts({ ...contacts, user_id: userId });
                 await handleSave();
                 router.navigate({
                   pathname: "AdoptionForm/UserSituation",

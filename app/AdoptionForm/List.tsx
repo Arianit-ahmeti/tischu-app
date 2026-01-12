@@ -8,6 +8,7 @@ import { useFocusEffect } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { getCurrentSession } from "../../lib/userService";
 
 export default function AdoptionContactList() {
   const [messages, setMessages] = useState<AdoptionContact[]>([]);
@@ -16,8 +17,11 @@ export default function AdoptionContactList() {
   async function load() {
     setLoading(true);
     try {
+      const session = await getCurrentSession();
+      let userId = session?.user.id;
+      if (!userId) throw Error(ERROR_MESSAGES.NO_USER_ON_SESSION);
       let data: AdoptionContact[] | null;
-      data = await fetchAdoptionContactsForList();
+      data = await fetchAdoptionContactsForList(userId);
       if (data == null) {
         data = [];
       }

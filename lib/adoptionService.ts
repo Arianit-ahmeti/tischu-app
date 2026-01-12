@@ -58,13 +58,13 @@ export async function saveUserSituation(situation: Partial<UserSituation>) {
 
 export async function loadUserContacts(userId: string) {
   try {
-    const { data, error } = await supabase.from("user_contact").select("*").eq("user_id", userId).single();
+    const { data, error } = await supabase.from("user_contact").select("*").eq("user_id", userId);
 
     if (error) {
       console.error(ERROR_MESSAGES.USER_CONTACT_LOAD_FAILED, error.message);
       return null;
     } else {
-      return data as UserContact;
+      return data[0] as UserContact;
     }
   } catch (error) {
     console.error(ERROR_MESSAGES.USER_CONTACT_LOAD_FAILED, error);
@@ -134,7 +134,7 @@ export async function saveAdoptionContact(userId: string, formId: string, animal
   }
 }
 
-export async function fetchAdoptionContactsForList(): Promise<AdoptionContact[] | null> {
+export async function fetchAdoptionContactsForList(userId: string): Promise<AdoptionContact[] | null> {
   try {
     let query = supabase.from("adoption_contact").select();
 

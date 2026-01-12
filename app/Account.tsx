@@ -128,6 +128,9 @@ export default function Account() {
                 <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>
                   Jetzt verifizieren
                 </ThemedButton>
+                <View style={styles.button}>
+                  <ThemedButton onPress={() => router.navigate("/AdoptionForm/List")}>Kontaktanfragen</ThemedButton>
+                </View>
               </View>
             </>
           )}
@@ -137,9 +140,6 @@ export default function Account() {
             </ThemedButton>
           </View>
         </View>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/AdoptionForm/List")}>Kontaktanfragen</ThemedButton>
       </View>
     </ScrollView>
   );

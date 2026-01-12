@@ -237,7 +237,11 @@ export default function AdoptionFormUserContact() {
                   Weitere Tiere im Haushalt
                 </ThemedText>
                 <ThemedText variant="bodyLarge">
-                  {situation?.current_animals ? situation.current_animals.toString() : "Nicht angegeben"}
+                  {situation?.current_animals
+                    ? situation.current_animals.toString().length > 0
+                      ? situation.current_animals.toString()
+                      : "Nicht angegeben"
+                    : "Nicht angegeben"}
                 </ThemedText>
               </View>
               <View style={styles.block}>
@@ -272,8 +276,9 @@ export default function AdoptionFormUserContact() {
                   Garten
                 </ThemedText>
                 <ThemedText variant="bodyLarge">
-                  {situation?.garden_size}
-                  {situation?.garden_size != "none" &&
+                  {situation?.garden_size || "Nicht angegeben"}
+                  {situation?.garden_size &&
+                    situation?.garden_size != "none" &&
                     (situation?.garden_fenced ? ", " + situation.garden_fenced : ", Umzäunung unbekannt")}
                 </ThemedText>
               </View>
