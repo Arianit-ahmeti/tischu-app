@@ -188,7 +188,9 @@ export default function AddEditAnimal() {
         )}
         <View style={styles.container}>
           <View style={styles.buttonContainer}>
-            <ThemedButton onPress={handleImageSelection}>Bild Hinzufügen</ThemedButton>
+            <ThemedButton textStyle={{ fontWeight: "bold" }} onPress={handleImageSelection}>
+              BILD HOCHLADEN
+            </ThemedButton>
           </View>
 
           <ThemedText variant="h3">Name:</ThemedText>
@@ -288,8 +290,8 @@ export default function AddEditAnimal() {
           )}
 
           <View style={styles.buttonContainer}>
-            <ThemedButton onPress={handleSave} disabled={saving}>
-              {isEditMode ? "Speichern" : "Tier hinzufügen"}
+            <ThemedButton textStyle={{ fontWeight: "bold" }} onPress={handleSave} disabled={saving}>
+              {isEditMode ? "SPEICHERN" : "TIER HINZUFÜGEN"}
             </ThemedButton>
           </View>
         </View>

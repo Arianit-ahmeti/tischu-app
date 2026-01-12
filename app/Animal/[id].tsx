@@ -199,7 +199,7 @@ export default function AnimalDetailScreen() {
             </ThemedText>
           </View>
 
-          <ThemedButton style={styles.applyButton}>Jetzt Bewerben</ThemedButton>
+          <ThemedButton textStyle={{ fontWeight: "bold" }}>JETZT BEWERBEN</ThemedButton>
         </View>
       </ScrollView>
     </SafeAreaView>

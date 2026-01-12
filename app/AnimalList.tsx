@@ -55,11 +55,7 @@ export default function AnimalList() {
     );
   }
   let headertext: string;
-  if (!filter.type) {
-    headertext = "All Animals";
-  } else {
-    headertext = "All " + filter.type + "s";
-  }
+  headertext = "Alle Tiere";
 
   const isListMode = listMode;
   const effectiveNumColumns = isListMode ? 1 : numColumns;
@@ -126,7 +122,7 @@ export default function AnimalList() {
         renderItem={({ item }) => <AnimalCard animal={item} variant={cardVariant} />}
         ListEmptyComponent={
           <View style={styles.emptyComponent}>
-            <ThemedText variant="h2"> No animals yet</ThemedText>
+            <ThemedText variant="h2">Es wurden keine Tiere gefunden.</ThemedText>
           </View>
         }
       />

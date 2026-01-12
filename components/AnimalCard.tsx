@@ -17,7 +17,7 @@ interface AnimalCardProps {
   variant?: AnimalCardType;
 }
 
-export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid", onFavoriteChange }) => {
+export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid", ...props }) => {
   const router = useRouter();
   const { isFavoriteAnimal, changeIcon } = useFavorite(animal.id);
 
@@ -48,8 +48,8 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
 
   const handleFavoritePress = async () => {
     await changeIcon();
-    if (onFavoriteChange) {
-      onFavoriteChange();
+    if (props.onFavoriteChange) {
+      props.onFavoriteChange();
     }
   };
 
@@ -78,8 +78,8 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
 
     return (
       <View style={[styles.noImage, variant === "list" && styles.listNoImage]}>
-        <ThemedText variant="h4" color={theme.colors.text.muted}>
-          No Image
+        <ThemedText style={styles.text} variant="h4" color={theme.colors.text.muted}>
+          Kein Bild verfügbar
         </ThemedText>
       </View>
     );
@@ -165,6 +165,9 @@ const styles = StyleSheet.create({
   listNoImage: {
     height: 140,
     width: 140,
+  },
+  text: {
+    textAlign: "center",
   },
   itemBox: {
     flex: 1,

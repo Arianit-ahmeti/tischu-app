@@ -96,7 +96,9 @@ export default function OrganizationSignUp() {
         <ThemedTextInput onChangeText={(text) => setCountry(text)} value={country} placeholder="Land" />
 
         <View style={styles.buttonSpacing}>
-          <ThemedButton onPress={async () => handleOrganizationSignUp()}>Registrieren</ThemedButton>
+          <ThemedButton textStyle={{ fontWeight: "bold" }} onPress={async () => handleOrganizationSignUp()}>
+            REGISTRIEREN
+          </ThemedButton>
         </View>
       </View>
     </ScrollView>

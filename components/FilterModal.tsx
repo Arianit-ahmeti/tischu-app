@@ -150,7 +150,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({ ...props }) => {
             />
 
             <ThemedText variant="badge" color={theme.colors.text.light} style={styles.text}>
-              Status
+              Adoptionsstatus
             </ThemedText>
             <ThemedDropdown
               dropdownData={enums.adoptionStatuses}
@@ -163,12 +163,13 @@ export const FilterModal: React.FC<FilterModalProps> = ({ ...props }) => {
 
           <View style={styles.bottom}>
             <ThemedButton
+              textStyle={{ fontWeight: "bold" }}
               onPress={() => {
                 props.applyFilter(dropdownFilter);
                 props.closeModal();
               }}
             >
-              Anwenden
+              ANWENDEN
             </ThemedButton>
             <ThemedButton
               variant="text"
@@ -177,7 +178,7 @@ export const FilterModal: React.FC<FilterModalProps> = ({ ...props }) => {
                 setDropdownFilter({});
               }}
             >
-              Filter Löschen
+              Filter löschen
             </ThemedButton>
           </View>
         </View>
