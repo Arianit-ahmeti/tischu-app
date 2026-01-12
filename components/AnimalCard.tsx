@@ -18,7 +18,7 @@ interface AnimalCardProps {
   variant?: AnimalCardType;
 }
 
-export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid" }) => {
+export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid", ...props }) => {
   const router = useRouter();
   const { isFavoriteAnimal, changeIcon } = useFavorite(animal.id);
 
@@ -79,8 +79,8 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
 
     return (
       <View style={[styles.noImage, variant === "list" && styles.listNoImage]}>
-        <ThemedText variant="h4" color={theme.colors.text.muted}>
-          kein Bild verfügbar
+        <ThemedText style={styles.text} variant="h4" color={theme.colors.text.muted}>
+          Kein Bild verfügbar
         </ThemedText>
       </View>
     );
@@ -166,6 +166,9 @@ const styles = StyleSheet.create({
   listNoImage: {
     height: 140,
     width: 140,
+  },
+  text: {
+    textAlign: "center",
   },
   itemBox: {
     flex: 1,
