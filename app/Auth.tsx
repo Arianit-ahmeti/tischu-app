@@ -1,9 +1,9 @@
+import { ThemedText, ThemedTextInput } from "@components";
 import { ThemedButton } from "@components/ThemedButton";
 import { supabase } from "@lib/supabase";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, AppState, Image, StyleSheet, View } from "react-native";
-import { ThemedText, ThemedTextInput } from "../components";
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
