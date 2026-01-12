@@ -181,3 +181,10 @@ export async function removeFavorite(animalID: string, userID: string) {
     throw error;
   }
 }
+
+export async function fetchUserFavorites(userID: string): Promise<Animal[]> {
+  const { data, error } = await supabase.from("favorites").select("animals(*)").eq("user_id", userID);
+
+  if (error) throw error;
+  return data?.map((f: any) => f.animals).filter(Boolean) || [];
+}
