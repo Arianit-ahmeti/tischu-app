@@ -160,7 +160,7 @@ export default function AdoptionFormUserContact() {
                 <ThemedTextInput
                   value={contacts.phone?.toString() || ""}
                   keyboardType="numeric"
-                  onChangeText={(text) => setContacts({ ...contacts, phone: parseInt(text) || null })}
+                  onChangeText={(text) => setContacts({ ...contacts, phone: Number(text) || null })}
                   placeholder="Telefon"
                 />
               </ColumnView>
