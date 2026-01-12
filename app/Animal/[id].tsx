@@ -3,7 +3,7 @@ import { IconButton } from "@components/IconButton";
 import { useFavorite } from "@hooks/useFavorite";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
-import { deleteAnimal, fetchAnimalDetails } from "@lib/animalService";
+import { deleteAnimal, fetchAnimalDetails, isOrganizationAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { theme } from "@theme";
 import { Animal } from "@types";
@@ -21,6 +21,7 @@ export default function AnimalDetailScreen() {
   const [animal, setAnimal] = useState<Animal | null>(null);
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
+  const [isOrgAnimal, setIsOrgAnimal] = useState(false);
 
   const { isFavoriteAnimal, changeIcon } = useFavorite(animalId);
 
@@ -61,6 +62,19 @@ export default function AnimalDetailScreen() {
 
     fetchData();
   }, [animalId]);
+
+  useEffect(() => {
+    const checkIsOrganizationAnimal = async () => {
+      if (animal && session?.user.id && type === "organization") {
+        const result = await isOrganizationAnimal(animal.id, session.user.id);
+        setIsOrgAnimal(result);
+      } else {
+        setIsOrgAnimal(false);
+      }
+    };
+
+    checkIsOrganizationAnimal();
+  }, [animal, session?.user.id, type]);
 
   if (loading || sessionLoading) {
     return (
@@ -103,7 +117,7 @@ export default function AnimalDetailScreen() {
                 changeIcon();
               }}
             />
-            {type == "organization" && (
+            {isOrgAnimal && (
               <>
                 <IconButton
                   size={30}
