@@ -77,9 +77,7 @@ export default function OrgAnimalList() {
         numColumns={numColumns}
         style={styles.list}
         keyExtractor={(item) => item.id}
-        renderItem={({ item }) => (
-          <AnimalCard animal={item} previewImage={previewImage[item.id]} doneLoading={!isLoadingImages} />
-        )}
+        renderItem={({ item }) => <AnimalCard animal={item} previewImage={previewImage[item.id]} />}
         ListEmptyComponent={
           <View style={globalStyles.center}>
             <ThemedText variant="h2">No animals yet</ThemedText>
