@@ -91,7 +91,6 @@ export default function AdoptionFormUserSituation() {
 
   async function handleSave() {
     setSaving(true);
-    situation.children_ages?.map((text) => Number(text));
     let form;
     try {
       let savedData = await saveUserSituation(situation);
@@ -230,7 +229,17 @@ export default function AdoptionFormUserSituation() {
                       data={situation.children_ages || []}
                       labels="Kind"
                       keyboardType="numeric"
-                      onChange={(text) => setSituation({ ...situation, children_ages: text })}
+                      onChange={(newData) => {
+                        const numericData = newData.map((val) => {
+                          const parsed = Number(val);
+                          return isNaN(parsed) ? 0 : parsed;
+                        });
+
+                        setSituation({
+                          ...situation,
+                          children_ages: numericData,
+                        });
+                      }}
                       singleRow={true}
                     />
                   </View>
