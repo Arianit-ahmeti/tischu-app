@@ -1,80 +1,89 @@
 import { ThemedButton, ThemedText } from "@components";
+import { Ionicons } from "@expo/vector-icons";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { supabase } from "@lib/supabase";
+import { theme } from "@theme";
 import { useRouter } from "expo-router";
-import { useEffect, useState } from "react";
-import { ActivityIndicator, Alert, ScrollView, StyleSheet, TextInput, View } from "react-native";
+import { useCallback, useEffect, useState } from "react";
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, View } from "react-native";
+
+interface UserProfile {
+  id: string;
+  username: string | null;
+  full_name: string | null;
+}
+
+interface InfoFieldProps {
+  icon: string;
+  label: string;
+  value: string;
+  isLast?: boolean;
+}
+
+function InfoField({ icon, label, value, isLast }: InfoFieldProps) {
+  return (
+    <View style={[styles.infoRow, isLast && styles.infoRowLast]}>
+      <View style={styles.iconCircle}>
+        <Ionicons name={icon as any} size={18} color={theme.colors.brand.secondary} />
+      </View>
+      <View style={styles.infoContent}>
+        <ThemedText variant="badge" color={theme.colors.brand.primary} style={styles.label}>
+          {label}
+        </ThemedText>
+        <ThemedText variant="bodyLarge" color={theme.colors.text.dark}>
+          {value}
+        </ThemedText>
+      </View>
+    </View>
+  );
+}
 
 export default function Account() {
-  const { session, isLoading: isSessionLoading } = useSupabaseSession();
+  const { session, type, isLoading: isSessionLoading } = useSupabaseSession();
+  const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loading, setLoading] = useState(true);
-  const [username, setUsername] = useState("");
-
   const router = useRouter();
 
-  useEffect(() => {
-    if (session) {
-      getProfile();
-    }
-  }, [session]);
-
-  async function getProfile() {
+  const getProfile = useCallback(async () => {
     try {
       setLoading(true);
       if (!session?.user) throw new Error("No user on the session!");
 
       const { data, error, status } = await supabase
         .from("profiles")
-        .select(`username`)
+        .select("id, username, full_name")
         .eq("id", session?.user.id)
         .single();
+
       if (error && status !== 406) {
         throw error;
       }
 
       if (data) {
-        setUsername(data.username);
+        setProfile(data);
       }
     } catch (error) {
       if (error instanceof Error) {
-        Alert.alert(error.message);
+        console.error("Error loading profile:", error);
+        Alert.alert("Fehler", "Profil konnte nicht geladen werden");
       }
     } finally {
       setLoading(false);
     }
-  }
+  }, [session]);
 
-  async function updateProfile({ username }: { username: string }) {
-    try {
-      setLoading(true);
-      if (!session?.user) throw new Error("No user on the session!");
-
-      const updates = {
-        id: session?.user.id,
-        username,
-        updated_at: new Date(),
-      };
-
-      const { error } = await supabase.from("profiles").upsert(updates);
-
-      if (error) {
-        throw error;
-      }
-    } catch (error) {
-      if (error instanceof Error) {
-        Alert.alert(error.message);
-      }
-    } finally {
-      setLoading(false);
+  useEffect(() => {
+    if (session) {
+      getProfile();
     }
-  }
+  }, [session, getProfile]);
 
   async function handleSignOut() {
     await supabase.auth.signOut();
     router.replace("/");
   }
 
-  if (isSessionLoading) {
+  if (isSessionLoading || loading) {
     return (
       <View style={styles.center}>
         <ActivityIndicator size="large" />
@@ -82,50 +91,52 @@ export default function Account() {
     );
   }
 
-  if (!session?.user) {
+  if (!session?.user || !profile) {
     return (
       <View style={styles.center}>
-        <ThemedText>Please authenticate to view your account.</ThemedText>
+        <ThemedText variant="body">Profil nicht gefunden</ThemedText>
       </View>
     );
   }
 
   return (
     <ScrollView style={styles.container}>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <ThemedText>Email</ThemedText>
-        <TextInput value={session?.user?.email} />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedText>Username</ThemedText>
-        <TextInput value={username || ""} onChangeText={(text) => setUsername(text)} />
-      </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <ThemedButton onPress={() => updateProfile({ username })} disabled={loading}>
-          {loading ? "Loading ..." : "Update"}
-        </ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={handleSignOut}>Sign Out</ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/AddEdit/Add")}>Add Animal</ThemedButton>
+      <View style={styles.profileSection}>
+        <View style={styles.profileImage} />
+        <ThemedText variant="h1" color={theme.colors.text.dark}>
+          {profile.full_name || profile.username || "Unbekannt"}
+        </ThemedText>
       </View>
 
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/AnimalList")}>Show AnimalList</ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/ProfileScreen")}>Accountdaten</ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Mein Profil</ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
-      </View>
-      <View style={styles.verticallySpaced}>
-        <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>Jetzt verifizieren</ThemedButton>
+      <View style={styles.content}>
+        <View style={styles.card}>
+          <InfoField icon="person-outline" label="NAME" value={profile.full_name || "Nicht angegeben"} />
+          <InfoField icon="at-outline" label="BENUTZERNAME" value={profile.username || "Nicht angegeben"} />
+          <InfoField icon="mail-outline" label="E-MAIL" value={session.user.email || "Nicht angegeben"} isLast />
+        </View>
+
+        <View style={styles.card}>
+          {type === "organization" && (
+            <>
+              <View style={styles.button}>
+                <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Mein Profil</ThemedButton>
+              </View>
+              <View style={styles.button}>
+                <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
+              </View>
+              <View style={styles.button}>
+                <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>
+                  Jetzt verifizieren
+                </ThemedButton>
+              </View>
+            </>
+          )}
+          <View style={styles.button}>
+            <ThemedButton variant="text" onPress={handleSignOut}>
+              Abmelden
+            </ThemedButton>
+          </View>
+        </View>
       </View>
     </ScrollView>
   );
@@ -133,21 +144,61 @@ export default function Account() {
 
 const styles = StyleSheet.create({
   container: {
-    marginTop: 40,
-    padding: 12,
-  },
-  verticallySpaced: {
-    paddingTop: 4,
-    paddingBottom: 4,
-    alignSelf: "stretch",
-  },
-  mt20: {
-    marginTop: 20,
+    flex: 1,
+    backgroundColor: theme.colors.background.base,
   },
   center: {
     flex: 1,
     justifyContent: "center",
     alignItems: "center",
+  },
+  profileSection: {
+    flexDirection: "row",
+    alignItems: "center",
+    padding: 20,
+    gap: 24,
+  },
+  profileImage: {
+    width: 90,
+    height: 90,
+    borderRadius: 45,
+    backgroundColor: theme.colors.brand.secondary,
+  },
+  content: {
+    padding: 20,
+    paddingTop: 0,
+    gap: 16,
+  },
+  card: {
+    backgroundColor: theme.colors.background.warm,
+    borderRadius: 12,
     padding: 16,
+  },
+  infoRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    paddingVertical: 12,
+  },
+  infoRowLast: {
+    borderBottomWidth: 0,
+  },
+  iconCircle: {
+    width: 36,
+    height: 36,
+    borderRadius: 18,
+    backgroundColor: theme.colors.background.base,
+    justifyContent: "center",
+    alignItems: "center",
+    marginRight: 12,
+  },
+  infoContent: {
+    flex: 1,
+  },
+  label: {
+    marginBottom: 4,
+    letterSpacing: 0.5,
+  },
+  button: {
+    marginVertical: 4,
   },
 });
