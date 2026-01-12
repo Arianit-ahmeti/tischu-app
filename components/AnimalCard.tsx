@@ -80,7 +80,7 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
     return (
       <View style={[styles.noImage, variant === "list" && styles.listNoImage]}>
         <ThemedText variant="h4" color={theme.colors.text.muted}>
-          No Image
+          kein Bild verfügbar
         </ThemedText>
       </View>
     );
