@@ -65,10 +65,16 @@ export async function fetchAnimalDetails(animalId: string): Promise<Animal | nul
 }
 
 export async function deleteAnimal(animalId: string) {
-  const { error } = await supabase.from("animals").delete().eq("id", animalId);
+  const { error: orgError } = await supabase.from("organization_animals").delete().eq("animal_id", animalId);
+  if (orgError) {
+    console.error("Error deleting animal:", orgError.message);
+    return false;
+  }
 
-  if (error) {
-    console.error("Error deleting animal:", error.message);
+  const { error: animalError } = await supabase.from("animals").delete().eq("id", animalId);
+
+  if (animalError) {
+    console.error("Error deleting animal:", animalError.message);
     return false;
   }
 
