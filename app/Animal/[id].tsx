@@ -146,9 +146,10 @@ export default function AnimalDetailScreen() {
               title="Tier löschen"
               message={`Möchten Sie ${animal.name} wirklich löschen?`}
               buttons={[
-                { text: "Abbrechen", onPress: () => setAlertVisible(false) },
+                { text: "Abbrechen", variant: "text", onPress: () => setAlertVisible(false) },
                 {
                   text: "Löschen",
+                  variant: "filled",
                   onPress: async () => {
                     (await deleteAnimal(animalId as string), router.back());
                   },
