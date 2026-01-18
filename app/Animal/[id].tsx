@@ -1,4 +1,4 @@
-import { AlertDialog, BackButton, Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
+import { AlertDialog, BackButton, Chip, ImageCarousel, RowView, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
 import { useFavorite } from "@hooks/useFavorite";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
@@ -11,6 +11,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { checkForForm } from "../../lib/adoptionService";
 
 export default function AnimalDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -26,6 +27,7 @@ export default function AnimalDetailScreen() {
 
   const { isFavoriteAnimal, changeIcon } = useFavorite(animalId);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [contactExists, setContactExists] = useState(false);
 
   async function loadAnimal() {
     try {
@@ -74,8 +76,16 @@ export default function AnimalDetailScreen() {
         setIsOrgAnimal(false);
       }
     };
+    const checkContactExists = async () => {
+      if (animal && session?.user.id) {
+        const result = await checkForForm(session.user.id, animal.id);
+        if (result) setContactExists(result);
+        else setContactExists(false);
+      }
+    };
 
     checkIsOrganizationAnimal();
+    checkContactExists();
   }, [animal, session?.user.id, type]);
 
   if (loading || sessionLoading) {
@@ -94,8 +104,6 @@ export default function AnimalDetailScreen() {
     );
   }
 
-  const userID = session?.user.id || null;
-
   return (
     <SafeAreaView style={styles.root} edges={["top", "left", "right"]}>
       <Stack.Screen options={{ headerShown: false }} />
@@ -111,9 +119,9 @@ export default function AnimalDetailScreen() {
               iconSet="FontAwesome"
               iconColor={isFavoriteAnimal ? theme.colors.brand.focus : theme.colors.text.dark}
               style={styles.favoriteButton}
-              disabled={userID == null}
+              disabled={session?.user.id == null}
               onPress={() => {
-                if (userID != null) changeIcon();
+                if (session?.user.id != null) changeIcon();
               }}
             />
           </View>
@@ -218,22 +226,29 @@ export default function AnimalDetailScreen() {
             onDismiss={() => setAlertVisible(false)}
           />
 
-          <ThemedButton
-            disabled={sessionLoading}
-            textStyle={{ fontWeight: "bold" }}
-            onPress={() => {
-              if (session?.user) {
-                router.navigate({
-                  pathname: "AdoptionForm/UserContact",
-                  params: { animalId: animalId, animalType: animal.type },
-                });
-              } else {
-                setAlertVisible(true);
-              }
-            }}
-          >
-            JETZT BEWERBEN
-          </ThemedButton>
+          {contactExists ? (
+            <RowView style={styles.contacted}>
+              <IconButton iconSet="Feather" iconName="check-circle" />
+              <ThemedText variant="bodyLarge">BEREITS BEWORBEN</ThemedText>
+            </RowView>
+          ) : (
+            <ThemedButton
+              disabled={sessionLoading}
+              textStyle={{ fontWeight: "bold" }}
+              onPress={() => {
+                if (session?.user) {
+                  router.navigate({
+                    pathname: "AdoptionForm/UserContact",
+                    params: { animalId: animalId },
+                  });
+                } else {
+                  setAlertVisible(true);
+                }
+              }}
+            >
+              JETZT BEWERBEN
+            </ThemedButton>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -335,5 +350,11 @@ const styles = StyleSheet.create({
   },
   gap: {
     marginBottom: 8,
+  },
+  contacted: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: theme.colors.background.warm,
+    borderRadius: 12,
   },
 });

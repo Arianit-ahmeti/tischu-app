@@ -82,7 +82,6 @@ export default function AnimalList() {
           <AnimalCard
             animal={item}
             previewImage={previewImage[item.id]}
-            doneLoading={!imageLoading}
             onFavoriteChange={() => {
               setAnimals((prev) => prev.filter((a) => a.id !== item.id));
             }}
