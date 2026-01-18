@@ -11,6 +11,7 @@ interface AlertDialogProps {
   buttons?: {
     text: string;
     onPress?: () => void;
+    variant?: "filled" | "text";
   }[];
   onDismiss?: () => void;
 }
@@ -39,6 +40,7 @@ export const AlertDialog: React.FC<AlertDialogProps> = ({
             {buttons.map((button, index) => (
               <ThemedButton
                 key={index}
+                variant={button.variant || "filled"}
                 onPress={() => {
                   button.onPress?.();
                   onDismiss?.();
