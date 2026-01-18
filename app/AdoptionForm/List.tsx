@@ -1,24 +1,22 @@
-import { ThemedText } from "@components";
-import { MessageCard } from "@components/MessageCard";
+import { MessageCard, ThemedText } from "@components";
+import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { fetchAdoptionContactsForList } from "@lib/adoptionService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { FlashList } from "@shopify/flash-list";
 import type { AdoptionContact } from "@types";
-import { useFocusEffect } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { getCurrentSession } from "../../lib/userService";
 
 export default function AdoptionContactList() {
   const [messages, setMessages] = useState<AdoptionContact[]>([]);
   const [loading, setLoading] = useState(true);
+  const { session } = useSupabaseSession();
 
   async function load() {
     setLoading(true);
     try {
-      const session = await getCurrentSession();
-      let userId = session?.user.id;
+      let userId = session?.user?.id;
       if (!userId) throw Error(ERROR_MESSAGES.NO_USER_ON_SESSION);
       let data: AdoptionContact[] | null;
       data = await fetchAdoptionContactsForList(userId);
@@ -31,12 +29,6 @@ export default function AdoptionContactList() {
     }
     setLoading(false);
   }
-
-  useFocusEffect(
-    React.useCallback(() => {
-      load();
-    }, [])
-  );
 
   useEffect(() => {
     load();
@@ -73,10 +65,5 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: "center",
   },
-  buttonArea: {
-    marginTop: 40,
-    flexDirection: "row-reverse",
-  },
-  button: { margin: 4 },
   component: { alignItems: "center", padding: 10 },
 });

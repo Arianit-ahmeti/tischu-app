@@ -9,6 +9,7 @@ export { FilterModal } from "components/FilterModal";
 export { IconButton } from "components/IconButton";
 export { ImageCarousel } from "components/ImageCarousel";
 export { ListTile } from "components/ListTile";
+export { MessageCard } from "components/MessageCard";
 export { PreviewModal } from "components/PreviewModal";
 export { RenameModal } from "components/RenameModal";
 export { RowView } from "components/RowView";
