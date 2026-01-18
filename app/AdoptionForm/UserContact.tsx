@@ -32,12 +32,12 @@ export default function AdoptionFormUserContact() {
   async function getData() {
     setLoading(true);
     if (session?.user?.id) {
+      setContacts({ ...contacts, user_id: session.user.id });
       try {
         const data = await loadUserContacts(session.user.id);
         if (data) {
           setContacts(data);
           setPrefilledContact(true);
-          setLoading(false);
         }
       } catch (error) {
         console.error(error);
