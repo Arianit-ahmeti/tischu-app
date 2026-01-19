@@ -1,6 +1,7 @@
 import { IconButton } from "@components/IconButton";
-import { useFavorite } from "@hooks/useFavorite";
+import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
+import { favoriteService } from "@lib/services/favoriteService";
 import { Animal } from "@lib/types";
 import { theme } from "@theme";
 import { useRouter } from "expo-router";
@@ -19,10 +20,11 @@ interface AnimalCardProps {
 
 export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid", ...props }) => {
   const router = useRouter();
-  const { isFavoriteAnimal, changeIcon } = useFavorite(animal.id);
+  const { session, isLoading: sessionLoading } = useSupabaseSession();
 
   const [images, setImages] = useState<string[]>();
   const [imagesLoading, setImagesLoading] = useState(true);
+  const [isFavoriteAnimal, setIsFavorite] = useState(false);
 
   useEffect(() => {
     let mounted = true;
@@ -46,10 +48,34 @@ export const AnimalCard: React.FC<AnimalCardProps> = ({ animal, variant = "grid"
     };
   }, [animal.id]);
 
+  useEffect(() => {
+    if (!sessionLoading && session?.user.id) {
+      loadFavoriteStatus();
+    }
+  }, [sessionLoading, session?.user.id, animal.id]);
+
+  async function loadFavoriteStatus() {
+    if (session?.user.id) {
+      try {
+        const status = await favoriteService.getFavoriteStatus(animal.id, session.user.id);
+        setIsFavorite(status);
+      } catch (error) {
+        console.error("Error loading favorite status", error);
+      }
+    }
+  }
+
   const handleFavoritePress = async () => {
-    await changeIcon();
-    if (props.onFavoriteChange) {
-      props.onFavoriteChange();
+    if (session?.user.id) {
+      try {
+        const newStatus = await favoriteService.toggleFavorite(animal.id, session.user.id, isFavoriteAnimal);
+        setIsFavorite(newStatus);
+        if (props.onFavoriteChange) {
+          props.onFavoriteChange();
+        }
+      } catch (error) {
+        console.error("Error toggling favorite", error);
+      }
     }
   };
 

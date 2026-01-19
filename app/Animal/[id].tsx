@@ -1,10 +1,10 @@
 import { AlertDialog, BackButton, Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
-import { useFavorite } from "@hooks/useFavorite";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
 import { deleteAnimal, fetchAnimalDetails, isOrganizationAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { favoriteService } from "@lib/services/favoriteService";
 import { theme } from "@theme";
 import { Animal } from "@types";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
@@ -23,8 +23,7 @@ export default function AnimalDetailScreen() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOrgAnimal, setIsOrgAnimal] = useState(false);
-
-  const { isFavoriteAnimal, changeIcon } = useFavorite(animalId);
+  const [isFavoriteAnimal, setIsFavorite] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
 
   async function loadAnimal() {
@@ -50,6 +49,28 @@ export default function AnimalDetailScreen() {
     }
   }
 
+  async function loadFavoriteStatus() {
+    if (session?.user.id) {
+      try {
+        const status = await favoriteService.getFavoriteStatus(animalId as string, session.user.id);
+        setIsFavorite(status);
+      } catch (error) {
+        console.error("Error loading favorite status", error);
+      }
+    }
+  }
+
+  async function toggleFavorite() {
+    if (session?.user.id) {
+      try {
+        const newStatus = await favoriteService.toggleFavorite(animalId as string, session.user.id, isFavoriteAnimal);
+        setIsFavorite(newStatus);
+      } catch (error) {
+        console.error("Error changing favorite status", error);
+      }
+    }
+  }
+
   useEffect(() => {
     if (!animalId) {
       setLoading(false);
@@ -64,6 +85,12 @@ export default function AnimalDetailScreen() {
 
     fetchData();
   }, [animalId]);
+
+  useEffect(() => {
+    if (!sessionLoading && session?.user.id && animalId) {
+      loadFavoriteStatus();
+    }
+  }, [sessionLoading, session?.user.id, animalId]);
 
   useEffect(() => {
     const checkIsOrganizationAnimal = async () => {
@@ -112,7 +139,7 @@ export default function AnimalDetailScreen() {
               iconColor={isFavoriteAnimal ? theme.colors.brand.focus : theme.colors.text.dark}
               style={styles.favoriteButton}
               onPress={() => {
-                changeIcon();
+                toggleFavorite();
               }}
             />
           </View>
