@@ -1,9 +1,9 @@
 import { AlertDialog, BackButton, Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { IconButton } from "@components/IconButton";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
-import { deleteAnimal, fetchAnimalDetails, isOrganizationAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { getAnimalMediaDownloadURLs } from "@lib/services/animalMediaService";
+import { deleteAnimal, fetchAnimalDetails, isOrganizationAnimal } from "@lib/services/animalService";
 import { favoriteService } from "@lib/services/favoriteService";
 import { theme } from "@theme";
 import { Animal } from "@types";

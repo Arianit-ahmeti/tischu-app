@@ -1,6 +1,6 @@
+import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Organization } from "@types";
-import { supabase } from "./supabase";
 
 export async function getProfile(user_id: string): Promise<Organization | null> {
   try {

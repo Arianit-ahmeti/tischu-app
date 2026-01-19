@@ -1,6 +1,6 @@
 import { ThemedButton, ThemedText, ThemedTextInput } from "@components";
+import { saveOrganization } from "@lib/services/userService";
 import { supabase } from "@lib/supabase";
-import { saveOrganization } from "@lib/userService";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
 import { Alert, ScrollView, StyleSheet, View } from "react-native";

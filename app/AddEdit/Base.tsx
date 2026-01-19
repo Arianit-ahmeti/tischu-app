@@ -2,9 +2,9 @@ import { AlertDialog, SelectableButton, ThemedButton, ThemedText } from "@compon
 import { ImageCarousel } from "@components/ImageCarousel";
 import { ThemedTextInput } from "@components/ThemedTextInput";
 import { useEnums } from "@hooks/useEnums";
-import { getAnimalMediaDownloadURLs, selectImages, uploadLocalImages } from "@lib/animalMediaService";
-import { addAnimal, fetchAnimalDetails, updateAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
+import { getAnimalMediaDownloadURLs, selectImages, uploadLocalImages } from "@lib/services/animalMediaService";
+import { addAnimal, fetchAnimalDetails, updateAnimal } from "@lib/services/animalService";
 import {
   getAdoptionStatusesEnum,
   getAnimalSizesEnum,

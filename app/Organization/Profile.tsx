@@ -1,6 +1,6 @@
 import { IconButton, ThemedButton, ThemedText } from "@components";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
-import { getCurrentSession, getProfile } from "@lib/userService";
+import { getCurrentSession, getProfile } from "@lib/services/userService";
 import { theme } from "@theme";
 import { Organization } from "@types";
 import { Stack, useFocusEffect, useRouter } from "expo-router";

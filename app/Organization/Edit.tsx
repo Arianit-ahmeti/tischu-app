@@ -1,6 +1,6 @@
 import { AlertDialog, ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
-import { getCurrentSession, getProfile, updateProfile } from "@lib/userService";
+import { getCurrentSession, getProfile, updateProfile } from "@lib/services/userService";
 import { theme } from "@theme";
 import { Organization } from "@types";
 import { useRouter } from "expo-router";

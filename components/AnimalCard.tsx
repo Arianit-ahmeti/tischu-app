@@ -1,6 +1,6 @@
 import { IconButton } from "@components/IconButton";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
+import { getAnimalMediaDownloadURLs } from "@lib/services/animalMediaService";
 import { favoriteService } from "@lib/services/favoriteService";
 import { Animal } from "@lib/types";
 import { theme } from "@theme";
