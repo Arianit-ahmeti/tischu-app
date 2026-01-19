@@ -1,4 +1,4 @@
-import { supabase } from "./supabase";
+import { supabase } from "@lib/supabase";
 
 export type EnumObject<T extends string> = {
   readonly [K in T]: K;

@@ -1,4 +1,4 @@
-import type { EnumObject } from "@lib/supabaseEnumHandler";
+import type { EnumObject } from "@lib/utils/supabaseEnumHandler";
 import { useEffect, useRef, useState } from "react";
 
 type EnumFetchers<T extends Record<string, string>> = {
