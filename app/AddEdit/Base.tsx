@@ -1,19 +1,16 @@
-import { AlertDialog, SelectableButton, ThemedButton, ThemedText } from "@components";
-import { ImageCarousel } from "@components/ImageCarousel";
-import { ThemedTextInput } from "@components/ThemedTextInput";
+import { AlertDialog, ImageCarousel, SelectableButton, ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { useEnums } from "@hooks/useEnums";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
 import { getAnimalMediaDownloadURLs, selectImages, uploadLocalImages } from "@lib/services/animalMediaService";
 import { addAnimal, fetchAnimalDetails, updateAnimal } from "@lib/services/animalService";
+import { Animal } from "@lib/types";
 import {
   getAdoptionStatusesEnum,
   getAnimalSizesEnum,
   getAnimalTypesEnum,
   getCharacterTypesEnum,
   getSexesEnum,
-} from "@lib/supabaseEnumHandler";
-import { Animal } from "@lib/types";
-import "@lib/utils/stringExtensions";
+} from "@lib/utils/supabaseEnumHandler";
 import { theme } from "@theme";
 import { useLocalSearchParams, useNavigation, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
@@ -241,7 +238,7 @@ export default function AddEditAnimal() {
                 onPress={() => setAnimal({ ...animal, type: value })}
                 style={styles.selectableButton}
               >
-                {value.capitalizeFirst()}
+                {capitalizeFirst(value)}
               </SelectableButton>
             ))}
           </View>
@@ -255,7 +252,7 @@ export default function AddEditAnimal() {
                 onPress={() => setAnimal({ ...animal, sex: value })}
                 style={styles.selectableButton}
               >
-                {value.capitalizeFirst()}
+                {capitalizeFirst(value)}
               </SelectableButton>
             ))}
           </View>
@@ -269,7 +266,7 @@ export default function AddEditAnimal() {
                 onPress={() => setAnimal({ ...animal, size: value })}
                 style={styles.selectableButton}
               >
-                {value.capitalizeFirst()}
+                {capitalizeFirst(value)}
               </SelectableButton>
             ))}
           </View>
@@ -283,7 +280,7 @@ export default function AddEditAnimal() {
                 onPress={() => setAnimal({ ...animal, character: value })}
                 style={styles.selectableButton}
               >
-                {value.capitalizeFirst()}
+                {capitalizeFirst(value)}
               </SelectableButton>
             ))}
           </View>
@@ -299,7 +296,7 @@ export default function AddEditAnimal() {
                     onPress={() => setAnimal({ ...animal, status: value })}
                     style={styles.selectableButton}
                   >
-                    {value.capitalizeFirst()}
+                    {capitalizeFirst(value)}
                   </SelectableButton>
                 ))}
               </View>
@@ -336,3 +333,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: { marginVertical: 8, overflow: "hidden" },
 });
+
+function capitalizeFirst(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}

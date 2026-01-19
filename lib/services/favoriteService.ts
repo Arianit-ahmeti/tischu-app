@@ -1,5 +1,5 @@
-import { addFavorite, isFavorite, removeFavorite } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { addFavorite, isFavorite, removeFavorite } from "@lib/services/animalService";
 import { Alert } from "react-native";
 
 export const favoriteService = {

@@ -1,5 +1,4 @@
-import { AlertDialog, BackButton, Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
-import { IconButton } from "@components/IconButton";
+import { AlertDialog, BackButton, Chip, IconButton, ImageCarousel, ThemedButton, ThemedText } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { getAnimalMediaDownloadURLs } from "@lib/services/animalMediaService";

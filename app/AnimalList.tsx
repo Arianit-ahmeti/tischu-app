@@ -1,5 +1,5 @@
 import { AnimalCard, FilterModal, IconButton, RowView, ThemedText } from "@components";
-import { fetchAnimalsForList } from "@lib/animalService";
+import { fetchAnimalsForList } from "@lib/services/animalService";
 import { FlashList } from "@shopify/flash-list";
 import { theme } from "@theme";
 import type { Animal, AnimalFilters } from "@types";
