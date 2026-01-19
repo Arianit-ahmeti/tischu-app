@@ -10,12 +10,14 @@ import { theme } from "@theme";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import { useSafeAreaInsets } from "react-native-safe-area-context";
 
 export default function OrganizationVerification() {
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
   const { session, isLoading: sessionLoading } = useSupabaseSession();
   const userId = session?.user?.id ?? null;
+  const insets = useSafeAreaInsets();
 
   const [files, setFiles] = useState<SelectedFile[]>([]);
   const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
@@ -38,6 +40,7 @@ export default function OrganizationVerification() {
       setUploadedFiles(fetched);
     } catch (error) {
       console.error("Load Error:", error);
+      //TODO: ErrorMessage constant
       Alert.alert("Fehler", "Dateien konnten nicht geladen werden.");
     } finally {
       setLoadingFiles(false);
@@ -59,6 +62,7 @@ export default function OrganizationVerification() {
           setFiles(newFiles);
         } catch (error) {
           console.error("Error selecting files:", error);
+          //TODO: ErrorMessage constant
           Alert.alert("Fehler", "Dateien konnten nicht ausgewählt werden.");
         }
       }
@@ -74,6 +78,7 @@ export default function OrganizationVerification() {
         await loadFiles();
       } catch (error) {
         console.error("Error deleting file:", error);
+        //TODO: ErrorMessage constant
         Alert.alert("Fehler", "Datei konnte nicht gelöscht werden.");
       } finally {
         setLoadingFiles(false);
@@ -103,6 +108,7 @@ export default function OrganizationVerification() {
       }
     } catch (error) {
       console.error("Error renaming file:", error);
+      //TODO: ErrorMessage constant
       Alert.alert("Fehler", "Umbenennen fehlgeschlagen.");
     } finally {
       setLoadingFiles(false);
@@ -125,6 +131,7 @@ export default function OrganizationVerification() {
       await loadFiles();
     } catch (error) {
       console.error("Error uploading files:", error);
+      //TODO: ErrorMessage constant
       Alert.alert("Fehler", error instanceof Error ? error.message : "Fehler beim Hochladen");
     } finally {
       setSaving(false);
@@ -186,7 +193,8 @@ export default function OrganizationVerification() {
         ]}
         onDismiss={() => setDeleteModalVisible(false)}
       />
-      <ScrollView style={styles.container} contentContainerStyle={styles.flexGrow}>
+
+      <ScrollView style={[styles.container, { marginBottom: insets.bottom }]} contentContainerStyle={styles.flexGrow}>
         <TouchableOpacity onPress={onFilesSelection} style={styles.uploadContainer} activeOpacity={0.7}>
           <IconButton
             iconSet="FontAwesome5"
