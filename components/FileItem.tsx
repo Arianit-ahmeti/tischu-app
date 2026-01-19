@@ -1,5 +1,5 @@
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { getFilePreviewUrl } from "@lib/organizationFileService";
+import { organizationVerificationService } from "@lib/services/organizationVerificationService";
 import { theme } from "@theme";
 import React from "react";
 import { StyleSheet, View } from "react-native";
@@ -47,7 +47,7 @@ export const FileItem: React.FC<FileItemProps> = ({
 
         switch (index) {
           case 0: // Vorschau
-            const previewUri = isUploaded ? getFilePreviewUrl(userId!, name) : uri;
+            const previewUri = isUploaded ? organizationVerificationService.getFilePreviewUrl(userId!, name) : uri;
             if (previewUri) {
               onPreview(previewUri, name, type || "");
             }

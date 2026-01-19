@@ -1,14 +1,26 @@
 import { AlertDialog, FileItem, IconButton, PreviewModal, RenameModal, ThemedButton, ThemedText } from "@components";
 import { useActionSheet } from "@expo/react-native-action-sheet";
-import { useOrganizationFiles } from "@hooks/useOrganizationFiles";
+import { useSupabaseSession } from "@hooks/useSupabaseSession";
+import {
+  organizationVerificationService,
+  SelectedFile,
+  UploadedFile,
+} from "@lib/services/organizationVerificationService";
 import { theme } from "@theme";
 import { useRouter } from "expo-router";
-import React, { useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
+import React, { useEffect, useState } from "react";
+import { ActivityIndicator, Alert, ScrollView, StyleSheet, TouchableOpacity, View } from "react-native";
 
 export default function OrganizationVerification() {
   const router = useRouter();
   const { showActionSheetWithOptions } = useActionSheet();
+  const { session, isLoading: sessionLoading } = useSupabaseSession();
+  const userId = session?.user?.id ?? null;
+
+  const [files, setFiles] = useState<SelectedFile[]>([]);
+  const [uploadedFiles, setUploadedFiles] = useState<UploadedFile[]>([]);
+  const [loadingFiles, setLoadingFiles] = useState(false);
+  const [saving, setSaving] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
   const [confirmVisible, setConfirmVisible] = useState(false);
   const [deleteModalVisible, setDeleteModalVisible] = useState(false);
@@ -17,30 +29,84 @@ export default function OrganizationVerification() {
   const [isRenameModalVisible, setIsRenameModalVisible] = useState(false);
   const [selectedFileName, setSelectedFileName] = useState("");
 
-  const { files, uploadedFiles, userId, loadingFiles, saving, actions } = useOrganizationFiles(() =>
-    setAlertVisible(true)
-  );
+  const loadFiles = async () => {
+    if (!userId) return;
+
+    try {
+      setLoadingFiles(true);
+      const fetched = await organizationVerificationService.loadFiles(userId);
+      setUploadedFiles(fetched);
+    } catch (error) {
+      console.error("Load Error:", error);
+      Alert.alert("Fehler", "Dateien konnten nicht geladen werden.");
+    } finally {
+      setLoadingFiles(false);
+    }
+  };
+
+  useEffect(() => {
+    if (!sessionLoading && userId) {
+      loadFiles();
+    }
+  }, [userId, sessionLoading]);
 
   const onFilesSelection = () => {
     const options = ["Fotos", "Dateien", "Kamera", "Abbrechen"];
     showActionSheetWithOptions({ options, cancelButtonIndex: 3 }, async (index) => {
       if (index !== undefined && index !== 3) {
-        await actions.handleSelection(index);
+        try {
+          const newFiles = await organizationVerificationService.selectFiles(index, files, uploadedFiles);
+          setFiles(newFiles);
+        } catch (error) {
+          console.error("Error selecting files:", error);
+          Alert.alert("Fehler", "Dateien konnten nicht ausgewählt werden.");
+        }
       }
     });
   };
 
   const onConfirmDelete = async () => {
-    if (fileToDelete) {
+    if (fileToDelete && userId) {
       setDeleteModalVisible(false);
-      await actions.handleDelete(fileToDelete);
-      setFileToDelete(null);
+      try {
+        setLoadingFiles(true);
+        await organizationVerificationService.deleteFile(userId, fileToDelete);
+        await loadFiles();
+      } catch (error) {
+        console.error("Error deleting file:", error);
+        Alert.alert("Fehler", "Datei konnte nicht gelöscht werden.");
+      } finally {
+        setLoadingFiles(false);
+        setFileToDelete(null);
+      }
     }
   };
 
   const onConfirmRename = async (newName: string) => {
     setIsRenameModalVisible(false);
-    await actions.handleRename(selectedFileName, newName);
+    if (!userId) return;
+
+    try {
+      setLoadingFiles(true);
+      const result = await organizationVerificationService.renameFile(
+        userId,
+        selectedFileName,
+        newName,
+        files,
+        uploadedFiles
+      );
+
+      if (result.isLocal && result.updatedFiles) {
+        setFiles(result.updatedFiles);
+      } else if (!result.isLocal) {
+        await loadFiles();
+      }
+    } catch (error) {
+      console.error("Error renaming file:", error);
+      Alert.alert("Fehler", "Umbenennen fehlgeschlagen.");
+    } finally {
+      setLoadingFiles(false);
+    }
   };
 
   const triggerSave = () => {
@@ -49,8 +115,34 @@ export default function OrganizationVerification() {
 
   const onFinalSave = async () => {
     setConfirmVisible(false);
-    await actions.handleUpload();
+    if (!userId) return;
+
+    try {
+      setSaving(true);
+      await organizationVerificationService.uploadFiles(userId, files, uploadedFiles);
+      setAlertVisible(true);
+      setFiles([]);
+      await loadFiles();
+    } catch (error) {
+      console.error("Error uploading files:", error);
+      Alert.alert("Fehler", error instanceof Error ? error.message : "Fehler beim Hochladen");
+    } finally {
+      setSaving(false);
+    }
   };
+
+  const handleRemoveLocalFile = (index: number) => {
+    const updatedFiles = organizationVerificationService.removeLocalFile(index, files);
+    setFiles(updatedFiles);
+  };
+
+  if (sessionLoading) {
+    return (
+      <View style={[styles.container, styles.centerContent]}>
+        <ActivityIndicator color={theme.colors.brand.primary} size="large" />
+      </View>
+    );
+  }
 
   return (
     <>
@@ -120,7 +212,7 @@ export default function OrganizationVerification() {
               uri={file.uri}
               type={file.type}
               isUploaded={false}
-              onDelete={() => actions.removeLocalFile(index)}
+              onDelete={() => handleRemoveLocalFile(index)}
               onRename={(name) => {
                 setSelectedFileName(name);
                 setIsRenameModalVisible(true);
@@ -185,6 +277,10 @@ const styles = StyleSheet.create({
     flex: 1,
     padding: 20,
     backgroundColor: theme.colors.background.base,
+  },
+  centerContent: {
+    justifyContent: "center",
+    alignItems: "center",
   },
   uploadContainer: {
     height: 120,
