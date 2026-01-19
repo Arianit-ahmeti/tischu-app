@@ -1,7 +1,7 @@
+import { ThemedText } from "@components";
 import { theme } from "@theme";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { ThemedText } from "./ThemedText";
 
 interface ChipProps {
   color?: string;

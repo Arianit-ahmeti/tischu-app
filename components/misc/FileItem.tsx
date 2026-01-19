@@ -1,10 +1,9 @@
+import { IconButton, ThemedText } from "@components";
 import { useActionSheet } from "@expo/react-native-action-sheet";
 import { organizationVerificationService } from "@lib/services/organizationVerificationService";
 import { theme } from "@theme";
 import React from "react";
 import { StyleSheet, View } from "react-native";
-import { IconButton } from "./IconButton";
-import { ThemedText } from "./ThemedText";
 
 interface FileItemProps {
   name: string;

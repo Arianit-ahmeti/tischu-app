@@ -1,8 +1,7 @@
+import { ThemedButton, ThemedText } from "@components";
 import { theme } from "@theme";
 import React, { useEffect, useState } from "react";
 import { Modal, StyleSheet, TextInput, View } from "react-native";
-import { ThemedButton } from "./ThemedButton";
-import { ThemedText } from "./ThemedText";
 
 interface RenameModalProps {
   isVisible: boolean;

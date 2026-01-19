@@ -1,8 +1,7 @@
+import { ThemedButton, ThemedText } from "@components";
 import { theme } from "@theme";
 import React from "react";
 import { Modal, Pressable, StyleSheet, View } from "react-native";
-import { ThemedButton } from "./ThemedButton";
-import { ThemedText } from "./ThemedText";
 
 interface AlertDialogProps {
   visible: boolean;

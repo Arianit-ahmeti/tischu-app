@@ -1,3 +1,4 @@
+import { IconButton, RowView, ThemedButton, ThemedDropdown, ThemedText, ThemedTextInput } from "@components";
 import { useEnums } from "@hooks/useEnums";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import {
@@ -6,17 +7,11 @@ import {
   getAnimalTypesEnum,
   getCharacterTypesEnum,
   getSexesEnum,
-} from "@lib/supabaseEnumHandler";
+} from "@lib/utils/supabaseEnumHandler";
 import { theme } from "@theme";
 import type { AnimalFilters } from "@types";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Modal, ModalProps, ScrollView, StyleSheet, Text, View } from "react-native";
-import { IconButton } from "./IconButton";
-import { RowView } from "./RowView";
-import { ThemedButton } from "./ThemedButton";
-import { ThemedDropdown } from "./ThemedDropdown";
-import { ThemedText } from "./ThemedText";
-import { ThemedTextInput } from "./ThemedTextInput";
 
 interface FilterModalProps extends ModalProps {
   closeModal: () => void;
