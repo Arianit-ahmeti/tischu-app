@@ -1,5 +1,12 @@
-import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
+import { useEnums } from "@hooks/useEnums";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import {
+  getAdoptionStatusesEnum,
+  getAnimalSizesEnum,
+  getAnimalTypesEnum,
+  getCharacterTypesEnum,
+  getSexesEnum,
+} from "@lib/supabaseEnumHandler";
 import { theme } from "@theme";
 import type { AnimalFilters } from "@types";
 import { useEffect, useState } from "react";
@@ -18,7 +25,17 @@ interface FilterModalProps extends ModalProps {
 }
 export const FilterModal: React.FC<FilterModalProps> = ({ ...props }) => {
   const [dropdownFilter, setDropdownFilter] = useState<AnimalFilters>({});
-  const { enums, enumsAreLoading, enumsError } = useAnimalFieldEnums();
+  const {
+    enums,
+    loading: enumsAreLoading,
+    error: enumsError,
+  } = useEnums({
+    animalTypes: getAnimalTypesEnum,
+    animalSizes: getAnimalSizesEnum,
+    sexes: getSexesEnum,
+    characterTypes: getCharacterTypesEnum,
+    adoptionStatuses: getAdoptionStatusesEnum,
+  });
 
   useEffect(() => {
     setDropdownFilter(props.currentFilter);
