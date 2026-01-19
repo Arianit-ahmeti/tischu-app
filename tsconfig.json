@@ -11,7 +11,7 @@
       "@app/*": ["app/*"],
       "@types": ["lib/types"],
       "@hooks/*": ["hooks/*"],
-      "@theme": ["theme/theme.ts"]
-    }
-  }
+      "@theme": ["lib/constants/theme.ts"],
+    },
+  },
 }
