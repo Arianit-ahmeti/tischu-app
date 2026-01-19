@@ -2,7 +2,7 @@ import { render, screen } from "@testing-library/react-native";
 import React from "react";
 import { ThemedText } from "../../components/ui/ThemedText";
 
-jest.mock("../../theme/theme", () => ({
+jest.mock("../../lib/constants/theme", () => ({
   theme: {
     typography: {
       body: {
