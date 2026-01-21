@@ -1,6 +1,6 @@
-import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "./constants/messages";
-import { supabase } from "./supabase";
-import { AdoptionContact, UserContact, UserSituation } from "./types";
+import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
+import { supabase } from "@lib/supabase";
+import { AdoptionContact, UserContact, UserSituation } from "@types";
 
 export async function checkForForm(userId: string, animalId: string): Promise<boolean | null> {
   try {
@@ -136,9 +136,7 @@ export async function saveAdoptionContact(userId: string, formId: string, animal
 
 export async function fetchAdoptionContactsForList(userId: string): Promise<AdoptionContact[] | null> {
   try {
-    let query = supabase.from("adoption_contact").select();
-
-    const { data: adoptionContacts, error } = await query;
+    const { data: adoptionContacts, error } = await supabase.from("adoption_contact").select();
 
     if (error) {
       console.error(ERROR_MESSAGES.ADOPTION_CONTACT_LOAD_ALL_FAILED, error.message);

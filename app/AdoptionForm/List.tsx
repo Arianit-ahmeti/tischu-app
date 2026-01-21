@@ -11,19 +11,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function AdoptionContactList() {
   const [messages, setMessages] = useState<AdoptionContact[]>([]);
   const [loading, setLoading] = useState(true);
-  const { session } = useSupabaseSession();
+  const { session, isLoading: sessionLoading } = useSupabaseSession();
 
   async function load() {
     setLoading(true);
     try {
       let userId = session?.user?.id;
       if (!userId) throw Error(ERROR_MESSAGES.NO_USER_ON_SESSION);
-      let data: AdoptionContact[] | null;
-      data = await fetchAdoptionContactsForList(userId);
-      if (data == null) {
-        data = [];
-      }
-      setMessages(data);
+      let data = await fetchAdoptionContactsForList(userId);
+      setMessages(data ?? []);
     } catch (err) {
       console.error(ERROR_MESSAGES.ADOPTION_CONTACT_LOAD_ALL_FAILED, err);
     }
@@ -31,10 +27,12 @@ export default function AdoptionContactList() {
   }
 
   useEffect(() => {
-    load();
-  }, []);
+    if (!sessionLoading) {
+      load();
+    }
+  }, [session]);
 
-  if (loading) {
+  if (loading || sessionLoading) {
     return (
       <View style={styles.component}>
         <ThemedText variant="h3">

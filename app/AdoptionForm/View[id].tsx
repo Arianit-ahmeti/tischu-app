@@ -9,64 +9,46 @@ import React, { useEffect, useState } from "react";
 import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-export default function AdoptionFormUserContact() {
+export default function AdoptionFormViewt() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [userId, setUserId] = useState(String);
   const [alertVisible, setAlertVisible] = useState(false);
   const [contacts, setContacts] = useState<UserContact | null>();
   const [situation, setSituation] = useState<UserSituation | null>();
-  let paramFormId = useLocalSearchParams().formId;
-  let paramUserId = useLocalSearchParams().userId;
+  const { uid, fid } = useLocalSearchParams();
+  const senderId = Array.isArray(uid) ? uid[0] : uid;
+  const formId = Array.isArray(fid) ? fid[0] : fid;
 
   async function load() {
+    setLoading(true);
     if (!situation) {
       try {
-        if (!paramFormId) {
-          throw Error(ERROR_MESSAGES.ERROR);
-        }
         setLoading(true);
-        paramFormId = paramFormId instanceof Array ? paramFormId[0] : paramFormId;
-        let form = await loadUserSituation(paramFormId);
+        let form = await loadUserSituation(formId);
         setSituation(form);
-        setLoading(false);
       } catch (error) {
         console.error(ERROR_MESSAGES.USER_SITUATION_LOAD_FAILED, error);
         setAlertVisible(true);
       }
     }
-    if (!userId) {
-      try {
-        if (!paramUserId) {
-          throw Error(ERROR_MESSAGES.ERROR);
-        }
-        paramUserId = paramUserId instanceof Array ? paramUserId[0] : paramUserId;
-        setUserId(paramUserId);
-      } catch (error) {
-        console.error(ERROR_MESSAGES.USER_NOT_FOUND, error);
-        setAlertVisible(true);
-      }
-    }
     if (!contacts) {
       try {
-        if (!paramUserId) {
+        if (!senderId) {
           throw Error(ERROR_MESSAGES.ERROR);
         }
-        setLoading(true);
-        paramUserId = paramUserId instanceof Array ? paramUserId[0] : paramUserId;
-        let data = await loadUserContacts(paramUserId);
+        let data = await loadUserContacts(senderId);
         setContacts(data);
-        setLoading(false);
       } catch (error) {
         console.error(ERROR_MESSAGES.USER_CONTACT_LOAD_FAILED, error);
         setAlertVisible(true);
       }
     }
+    setLoading(false);
   }
 
   useEffect(() => {
     load();
-  }, [paramFormId]);
+  }, [senderId, formId]);
 
   if (loading) {
     return (
@@ -87,7 +69,7 @@ export default function AdoptionFormUserContact() {
         onPress={() =>
           router.navigate({
             pathname: "ProfileScreen",
-            params: { id: userId },
+            params: { id: senderId },
           })
         }
       />
@@ -102,16 +84,15 @@ export default function AdoptionFormUserContact() {
           title={ERROR_MESSAGES.ERROR}
           message={ERROR_MESSAGES.USER_SITUATION_LOAD_FAILED}
           onDismiss={() => router.back()}
-        ></AlertDialog>
+        />
       </View>
     );
   }
 
   return (
     <>
+      <Stack.Screen options={{ headerRight: () => userProfile(), title: "Kontaktformular" }} />
       <SafeAreaView>
-        <Stack.Screen options={{ headerRight: () => userProfile(), title: "Kontaktformular" }} />
-
         <ScrollView>
           <View style={styles.center}>
             <ThemedText variant="h1">{contacts?.full_name || "Nicht angegeben"}</ThemedText>
@@ -325,9 +306,7 @@ export default function AdoptionFormUserContact() {
 }
 
 const styles = StyleSheet.create({
-  baseFlex: { flex: 1, paddingHorizontal: 16 },
   center: { flex: 1, justifyContent: "center", alignItems: "center", textAlign: "justify", alignSelf: "center" },
-  buttonContainer: { marginVertical: 8, overflow: "hidden" },
   column: { paddingRight: 15 },
   block: { paddingBottom: 5, alignItems: "center" },
   contact: {
