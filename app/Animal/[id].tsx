@@ -146,30 +146,26 @@ export default function AnimalDetailScreen() {
                     iconSet="Feather"
                     onPress={() => router.push(`AddEdit/Edit?id=${animal.id}`)}
                   />
-                  <IconButton
-                    iconSet="Feather"
-                    iconName="trash-2"
-                    size={24}
-                    onPress={() => {
-                      Alert.alert("Tier löschen", `Möchten Sie ${animal.name} wirklich löschen?`, [
-                        {
-                          text: "Abbrechen",
-                          style: "cancel",
-                        },
-                        {
-                          text: "Löschen",
-                          style: "destructive",
-                          onPress: async () => {
-                            await deleteAnimal(animalId as string);
-                            router.back();
-                          },
-                        },
-                      ]);
-                    }}
-                  />
+                  <IconButton iconSet="Feather" iconName="trash-2" size={24} onPress={() => setAlertVisible(true)} />
                 </View>
               </>
             )}
+            <AlertDialog
+              visible={alertVisible}
+              title="Tier löschen"
+              message={`Möchten Sie ${animal.name} wirklich löschen?`}
+              buttons={[
+                { text: "Abbrechen", variant: "text", onPress: () => setAlertVisible(false) },
+                {
+                  text: "Löschen",
+                  variant: "filled",
+                  onPress: async () => {
+                    (await deleteAnimal(animalId as string), router.back());
+                  },
+                },
+              ]}
+              onDismiss={() => setAlertVisible(false)}
+            />
           </View>
 
           <View style={styles.infoSection}>
