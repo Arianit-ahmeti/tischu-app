@@ -22,7 +22,7 @@ export async function checkForForm(userId: string, animalId: string): Promise<bo
   }
 }
 
-export async function saveUserContacts(contacts: UserContact) {
+export async function saveUserContacts(contacts: UserContact): Promise<UserContact | null> {
   try {
     const { data, error } = await supabase.from("user_contact").insert(contacts).select().single();
 
@@ -31,7 +31,7 @@ export async function saveUserContacts(contacts: UserContact) {
       return null;
     } else {
       console.log(SUCCESS_MESSAGES.USER_CONTACT_SAVED);
-      return data;
+      return data as UserContact;
     }
   } catch (error) {
     console.error(ERROR_MESSAGES.USER_CONTACT_SAVE_FAILED, error);
@@ -39,7 +39,7 @@ export async function saveUserContacts(contacts: UserContact) {
   }
 }
 
-export async function saveUserSituation(situation: Partial<UserSituation>) {
+export async function saveUserSituation(situation: Partial<UserSituation>): Promise<UserSituation | null> {
   try {
     const { data, error } = await supabase.from("user_adoption_situation").insert(situation).select().single();
 
@@ -48,7 +48,7 @@ export async function saveUserSituation(situation: Partial<UserSituation>) {
       return null;
     } else {
       console.log(SUCCESS_MESSAGES.USER_SITUATION_SAVED);
-      return data;
+      return data as UserSituation;
     }
   } catch (error) {
     console.error(ERROR_MESSAGES.USER_SITUATION_SAVE_FAILED, error);
@@ -56,7 +56,7 @@ export async function saveUserSituation(situation: Partial<UserSituation>) {
   }
 }
 
-export async function loadUserContacts(userId: string) {
+export async function loadUserContacts(userId: string): Promise<UserContact | null> {
   try {
     const { data, error } = await supabase.from("user_contact").select("*").eq("user_id", userId);
 
@@ -72,7 +72,7 @@ export async function loadUserContacts(userId: string) {
   }
 }
 
-export async function loadUserSituation(formId: string) {
+export async function loadUserSituation(formId: string): Promise<UserSituation | null> {
   try {
     const { data, error } = await supabase.from("user_adoption_situation").select("*").eq("form_id", formId).single();
 
@@ -88,7 +88,7 @@ export async function loadUserSituation(formId: string) {
   }
 }
 
-export async function updateUserContacts(contacts: UserContact) {
+export async function updateUserContacts(contacts: UserContact): Promise<UserSituation | null> {
   try {
     const { data, error } = await supabase
       .from("user_contact")
@@ -101,7 +101,7 @@ export async function updateUserContacts(contacts: UserContact) {
       return null;
     } else {
       console.log(SUCCESS_MESSAGES.USER_CONTACT_UPDATED);
-      return data;
+      return data as UserSituation;
     }
   } catch (error) {
     console.error(ERROR_MESSAGES.USER_CONTACT_UPDATE_FAILED, error);
@@ -109,7 +109,11 @@ export async function updateUserContacts(contacts: UserContact) {
   }
 }
 
-export async function saveAdoptionContact(userId: string, formId: string, animalId: string) {
+export async function saveAdoptionContact(
+  userId: string,
+  formId: string,
+  animalId: string
+): Promise<AdoptionContact | null> {
   try {
     const { data, error } = await supabase
       .from("adoption_contact")
@@ -126,7 +130,7 @@ export async function saveAdoptionContact(userId: string, formId: string, animal
       return null;
     } else {
       console.log(SUCCESS_MESSAGES.ADOPTION_CONTACT_SAVED);
-      return data;
+      return data as AdoptionContact;
     }
   } catch (error) {
     console.error(ERROR_MESSAGES.ADOPTION_CONTACT_SAVE_FAILED, error);
@@ -149,7 +153,7 @@ export async function fetchAdoptionContactsForList(userId: string): Promise<Adop
   }
 }
 
-export async function adoptionRead(userId: string, animalId: string) {
+export async function adoptionRead(userId: string, animalId: string): Promise<boolean> {
   try {
     let date = new Date();
     const { error } = await supabase
@@ -168,7 +172,7 @@ export async function adoptionRead(userId: string, animalId: string) {
   }
 }
 
-export async function deleteAdoptionContact(userId: string, animalId: string) {
+export async function deleteAdoptionContact(userId: string, animalId: string): Promise<boolean> {
   try {
     const { error } = await supabase.from("adoption_contact").delete().eq("animal_id", animalId).eq("user_id", userId);
 
