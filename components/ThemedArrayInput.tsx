@@ -37,7 +37,7 @@ export const ThemedArrayInput: React.FC<ThemedArrayInputProps> = ({ singleRow = 
   }
 
   const render = () => {
-    if (singleRow.valueOf() == false) {
+    if (!singleRow) {
       return (
         <View>
           {data.map((val, index) => {
