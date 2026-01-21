@@ -88,7 +88,7 @@ export async function loadUserSituation(formId: string): Promise<UserSituation |
   }
 }
 
-export async function updateUserContacts(contacts: UserContact): Promise<UserSituation | null> {
+export async function updateUserContacts(contacts: UserContact): Promise<UserContact | null> {
   try {
     const { data, error } = await supabase
       .from("user_contact")
@@ -101,7 +101,7 @@ export async function updateUserContacts(contacts: UserContact): Promise<UserSit
       return null;
     } else {
       console.log(SUCCESS_MESSAGES.USER_CONTACT_UPDATED);
-      return data as UserSituation;
+      return data as UserContact;
     }
   } catch (error) {
     console.error(ERROR_MESSAGES.USER_CONTACT_UPDATE_FAILED, error);
