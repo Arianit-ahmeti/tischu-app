@@ -10,6 +10,7 @@ export default function TabsLayout() {
         const defaults = defaultScreenOptions(props);
         return {
           ...defaults,
+          headerLeft: () => null,
           headerStyle: {
             backgroundColor: theme.colors.background.base,
           },
@@ -29,6 +30,16 @@ export default function TabsLayout() {
           tabBarIcon: ({ color, size, focused }) => {
             return <Ionicons name={focused ? "paw-sharp" : "paw-outline"} size={size} color={color} />;
           },
+        }}
+      />
+      <Tabs.Screen
+        name="OrgAnimalList"
+        options={{
+          tabBarLabel: "Meine Tiere",
+          tabBarIcon: ({ color, size, focused }) => {
+            return <Ionicons name={focused ? "list-circle-sharp" : "list-circle-outline"} size={size} color={color} />;
+          },
+          title: "Meine Tiere",
         }}
       />
       <Tabs.Screen
