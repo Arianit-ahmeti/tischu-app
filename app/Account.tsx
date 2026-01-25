@@ -122,7 +122,9 @@ export default function Account() {
                 <ThemedButton onPress={() => router.navigate("/Organization/Profile")}>Mein Profil</ThemedButton>
               </View>
               <View style={styles.button}>
-                <ThemedButton onPress={() => router.navigate("/OrgAnimalList")}>Meine Tiere</ThemedButton>
+                <ThemedButton onPress={() => router.navigate("/View/Organization/OrgAnimalList")}>
+                  Meine Tiere
+                </ThemedButton>
               </View>
               <View style={styles.button}>
                 <ThemedButton onPress={() => router.navigate("/Organization/Verification")}>
