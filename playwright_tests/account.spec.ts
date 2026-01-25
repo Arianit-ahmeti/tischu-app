@@ -7,7 +7,7 @@ const testuser_email = process.env.TEST_USER_EMAIL;
 const testuser_password = process.env.TEST_USER_PASSWORD;
 
 test("should correctly login with testuser", async ({ page }) => {
-  await page.goto("");
+  await page.goto("Auth/");
 
   await page.waitForTimeout(3000);
 
@@ -29,7 +29,7 @@ test("should correctly login with testuser", async ({ page }) => {
 });
 
 test("login should fail with wrong credentials", async ({ page }) => {
-  await page.goto("");
+  await page.goto("Auth/");
 
   await page.waitForTimeout(3000);
 
@@ -51,7 +51,7 @@ test("login should fail with wrong credentials", async ({ page }) => {
 });
 
 test("should be able to sign up a new user", async ({ page }) => {
-  await page.goto("");
+  await page.goto("Auth/");
 
   await page.waitForTimeout(3000);
 

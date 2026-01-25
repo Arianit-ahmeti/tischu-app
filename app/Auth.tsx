@@ -26,7 +26,7 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    error ? Alert.alert(error.message) : router.navigate("/User/Account");
     setLoading(false);
   }
 
@@ -40,7 +40,7 @@ export default function Auth() {
       password: password,
     });
 
-    if (error) Alert.alert(error.message);
+    error ? Alert.alert(error.message) : router.navigate("/User/Account");
     if (!session) Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
   }
