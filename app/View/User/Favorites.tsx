@@ -37,7 +37,7 @@ export default function AnimalList() {
   }
 
   async function load() {
-    if (!session?.user?.id) return;
+    if (!session?.user?.id) { setLoading(false); return;}
     setLoading(true);
 
     try {
@@ -89,12 +89,15 @@ export default function AnimalList() {
         )}
         ListEmptyComponent={
           <View style={styles.emptyContainer}>
-            <ThemedText variant="h2" style={styles.emptyText}>
+            {session ?
+              (<View style={styles.emptyContainer}><ThemedText variant="h2" style={styles.emptyText}>
               Noch keine Favoriten
             </ThemedText>
             <ThemedText variant="body" style={{ color: "gray" }}>
               Speichere Tiere mit dem Herz-Symbol.
-            </ThemedText>
+            </ThemedText></View>) : (<View style={styles.emptyContainer}><ThemedText variant="h3" style={styles.emptyText}>
+              Funktion nur für angemeldete Nutzer verfügbar
+            </ThemedText></View>)}
           </View>
         }
       />

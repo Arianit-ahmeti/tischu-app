@@ -41,11 +41,12 @@ function InfoField({ icon, label, value, isLast }: InfoFieldProps) {
 export default function Account() {
   const { session, type, isLoading: isSessionLoading } = useSupabaseSession();
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
   const router = useRouter();
 
   const getProfile = useCallback(async () => {
     try {
+      console.log(session, "prifle call")
       setLoading(true);
       if (!session?.user) throw new Error("No user on the session!");
 
@@ -91,7 +92,16 @@ export default function Account() {
     );
   }
 
-  if (!session?.user || !profile) {
+    if (!session || !session.user) {
+    return (
+      <View style={styles.center}>
+        <ThemedText style={styles.content} variant="h2">Kein Nutzer angemeldet</ThemedText>
+        <ThemedButton onPress={() => router.navigate({ pathname: "Auth" })}>ANMELDEN</ThemedButton>
+      </View>
+    )
+  }
+
+  if (!profile) {
     return (
       <View style={styles.center}>
         <ThemedText variant="body">Profil nicht gefunden</ThemedText>
