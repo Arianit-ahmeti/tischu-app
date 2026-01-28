@@ -46,7 +46,6 @@ export default function Account() {
 
   const getProfile = useCallback(async () => {
     try {
-      console.log(session, "prifle call");
       setLoading(true);
       if (!session?.user) throw new Error("No user on the session!");
 

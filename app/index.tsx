@@ -1,4 +1,3 @@
-import Auth from "@app/Auth";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { SessionType } from "@lib/types";
 import { Redirect } from "expo-router";
@@ -23,6 +22,4 @@ export default function App() {
     default:
       return <Redirect href="/View/User/AnimalList" />;
   }
-
-  return <Auth />;
 }
