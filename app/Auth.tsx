@@ -26,8 +26,7 @@ export default function Auth() {
       password: password,
     });
     setLoading(false);
-    error ? Alert.alert(error.message) : router.replace("/");;
-
+    error ? Alert.alert(error.message) : router.replace("/");
   }
 
   async function signUpWithEmail() {
@@ -40,9 +39,8 @@ export default function Auth() {
       password: password,
     });
     setLoading(false);
-    error ? Alert.alert(error.message) : router.replace("/");;
+    error ? Alert.alert(error.message) : router.replace("/");
     if (!session) Alert.alert("Please check your inbox for email verification!");
-
   }
 
   return (
