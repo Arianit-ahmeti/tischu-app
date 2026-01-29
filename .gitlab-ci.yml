@@ -14,7 +14,7 @@ prettier:
     - npm run prettier:check
   allow_failure: true
 
-test:
+jest tests:
   stage: test
   image: node:25-alpine
   cache:
@@ -24,3 +24,21 @@ test:
     - npm install
   script:
     - npm test
+
+end-to-end tests:
+  stage: test
+  image: mcr.microsoft.com/playwright:v1.57.0-noble
+  cache:
+    paths:
+      - node_modules/
+  before_script:
+    - npm install
+    - npx playwright install --with-deps
+  script:
+    - npm run test:e2e
+  artifacts:
+    when: always
+    paths:
+      - test-results/
+      - playwright-report/
+    expire_in: 1 week

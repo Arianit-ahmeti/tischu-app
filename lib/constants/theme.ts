@@ -113,6 +113,13 @@ export const theme = {
       fontWeight: "700" as const,
       textTransform: "uppercase" as const,
     },
+    BigBadge: {
+      fontFamily: "Inter",
+      fontSize: 14,
+      lineHeight: 24,
+      fontWeight: "500" as const,
+      textTransform: "uppercase" as const,
+    },
 
     // Navigation - Inter
     navigation: {

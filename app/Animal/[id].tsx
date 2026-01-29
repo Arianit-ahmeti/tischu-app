@@ -1,4 +1,13 @@
-import { AlertDialog, BackButton, Chip, IconButton, ImageCarousel, ThemedButton, ThemedText } from "@components";
+import {
+  AlertDialog,
+  BackButton,
+  Chip,
+  IconButton,
+  ImageCarousel,
+  RowView,
+  ThemedButton,
+  ThemedText,
+} from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { getAnimalMediaDownloadURLs } from "@lib/services/animalMediaService";
@@ -10,6 +19,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { checkForForm } from "../../lib/adoptionService";
 
 export default function AnimalDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -24,6 +34,7 @@ export default function AnimalDetailScreen() {
   const [isOrgAnimal, setIsOrgAnimal] = useState(false);
   const [isFavoriteAnimal, setIsFavorite] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [contactExists, setContactExists] = useState(false);
 
   async function loadAnimal() {
     try {
@@ -100,8 +111,16 @@ export default function AnimalDetailScreen() {
         setIsOrgAnimal(false);
       }
     };
+    const checkContactExists = async () => {
+      if (animal && session?.user.id) {
+        const result = await checkForForm(session.user.id, animal.id);
+        if (result) setContactExists(result);
+        else setContactExists(false);
+      }
+    };
 
     checkIsOrganizationAnimal();
+    checkContactExists();
   }, [animal, session?.user.id, type]);
 
   if (loading || sessionLoading) {
@@ -112,15 +131,13 @@ export default function AnimalDetailScreen() {
     );
   }
 
-  if (!animal || !session?.user.id) {
+  if (!animal) {
     return (
       <View style={styles.center}>
         <Text>Tier nicht gefunden.</Text>
       </View>
     );
   }
-
-  const userID = session.user.id;
 
   return (
     <SafeAreaView style={styles.root} edges={["top", "left", "right"]}>
@@ -137,6 +154,7 @@ export default function AnimalDetailScreen() {
               iconSet="FontAwesome"
               iconColor={isFavoriteAnimal ? theme.colors.brand.focus : theme.colors.text.dark}
               style={styles.favoriteButton}
+              disabled={session?.user.id == null}
               onPress={() => {
                 toggleFavorite();
               }}
@@ -222,7 +240,46 @@ export default function AnimalDetailScreen() {
             </ThemedText>
           </View>
 
-          <ThemedButton textStyle={{ fontWeight: "bold" }}>JETZT BEWERBEN</ThemedButton>
+          <AlertDialog
+            visible={alertVisible}
+            title={ERROR_MESSAGES.WARNING}
+            message={ERROR_MESSAGES.NOT_LOGGED_IN}
+            buttons={[
+              {
+                text: "Zurück",
+                onPress: () => router.back(),
+              },
+              {
+                text: "Log In",
+                onPress: () => router.navigate({ pathname: "Auth" }),
+              },
+            ]}
+            onDismiss={() => setAlertVisible(false)}
+          />
+
+          {contactExists ? (
+            <RowView style={styles.contacted}>
+              <IconButton iconSet="Feather" iconName="check-circle" />
+              <ThemedText variant="bodyLarge">BEREITS BEWORBEN</ThemedText>
+            </RowView>
+          ) : (
+            <ThemedButton
+              disabled={sessionLoading}
+              textStyle={{ fontWeight: "bold" }}
+              onPress={() => {
+                if (session?.user) {
+                  router.navigate({
+                    pathname: "AdoptionForm/UserContact",
+                    params: { animalId: animalId },
+                  });
+                } else {
+                  setAlertVisible(true);
+                }
+              }}
+            >
+              JETZT BEWERBEN
+            </ThemedButton>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -324,5 +381,11 @@ const styles = StyleSheet.create({
   },
   gap: {
     marginBottom: 8,
+  },
+  contacted: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: theme.colors.background.warm,
+    borderRadius: 12,
   },
 });

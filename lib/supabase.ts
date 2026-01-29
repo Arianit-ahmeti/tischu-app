@@ -3,6 +3,7 @@ import { createClient } from "@supabase/supabase-js";
 import * as aesjs from "aes-js";
 import Constants from "expo-constants";
 import * as SecureStore from "expo-secure-store";
+import { Platform } from "react-native";
 import "react-native-get-random-values";
 
 // As Expo's SecureStore does not support values larger than 2048
@@ -53,11 +54,32 @@ class LargeSecureStore {
   }
 }
 
+class WebSecureStore {
+  async getItem(key: string) {
+    if (typeof window !== "undefined") {
+      return localStorage.getItem(key);
+    }
+    return null;
+  }
+
+  async removeItem(key: string) {
+    if (typeof window !== "undefined") {
+      localStorage.removeItem(key);
+    }
+  }
+
+  async setItem(key: string, value: string) {
+    if (typeof window !== "undefined") {
+      localStorage.setItem(key, value);
+    }
+  }
+}
+
 const { supabaseUrl, supabaseKey } = Constants.expoConfig?.extra || {};
 
 export const supabase = createClient(supabaseUrl, supabaseKey, {
   auth: {
-    storage: new LargeSecureStore(),
+    storage: Platform.OS === "web" ? new WebSecureStore() : new LargeSecureStore(),
     autoRefreshToken: true,
     persistSession: true,
     detectSessionInUrl: false,

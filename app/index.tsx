@@ -1,4 +1,3 @@
-import Auth from "@app/Auth";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { SessionType } from "@lib/types";
 import { Redirect } from "expo-router";
@@ -15,16 +14,12 @@ export default function App() {
     );
   }
 
-  if (session?.user) {
-    switch (type) {
-      case SessionType.user:
-        return <Redirect href="/View/User/AnimalList" />;
-      case SessionType.organization:
-        return <Redirect href="/View/Organization/AnimalList" />;
-      default:
-        return <Redirect href="/View/User/AnimalList" />;
-    }
+  switch (type) {
+    case SessionType.user:
+      return <Redirect href="/View/User/AnimalList" />;
+    case SessionType.organization:
+      return <Redirect href="/View/Organization/AnimalList" />;
+    default:
+      return <Redirect href="/View/User/AnimalList" />;
   }
-
-  return <Auth />;
 }

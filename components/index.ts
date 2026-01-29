@@ -1,4 +1,5 @@
 export { AnimalCard } from "./cards/AnimalCard";
+export { MessageCard } from "./cards/MessageCard";
 export { ColumnView } from "./layout/ColumnView";
 export { ListTile } from "./layout/ListTile";
 export { RowView } from "./layout/RowView";
@@ -14,6 +15,7 @@ export { Chip } from "./ui/Chip";
 export { IconButton } from "./ui/IconButton";
 export { PaginationDots } from "./ui/PaginationDots";
 export { SelectableButton } from "./ui/SelectableButton";
+export { ThemedArrayInput } from "./ui/ThemedArrayInput";
 export { ThemedButton } from "./ui/ThemedButton";
 export { ThemedText } from "./ui/ThemedText";
 export { ThemedTextInput } from "./ui/ThemedTextInput";

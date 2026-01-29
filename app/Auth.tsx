@@ -24,9 +24,8 @@ export default function Auth() {
       email: email,
       password: password,
     });
-
-    if (error) Alert.alert(error.message);
     setLoading(false);
+    error ? Alert.alert(error.message) : router.replace("/");
   }
 
   async function signUpWithEmail() {
@@ -38,10 +37,9 @@ export default function Auth() {
       email: email,
       password: password,
     });
-
-    if (error) Alert.alert(error.message);
-    if (!session) Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
+    error ? Alert.alert(error.message) : router.replace("/");
+    if (!session) Alert.alert("Please check your inbox for email verification!");
   }
 
   return (
@@ -51,6 +49,7 @@ export default function Auth() {
       </View>
       <ThemedText variant="h3">E-Mail-Adresse</ThemedText>
       <ThemedTextInput
+        testID="auth/email-input"
         onChangeText={(text) => setEmail(text)}
         value={email}
         placeholder="E-Mail Adresse eingeben"
@@ -58,6 +57,7 @@ export default function Auth() {
       />
       <ThemedText variant="h3">Passwort</ThemedText>
       <ThemedTextInput
+        testID="auth/password-input"
         onChangeText={(text) => setPassword(text)}
         value={password}
         secureTextEntry={true}
@@ -65,17 +65,27 @@ export default function Auth() {
         autoCapitalize={"none"}
       />
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <ThemedButton textStyle={{ fontWeight: "bold" }} disabled={loading} onPress={() => signInWithEmail()}>
+        <ThemedButton
+          testID="auth/sign-in-button"
+          textStyle={{ fontWeight: "bold" }}
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        >
           EINLOGGEN
         </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <ThemedButton variant="text" disabled={loading} onPress={() => signUpWithEmail()}>
+        <ThemedButton testID="auth/sign-up-button" variant="text" disabled={loading} onPress={() => signUpWithEmail()}>
           Als Nutzer registrieren
         </ThemedButton>
       </View>
       <View style={[styles.bottomContainer]}>
-        <ThemedButton variant="text" disabled={loading} onPress={() => router.navigate("/Organization/SignUp")}>
+        <ThemedButton
+          testID="auth/organization-sign-up-button"
+          variant="text"
+          disabled={loading}
+          onPress={() => router.navigate("/Organization/SignUp")}
+        >
           Als Organisation registrieren
         </ThemedButton>
       </View>
