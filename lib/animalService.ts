@@ -65,10 +65,16 @@ export async function fetchAnimalDetails(animalId: string): Promise<Animal | nul
 }
 
 export async function deleteAnimal(animalId: string) {
-  const { error } = await supabase.from("animals").delete().eq("id", animalId);
+  const { error: orgError } = await supabase.from("organization_animals").delete().eq("animal_id", animalId);
+  if (orgError) {
+    console.error("Error deleting animal:", orgError.message);
+    return false;
+  }
 
-  if (error) {
-    console.error("Error deleting animal:", error.message);
+  const { error: animalError } = await supabase.from("animals").delete().eq("id", animalId);
+
+  if (animalError) {
+    console.error("Error deleting animal:", animalError.message);
     return false;
   }
 
@@ -146,6 +152,14 @@ export async function fetchOrganizationAnimals(organizationId: string): Promise<
   return animalsData;
 }
 
+export async function isOrganizationAnimal(animalId: string, organizationId: string): Promise<boolean> {
+  const animals = await fetchOrganizationAnimals(organizationId);
+  if (animals.some((a) => a.id === animalId)) {
+    return true;
+  }
+  return false;
+}
+
 export async function addFavorite(animalID: string, userID: string) {
   const { error } = await supabase.from("favorites").insert({ user_id: userID, animal_id: animalID });
 
@@ -172,4 +186,11 @@ export async function removeFavorite(animalID: string, userID: string) {
   if (error) {
     throw error;
   }
+}
+
+export async function fetchUserFavorites(userID: string): Promise<Animal[]> {
+  const { data, error } = await supabase.from("favorites").select("animals(*)").eq("user_id", userID);
+
+  if (error) throw error;
+  return data?.map((f: any) => f.animals).filter(Boolean) || [];
 }

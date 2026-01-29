@@ -66,8 +66,8 @@ export const theme = {
     },
     h4: {
       fontFamily: "Inter",
-      fontSize: 15,
-      lineHeight: 20,
+      fontSize: 16,
+      lineHeight: 24,
       fontWeight: "500" as const,
     },
 

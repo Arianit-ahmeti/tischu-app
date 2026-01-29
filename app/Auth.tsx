@@ -1,8 +1,9 @@
+import { ThemedText, ThemedTextInput } from "@components";
 import { ThemedButton } from "@components/ThemedButton";
 import { supabase } from "@lib/supabase";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
-import { Alert, AppState, Button, StyleSheet, Text, TextInput, View } from "react-native";
+import { Alert, AppState, Image, StyleSheet, View } from "react-native";
 
 AppState.addEventListener("change", (state) => {
   if (state === "active") {
@@ -46,34 +47,49 @@ export default function Auth() {
 
   return (
     <View style={styles.container}>
+      <View style={styles.logoContainer}>
+        <Image source={require("../assets/tischu-logo.png")} style={styles.logo} resizeMode="contain" />
+      </View>
+      <ThemedText variant="h3">E-Mail-Adresse</ThemedText>
+      <ThemedTextInput
+        testID="auth/email-input"
+        onChangeText={(text) => setEmail(text)}
+        value={email}
+        placeholder="E-Mail Adresse eingeben"
+        autoCapitalize={"none"}
+      />
+      <ThemedText variant="h3">Passwort</ThemedText>
+      <ThemedTextInput
+        testID="auth/password-input"
+        onChangeText={(text) => setPassword(text)}
+        value={password}
+        secureTextEntry={true}
+        placeholder="Passwort eingeben"
+        autoCapitalize={"none"}
+      />
       <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Text>Email</Text>
-        <TextInput
-          onChangeText={(text) => setEmail(text)}
-          value={email}
-          placeholder="email@address.com"
-          autoCapitalize={"none"}
-        />
+        <ThemedButton
+          testID="auth/sign-in-button"
+          textStyle={{ fontWeight: "bold" }}
+          disabled={loading}
+          onPress={() => signInWithEmail()}
+        >
+          EINLOGGEN
+        </ThemedButton>
       </View>
       <View style={styles.verticallySpaced}>
-        <Text>Password</Text>
-        <TextInput
-          onChangeText={(text) => setPassword(text)}
-          value={password}
-          secureTextEntry={true}
-          placeholder="Password"
-          autoCapitalize={"none"}
-        />
+        <ThemedButton testID="auth/sign-up-button" variant="text" disabled={loading} onPress={() => signUpWithEmail()}>
+          Als Nutzer registrieren
+        </ThemedButton>
       </View>
-      <View style={[styles.verticallySpaced, styles.mt20]}>
-        <Button title="Sign in" disabled={loading} onPress={() => signInWithEmail()} />
-      </View>
-      <View style={styles.verticallySpaced}>
-        <Button title="Sign up" disabled={loading} onPress={() => signUpWithEmail()} />
-      </View>
-      <View style={[styles.verticallySpaced]}>
-        <ThemedButton disabled={loading} onPress={() => router.navigate("/Organization/SignUp")}>
-          Organization Sign up
+      <View style={[styles.bottomContainer]}>
+        <ThemedButton
+          testID="auth/organization-sign-up-button"
+          variant="text"
+          disabled={loading}
+          onPress={() => router.navigate("/Organization/SignUp")}
+        >
+          Als Organisation registrieren
         </ThemedButton>
       </View>
     </View>
@@ -82,8 +98,18 @@ export default function Auth() {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     marginTop: 40,
     padding: 12,
+  },
+  logoContainer: {
+    alignItems: "center",
+    marginTop: 20,
+    marginBottom: 30,
+  },
+  logo: {
+    width: 200,
+    height: 100,
   },
   verticallySpaced: {
     paddingTop: 4,
@@ -91,6 +117,19 @@ const styles = StyleSheet.create({
     alignSelf: "stretch",
   },
   mt20: {
-    marginTop: 20,
+    marginTop: 10,
+  },
+  center: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    padding: 16,
+  },
+  bottomContainer: {
+    position: "absolute",
+    bottom: 40,
+    left: 0,
+    right: 0,
+    alignItems: "center",
   },
 });

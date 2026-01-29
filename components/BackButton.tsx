@@ -1,8 +1,8 @@
-import { Ionicons } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
+import { theme } from "@theme";
 import { router } from "expo-router";
 import React from "react";
-import { Pressable, StyleSheet, PressableProps, ViewStyle } from "react-native";
-import { theme } from "@theme";
+import { Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
 
 interface BackButtonProps extends PressableProps {
   color?: string;
@@ -21,7 +21,7 @@ export const BackButton: React.FC<BackButtonProps> = ({
       onPress={() => router.back()}
       {...props}
     >
-      <Ionicons name="chevron-back" size={size} color={color} style={{ marginRight: 2 }} />
+      <Feather name="chevron-left" size={size} color={color} style={{ marginRight: 2 }} />
     </Pressable>
   );
 };

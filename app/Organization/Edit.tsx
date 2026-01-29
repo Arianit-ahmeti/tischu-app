@@ -137,8 +137,8 @@ export default function OrganizationEdit() {
           />
 
           <View style={styles.buttonContainer}>
-            <ThemedButton onPress={handleSave} disabled={saving}>
-              Speichern
+            <ThemedButton textStyle={{ fontWeight: "bold" }} onPress={handleSave} disabled={saving}>
+              SPEICHERN
             </ThemedButton>
           </View>
         </View>
