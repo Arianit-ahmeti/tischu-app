@@ -1,7 +1,7 @@
 import { ColumnView, RowView, ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { loadUserContacts, saveUserContacts, updateUserContacts } from "@lib/adoptionService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { loadUserContacts, saveUserContacts, updateUserContacts } from "@lib/services/adoptionService";
 import { theme } from "@theme";
 import { UserContact } from "@types";
 import { isLoading } from "expo-font";

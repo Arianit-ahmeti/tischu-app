@@ -1,7 +1,7 @@
 import { AlertDialog, ColumnView, IconButton, RowView, ThemedText } from "@components";
-import { loadUserContacts, loadUserSituation } from "@lib/adoptionService";
 import { globalStyles } from "@lib/constants/globalStyles";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { loadUserContacts, loadUserSituation } from "@lib/services/adoptionService";
 import { theme } from "@theme";
 import { UserContact, UserSituation } from "@types";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";

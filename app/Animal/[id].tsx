@@ -19,7 +19,7 @@ import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import { checkForForm } from "../../lib/adoptionService";
+import { checkForForm } from "../../lib/services/adoptionService";
 
 export default function AnimalDetailScreen() {
   const { id } = useLocalSearchParams();

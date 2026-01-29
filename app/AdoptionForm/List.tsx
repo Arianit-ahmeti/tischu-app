@@ -1,7 +1,7 @@
 import { MessageCard, ThemedText } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { fetchAdoptionContactsForList } from "@lib/adoptionService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { fetchAdoptionContactsForList } from "@lib/services/adoptionService";
 import { FlashList } from "@shopify/flash-list";
 import type { AdoptionContact } from "@types";
 import React, { useEffect, useState } from "react";
