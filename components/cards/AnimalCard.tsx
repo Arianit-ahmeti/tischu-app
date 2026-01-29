@@ -1,4 +1,3 @@
-import { IconButton, ThemedText } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
 import { getAnimalMediaDownloadURLs } from "@lib/services/animalMediaService";
 import { favoriteService } from "@lib/services/favoriteService";
@@ -7,6 +6,8 @@ import { theme } from "@theme";
 import { useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Image, Pressable, StyleSheet, View } from "react-native";
+import { IconButton } from "../ui/IconButton";
+import { ThemedText } from "../ui/ThemedText";
 
 type AnimalCardType = "grid" | "list";
 

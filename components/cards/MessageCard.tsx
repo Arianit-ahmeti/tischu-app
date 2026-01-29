@@ -1,4 +1,3 @@
-import { Chip, ColumnView, IconButton, RowView, ThemedText } from "@components";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
 import { adoptionRead, deleteAdoptionContact } from "@lib/services/adoptionService";
 import { fetchAnimalDetails } from "@lib/services/animalService";
@@ -9,6 +8,11 @@ import { router } from "expo-router";
 import { reload } from "expo-router/build/global-state/routing";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from "react-native";
+import { ColumnView } from "../layout/ColumnView";
+import { RowView } from "../layout/RowView";
+import { Chip } from "../ui/Chip";
+import { IconButton } from "../ui/IconButton";
+import { ThemedText } from "../ui/ThemedText";
 
 interface MessageCardProps {
   message: AdoptionContact;

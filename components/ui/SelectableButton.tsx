@@ -1,7 +1,7 @@
-import { ThemedText } from "@components";
 import { theme } from "@theme";
 import React from "react";
 import { Pressable, PressableProps, StyleSheet, ViewStyle } from "react-native";
+import { ThemedText } from "./ThemedText";
 
 interface SelectableButtonProps extends PressableProps {
   backgroundColor?: string;

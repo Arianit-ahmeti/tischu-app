@@ -1,4 +1,3 @@
-import { PaginationDots, ThemedText } from "@components";
 import { FlashList } from "@shopify/flash-list";
 import { theme } from "@theme";
 import React, { ReactNode, useState } from "react";
@@ -11,6 +10,8 @@ import {
   StyleSheet,
   View,
 } from "react-native";
+import { PaginationDots } from "../ui/PaginationDots";
+import { ThemedText } from "../ui/ThemedText";
 
 const { width } = Dimensions.get("window");
 
