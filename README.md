@@ -46,8 +46,8 @@ To run the unit tests for the application:
 npm test
 ```
 
-For continuous testing during development:
+To run headed (a browser window is opened where the testing sequence plays out) end-to-end tests:
 
 ```bash
-npm run test:watch
+npm run test:e2e:headed
 ```
