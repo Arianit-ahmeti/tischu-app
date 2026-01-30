@@ -1,18 +1,18 @@
-import { IconButton } from "@components/IconButton";
-import { adoptionRead, deleteAdoptionContact } from "@lib/adoptionService";
-import { fetchAnimalDetails } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { adoptionRead, deleteAdoptionContact } from "@lib/services/adoptionService";
+import { fetchAnimalDetails } from "@lib/services/animalService";
+import { getUserName } from "@lib/services/userService";
 import { AdoptionContact } from "@lib/types";
-import { getUserName } from "@lib/userService";
 import { theme } from "@theme";
 import { router } from "expo-router";
 import { reload } from "expo-router/build/global-state/routing";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, Pressable, StyleSheet, View } from "react-native";
-import { Chip } from "./Chip";
-import { ColumnView } from "./ColumnView";
-import { RowView } from "./RowView";
-import { ThemedText } from "./ThemedText";
+import { ColumnView } from "../layout/ColumnView";
+import { RowView } from "../layout/RowView";
+import { Chip } from "../ui/Chip";
+import { IconButton } from "../ui/IconButton";
+import { ThemedText } from "../ui/ThemedText";
 
 interface MessageCardProps {
   message: AdoptionContact;

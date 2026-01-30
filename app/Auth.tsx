@@ -1,5 +1,4 @@
-import { ThemedText, ThemedTextInput } from "@components";
-import { ThemedButton } from "@components/ThemedButton";
+import { ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { supabase } from "@lib/supabase";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";

@@ -1,9 +1,9 @@
 import { AnimalCard, ThemedText } from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { fetchAnimalPreviewImages } from "@lib/animalMediaService";
-import { fetchOrganizationAnimals } from "@lib/animalService";
 import { globalStyles } from "@lib/constants/globalStyles";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { fetchAnimalPreviewImages } from "@lib/services/animalMediaService";
+import { fetchOrganizationAnimals } from "@lib/services/animalService";
 import { FlashList } from "@shopify/flash-list";
 import { Animal } from "@types";
 import { useFocusEffect } from "expo-router";

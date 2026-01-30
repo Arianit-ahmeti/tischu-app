@@ -8,10 +8,11 @@ import {
   ThemedText,
   ThemedTextInput,
 } from "@components";
+import { useEnums } from "@hooks/useEnums";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { useUserSituationEnums } from "@hooks/useUserSituationEnums";
-import { saveAdoptionContact, saveUserSituation } from "@lib/adoptionService";
 import { ERROR_MESSAGES, SUCCESS_MESSAGES } from "@lib/constants/messages";
+import { saveAdoptionContact, saveUserSituation } from "@lib/services/adoptionService";
+import { getGardenSizeEnum, getLandlordApprovalEnum, getPetExperienceEnum } from "@lib/utils/supabaseEnumHandler";
 import { UserSituation } from "@types";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
@@ -21,7 +22,15 @@ import { SafeAreaView } from "react-native-safe-area-context";
 export default function AdoptionFormUserSituation() {
   const router = useRouter();
   const { session, isLoading: isSessionLoading } = useSupabaseSession();
-  const { enums, enumsAreLoading, enumsError } = useUserSituationEnums();
+  const {
+    enums,
+    loading: enumsAreLoading,
+    error: enumsError,
+  } = useEnums({
+    gardenSizes: getGardenSizeEnum,
+    landlordApproval: getLandlordApprovalEnum,
+    petExperience: getPetExperienceEnum,
+  });
   const [loading, setLoading] = useState(true);
   const [userId, setUserId] = useState(String);
   const [animalId, setAnimalId] = useState(String);
@@ -167,7 +176,7 @@ export default function AdoptionFormUserSituation() {
                 onPress={() => setSituation({ ...situation, experience: value })}
                 style={styles.selectableButton}
               >
-                {value.capitalizeFirst()}
+                {capitalizeFirst(value)}
               </SelectableButton>
             ))}
           </View>
@@ -351,7 +360,7 @@ export default function AdoptionFormUserSituation() {
                 onPress={() => setSituation({ ...situation, garden_size: value })}
                 style={styles.selectableButton}
               >
-                {value.capitalizeFirst()}
+                {capitalizeFirst(value)}
               </SelectableButton>
             ))}
           </View>
@@ -410,7 +419,7 @@ export default function AdoptionFormUserSituation() {
                     onPress={() => setSituation({ ...situation, landlord_approval: value })}
                     style={styles.selectableButton}
                   >
-                    {value.capitalizeFirst()}
+                    {capitalizeFirst(value)}
                   </SelectableButton>
                 ))}
               </View>
@@ -515,3 +524,7 @@ const styles = StyleSheet.create({
   vertAlign: { alignItems: "center" },
   time: { width: "25%" },
 });
+
+function capitalizeFirst(value: string): string {
+  return value.charAt(0).toUpperCase() + value.slice(1);
+}

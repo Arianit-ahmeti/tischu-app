@@ -1,5 +1,4 @@
-import { supabase } from "./supabase";
-import { parsePostgresArray } from "./utils/postgresArrayHelper";
+import { supabase } from "@lib/supabase";
 
 export type EnumObject<T extends string> = {
   readonly [K in T]: K;
@@ -78,4 +77,10 @@ async function enumHelper(rpcFunctionName: string): Promise<string[]> {
   }
 
   return [];
+}
+
+function parsePostgresArray(data: string): string[] {
+  const cleaned = data.slice(1, -1);
+  if (cleaned.length === 0) return [];
+  return cleaned.split(",").map((item) => item.trim());
 }

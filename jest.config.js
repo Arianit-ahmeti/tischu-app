@@ -26,10 +26,10 @@ module.exports = {
       setupFilesAfterEnv: ["<rootDir>/__tests__/component_tests.setup.ts"],
       moduleNameMapper: {
         "^@components$": "<rootDir>/components/index.ts",
-        "^@theme$": "<rootDir>/theme/theme.ts",
+        "^@theme$": "<rootDir>/lib/constants/theme.ts",
         "^@/(.*)$": "<rootDir>/$1",
         "^components/(.*)$": "<rootDir>/components/$1",
-        "^theme/(.*)$": "<rootDir>/theme/$1",
+        "^theme/(.*)$": "<rootDir>/lib/constants/theme.ts",
       },
       transformIgnorePatterns: ["node_modules/(?!(react-native|@react-native|expo|@expo|@testing-library)/)"],
       collectCoverageFrom: ["components/**/*.{ts,tsx}", "!components/**/*.d.ts"],

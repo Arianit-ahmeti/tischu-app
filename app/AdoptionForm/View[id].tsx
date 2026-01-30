@@ -1,65 +1,60 @@
 import { AlertDialog, ColumnView, IconButton, RowView, ThemedText } from "@components";
-import { loadUserContacts, loadUserSituation } from "@lib/adoptionService";
-import { globalStyles } from "@lib/constants/globalStyles";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { loadUserContacts, loadUserSituation } from "@lib/services/adoptionService";
 import { theme } from "@theme";
 import { UserContact, UserSituation } from "@types";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { ActivityIndicator, ScrollView, StyleSheet, View } from "react-native";
+import { ScrollView, StyleSheet, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 
 export default function AdoptionFormViewt() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
-  const [alertVisible, setAlertVisible] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const [contacts, setContacts] = useState<UserContact | null>();
   const [situation, setSituation] = useState<UserSituation | null>();
-  const { uid, fid } = useLocalSearchParams();
-  const senderId = Array.isArray(uid) ? uid[0] : uid;
-  const formId = Array.isArray(fid) ? fid[0] : fid;
+  const { userId, formId } = useLocalSearchParams();
+  const _userId = Array.isArray(userId) ? userId[0] : userId;
+  const _formId = Array.isArray(formId) ? formId[0] : formId;
 
   async function load() {
     setLoading(true);
-    if (!situation) {
+    setError(null);
+
+    if (!situation && _formId) {
       try {
-        setLoading(true);
-        let form = await loadUserSituation(formId);
+        let form = await loadUserSituation(_formId);
         setSituation(form);
-      } catch (error) {
-        console.error(ERROR_MESSAGES.USER_SITUATION_LOAD_FAILED, error);
-        setAlertVisible(true);
+      } catch (err) {
+        console.error(ERROR_MESSAGES.USER_SITUATION_LOAD_FAILED, err);
+        setError(ERROR_MESSAGES.USER_SITUATION_LOAD_FAILED);
       }
     }
-    if (!contacts) {
+    if (!contacts && _userId) {
       try {
-        if (!senderId) {
-          throw Error(ERROR_MESSAGES.ERROR);
-        }
-        let data = await loadUserContacts(senderId);
+        let data = await loadUserContacts(_userId);
         setContacts(data);
-      } catch (error) {
-        console.error(ERROR_MESSAGES.USER_CONTACT_LOAD_FAILED, error);
-        setAlertVisible(true);
+      } catch (err) {
+        console.error(ERROR_MESSAGES.USER_CONTACT_LOAD_FAILED, err);
+        setError(ERROR_MESSAGES.USER_CONTACT_LOAD_FAILED);
       }
+    }
+
+    if (!_formId || !_userId) {
+      setError(ERROR_MESSAGES.ERROR);
     }
     setLoading(false);
   }
 
   useEffect(() => {
-    load();
-  }, [senderId, formId]);
-
-  if (loading) {
-    return (
-      <View style={globalStyles.center}>
-        <ActivityIndicator />
-      </View>
-    );
-  }
-  if (!contacts || !situation || contacts == null || situation == null) {
-    setAlertVisible(true);
-  }
+    if (_formId && _userId) {
+      load();
+    } else {
+      setError(ERROR_MESSAGES.ERROR);
+      setLoading(false);
+    }
+  }, [_userId, _formId]);
 
   const userProfile = () => {
     return (
@@ -69,22 +64,17 @@ export default function AdoptionFormViewt() {
         onPress={() =>
           router.navigate({
             pathname: "ProfileScreen",
-            params: { id: senderId },
+            params: { id: _userId },
           })
         }
       />
     );
   };
 
-  if (alertVisible) {
+  if (error) {
     return (
       <View>
-        <AlertDialog
-          visible={true}
-          title={ERROR_MESSAGES.ERROR}
-          message={ERROR_MESSAGES.USER_SITUATION_LOAD_FAILED}
-          onDismiss={() => router.back()}
-        />
+        <AlertDialog visible={true} title={ERROR_MESSAGES.ERROR} message={error} onDismiss={() => router.back()} />
       </View>
     );
   }

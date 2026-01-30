@@ -10,8 +10,8 @@ import {
   StyleSheet,
   View,
 } from "react-native";
-import { PaginationDots } from "./PaginationDots";
-import { ThemedText } from "./ThemedText";
+import { PaginationDots } from "../ui/PaginationDots";
+import { ThemedText } from "../ui/ThemedText";
 
 const { width } = Dimensions.get("window");
 

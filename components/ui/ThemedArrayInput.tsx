@@ -1,8 +1,8 @@
 import { useEffect } from "react";
 import { KeyboardType, ScrollView, StyleSheet, View } from "react-native";
-import { ColumnView } from "./ColumnView";
+import { ColumnView } from "../layout/ColumnView";
+import { RowView } from "../layout/RowView";
 import { IconButton } from "./IconButton";
-import { RowView } from "./RowView";
 import { ThemedTextInput } from "./ThemedTextInput";
 
 interface ThemedArrayInputProps {

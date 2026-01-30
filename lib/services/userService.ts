@@ -1,7 +1,7 @@
+import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Organization } from "@types";
-import { ERROR_MESSAGES } from "./constants/messages";
-import { supabase } from "./supabase";
 
 export async function getProfile(user_id: string): Promise<Organization | null> {
   try {
