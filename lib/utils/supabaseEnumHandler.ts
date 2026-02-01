@@ -1,5 +1,4 @@
-import { supabase } from "./supabase";
-import { parsePostgresArray } from "./utils/postgresArrayHelper";
+import { supabase } from "@lib/supabase";
 
 export type EnumObject<T extends string> = {
   readonly [K in T]: K;
@@ -35,6 +34,20 @@ export async function getVerificationStatusesEnum() {
   return createEnumObject(values);
 }
 
+export async function getPetExperienceEnum() {
+  const values = await enumHelper("get_pet_experience_enum");
+  return createEnumObject(values);
+}
+export async function getGardenSizeEnum() {
+  const values = await enumHelper("get_garden_size_enum");
+  return createEnumObject(values);
+}
+
+export async function getLandlordApprovalEnum() {
+  const values = await enumHelper("get_landlord_approval_enum");
+  return createEnumObject(values);
+}
+
 function createEnumObject<T extends string>(values: T[]): EnumObject<T> {
   const enumObj = values.reduce(
     (acc, value) => {
@@ -64,4 +77,10 @@ async function enumHelper(rpcFunctionName: string): Promise<string[]> {
   }
 
   return [];
+}
+
+function parsePostgresArray(data: string): string[] {
+  const cleaned = data.slice(1, -1);
+  if (cleaned.length === 0) return [];
+  return cleaned.split(",").map((item) => item.trim());
 }

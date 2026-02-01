@@ -1,8 +1,8 @@
 import { ReactNode } from "react";
 import { GestureResponderEvent, Pressable, StyleSheet, View, ViewStyle } from "react-native";
-import { ColumnView } from "./ColumnView";
-import { RowView } from "./RowView";
-import { ThemedText } from "./ThemedText";
+import { ColumnView } from "../layout/ColumnView";
+import { RowView } from "../layout/RowView";
+import { ThemedText } from "../ui/ThemedText";
 
 interface ListTileProps {
   onPress?: (event: GestureResponderEvent) => void;

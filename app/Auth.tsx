@@ -1,5 +1,4 @@
-import { ThemedText, ThemedTextInput } from "@components";
-import { ThemedButton } from "@components/ThemedButton";
+import { ThemedButton, ThemedText, ThemedTextInput } from "@components";
 import { supabase } from "@lib/supabase";
 import { useRouter } from "expo-router";
 import React, { useState } from "react";
@@ -25,9 +24,8 @@ export default function Auth() {
       email: email,
       password: password,
     });
-
-    if (error) Alert.alert(error.message);
     setLoading(false);
+    error ? Alert.alert(error.message) : router.replace("/");
   }
 
   async function signUpWithEmail() {
@@ -39,10 +37,9 @@ export default function Auth() {
       email: email,
       password: password,
     });
-
-    if (error) Alert.alert(error.message);
-    if (!session) Alert.alert("Please check your inbox for email verification!");
     setLoading(false);
+    error ? Alert.alert(error.message) : router.replace("/");
+    if (!session) Alert.alert("Please check your inbox for email verification!");
   }
 
   return (

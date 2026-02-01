@@ -1,16 +1,25 @@
-import { AlertDialog, BackButton, Chip, ImageCarousel, ThemedButton, ThemedText } from "@components";
-import { IconButton } from "@components/IconButton";
-import { useFavorite } from "@hooks/useFavorite";
+import {
+  AlertDialog,
+  BackButton,
+  Chip,
+  IconButton,
+  ImageCarousel,
+  RowView,
+  ThemedButton,
+  ThemedText,
+} from "@components";
 import { useSupabaseSession } from "@hooks/useSupabaseSession";
-import { getAnimalMediaDownloadURLs } from "@lib/animalMediaService";
-import { deleteAnimal, fetchAnimalDetails, isOrganizationAnimal } from "@lib/animalService";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { getAnimalMediaDownloadURLs } from "@lib/services/animalMediaService";
+import { deleteAnimal, fetchAnimalDetails, isOrganizationAnimal } from "@lib/services/animalService";
+import { favoriteService } from "@lib/services/favoriteService";
 import { theme } from "@theme";
 import { Animal } from "@types";
 import { Stack, useLocalSearchParams, useRouter } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { ActivityIndicator, Alert, ScrollView, StyleSheet, Text, View } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
+import { checkForForm } from "../../lib/services/adoptionService";
 
 export default function AnimalDetailScreen() {
   const { id } = useLocalSearchParams();
@@ -23,9 +32,9 @@ export default function AnimalDetailScreen() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [loading, setLoading] = useState(true);
   const [isOrgAnimal, setIsOrgAnimal] = useState(false);
-
-  const { isFavoriteAnimal, changeIcon } = useFavorite(animalId);
+  const [isFavoriteAnimal, setIsFavorite] = useState(false);
   const [alertVisible, setAlertVisible] = useState(false);
+  const [contactExists, setContactExists] = useState(false);
 
   async function loadAnimal() {
     try {
@@ -50,6 +59,28 @@ export default function AnimalDetailScreen() {
     }
   }
 
+  async function loadFavoriteStatus() {
+    if (session?.user.id) {
+      try {
+        const status = await favoriteService.getFavoriteStatus(animalId as string, session.user.id);
+        setIsFavorite(status);
+      } catch (error) {
+        console.error("Error loading favorite status", error);
+      }
+    }
+  }
+
+  async function toggleFavorite() {
+    if (session?.user.id) {
+      try {
+        const newStatus = await favoriteService.toggleFavorite(animalId as string, session.user.id, isFavoriteAnimal);
+        setIsFavorite(newStatus);
+      } catch (error) {
+        console.error("Error changing favorite status", error);
+      }
+    }
+  }
+
   useEffect(() => {
     if (!animalId) {
       setLoading(false);
@@ -66,6 +97,12 @@ export default function AnimalDetailScreen() {
   }, [animalId]);
 
   useEffect(() => {
+    if (!sessionLoading && session?.user.id && animalId) {
+      loadFavoriteStatus();
+    }
+  }, [sessionLoading, session?.user.id, animalId]);
+
+  useEffect(() => {
     const checkIsOrganizationAnimal = async () => {
       if (animal && session?.user.id && type === "organization") {
         const result = await isOrganizationAnimal(animal.id, session.user.id);
@@ -74,8 +111,16 @@ export default function AnimalDetailScreen() {
         setIsOrgAnimal(false);
       }
     };
+    const checkContactExists = async () => {
+      if (animal && session?.user.id) {
+        const result = await checkForForm(session.user.id, animal.id);
+        if (result) setContactExists(result);
+        else setContactExists(false);
+      }
+    };
 
     checkIsOrganizationAnimal();
+    checkContactExists();
   }, [animal, session?.user.id, type]);
 
   if (loading || sessionLoading) {
@@ -86,15 +131,13 @@ export default function AnimalDetailScreen() {
     );
   }
 
-  if (!animal || !session?.user.id) {
+  if (!animal) {
     return (
       <View style={styles.center}>
         <Text>Tier nicht gefunden.</Text>
       </View>
     );
   }
-
-  const userID = session.user.id;
 
   return (
     <SafeAreaView style={styles.root} edges={["top", "left", "right"]}>
@@ -111,8 +154,9 @@ export default function AnimalDetailScreen() {
               iconSet="FontAwesome"
               iconColor={isFavoriteAnimal ? theme.colors.brand.focus : theme.colors.text.dark}
               style={styles.favoriteButton}
+              disabled={session?.user.id == null}
               onPress={() => {
-                changeIcon();
+                toggleFavorite();
               }}
             />
           </View>
@@ -196,7 +240,46 @@ export default function AnimalDetailScreen() {
             </ThemedText>
           </View>
 
-          <ThemedButton textStyle={{ fontWeight: "bold" }}>JETZT BEWERBEN</ThemedButton>
+          <AlertDialog
+            visible={alertVisible}
+            title={ERROR_MESSAGES.WARNING}
+            message={ERROR_MESSAGES.NOT_LOGGED_IN}
+            buttons={[
+              {
+                text: "Zurück",
+                onPress: () => router.back(),
+              },
+              {
+                text: "Log In",
+                onPress: () => router.navigate({ pathname: "Auth" }),
+              },
+            ]}
+            onDismiss={() => setAlertVisible(false)}
+          />
+
+          {contactExists ? (
+            <RowView style={styles.contacted}>
+              <IconButton iconSet="Feather" iconName="check-circle" />
+              <ThemedText variant="bodyLarge">BEREITS BEWORBEN</ThemedText>
+            </RowView>
+          ) : (
+            <ThemedButton
+              disabled={sessionLoading}
+              textStyle={{ fontWeight: "bold" }}
+              onPress={() => {
+                if (session?.user) {
+                  router.navigate({
+                    pathname: "AdoptionForm/UserContact",
+                    params: { animalId: animalId },
+                  });
+                } else {
+                  setAlertVisible(true);
+                }
+              }}
+            >
+              JETZT BEWERBEN
+            </ThemedButton>
+          )}
         </View>
       </ScrollView>
     </SafeAreaView>
@@ -298,5 +381,11 @@ const styles = StyleSheet.create({
   },
   gap: {
     marginBottom: 8,
+  },
+  contacted: {
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: theme.colors.background.warm,
+    borderRadius: 12,
   },
 });

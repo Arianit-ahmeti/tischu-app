@@ -2,8 +2,8 @@ import { theme } from "@theme";
 import React from "react";
 import { Image, Modal, StyleSheet, View } from "react-native";
 import { WebView } from "react-native-webview";
-import { IconButton } from "./IconButton";
-import { ThemedText } from "./ThemedText";
+import { IconButton } from "../ui/IconButton";
+import { ThemedText } from "../ui/ThemedText";
 
 interface PreviewModalProps {
   isVisible: boolean;

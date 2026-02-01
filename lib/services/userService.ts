@@ -1,6 +1,7 @@
+import { ERROR_MESSAGES } from "@lib/constants/messages";
+import { supabase } from "@lib/supabase";
 import { Session } from "@supabase/supabase-js";
 import { Organization } from "@types";
-import { supabase } from "./supabase";
 
 export async function getProfile(user_id: string): Promise<Organization | null> {
   try {
@@ -113,4 +114,18 @@ export async function getCurrentUserId(): Promise<string> {
 
   if (!userId) throw new Error("Keine aktive Sitzung gefunden.");
   return userId;
+}
+
+export async function getUserName(id: string): Promise<string | null> {
+  try {
+    const { data, error } = await supabase.from("profiles").select("username").eq("id", id).single();
+    if (error) {
+      console.error(ERROR_MESSAGES.USER_NAME_LOAD_FAILED, error.message);
+      return null;
+    }
+    return data.username;
+  } catch (error) {
+    console.error(ERROR_MESSAGES.USER_NAME_LOAD_FAILED, error);
+    return null;
+  }
 }

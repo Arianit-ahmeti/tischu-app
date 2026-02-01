@@ -11,11 +11,13 @@ cd tischu
 
 ### 2. Environment Setup
 
-Create a `.env` file in the root directory with your Supabase credentials:
+Create a `.env` file in the root directory with your Supabase credentials (as well as account credentials for login tests):
 
 ```env
-SUPABASE_URL=your_supabase_url
-SUPABASE_KEY=your_supabase_key
+SUPABASE_URL=<your_supabase_url>
+SUPABASE_KEY=<your_supabase_key>
+TEST_USER_EMAIL=<test_user_email>
+TEST_USER_PASSWORD=<test_user_password>
 ```
 
 ### 3. Start Development Environment
@@ -46,8 +48,8 @@ To run the unit tests for the application:
 npm test
 ```
 
-For continuous testing during development:
+To run headed (a browser window is opened where the testing sequence plays out) end-to-end tests:
 
 ```bash
-npm run test:watch
+npm run test:e2e:headed
 ```

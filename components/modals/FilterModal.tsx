@@ -1,15 +1,22 @@
-import { useAnimalFieldEnums } from "@hooks/useAnimalFieldEnums";
+import { useEnums } from "@hooks/useEnums";
 import { ERROR_MESSAGES } from "@lib/constants/messages";
+import {
+  getAdoptionStatusesEnum,
+  getAnimalSizesEnum,
+  getAnimalTypesEnum,
+  getCharacterTypesEnum,
+  getSexesEnum,
+} from "@lib/utils/supabaseEnumHandler";
 import { theme } from "@theme";
 import type { AnimalFilters } from "@types";
 import { useEffect, useState } from "react";
 import { ActivityIndicator, Modal, ModalProps, ScrollView, StyleSheet, Text, View } from "react-native";
-import { IconButton } from "./IconButton";
-import { RowView } from "./RowView";
-import { ThemedButton } from "./ThemedButton";
-import { ThemedDropdown } from "./ThemedDropdown";
-import { ThemedText } from "./ThemedText";
-import { ThemedTextInput } from "./ThemedTextInput";
+import { RowView } from "../layout/RowView";
+import { ThemedDropdown } from "../misc/ThemedDropdown";
+import { IconButton } from "../ui/IconButton";
+import { ThemedButton } from "../ui/ThemedButton";
+import { ThemedText } from "../ui/ThemedText";
+import { ThemedTextInput } from "../ui/ThemedTextInput";
 
 interface FilterModalProps extends ModalProps {
   closeModal: () => void;
@@ -18,7 +25,17 @@ interface FilterModalProps extends ModalProps {
 }
 export const FilterModal: React.FC<FilterModalProps> = ({ ...props }) => {
   const [dropdownFilter, setDropdownFilter] = useState<AnimalFilters>({});
-  const { enums, enumsAreLoading, enumsError } = useAnimalFieldEnums();
+  const {
+    enums,
+    loading: enumsAreLoading,
+    error: enumsError,
+  } = useEnums({
+    animalTypes: getAnimalTypesEnum,
+    animalSizes: getAnimalSizesEnum,
+    sexes: getSexesEnum,
+    characterTypes: getCharacterTypesEnum,
+    adoptionStatuses: getAdoptionStatusesEnum,
+  });
 
   useEffect(() => {
     setDropdownFilter(props.currentFilter);
