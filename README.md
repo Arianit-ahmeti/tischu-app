@@ -55,4 +55,4 @@ npm run test:e2e:headed
 ```
 
 ## Related Projects
-- [tischu-admin](https://github.com/Arianit-ahmeti/tischu-admin) — Admin-Dashboard zur Organisationsverifizierung
+- [tischu-admin](https://github.com/Arianit-ahmeti/tischu-admin) — Admin dashboard for organization verification
