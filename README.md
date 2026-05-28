@@ -53,3 +53,6 @@ To run headed (a browser window is opened where the testing sequence plays out) 
 ```bash
 npm run test:e2e:headed
 ```
+
+## Related Projects
+- [tischu-admin](https://github.com/Arianit-ahmeti/tischu-admin) — Admin-Dashboard zur Organisationsverifizierung
